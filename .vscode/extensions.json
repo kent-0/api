@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions",
+        "tamasfe.even-better-toml",
+        "usernamehw.errorlens",
+        "IronGeek.vscode-env",
+        "aaron-bond.better-comments"
+    ]
+}
