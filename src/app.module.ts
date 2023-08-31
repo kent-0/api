@@ -1,7 +1,9 @@
+import { colors } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
@@ -28,10 +30,14 @@ import { UserModule } from './modules/user/user.module';
       useFactory: (_configService: ConfigService) => ({
         autoLoadEntities: true,
         dbName: _configService.getOrThrow<string>('MIKRO_ORM_DB_NAME'),
+        debug: true,
         driver: PostgreSqlDriver,
         entities: [UserEntity],
         forceEntityConstructor: true,
+        highlighter: new SqlHighlighter(),
         host: _configService.getOrThrow<string>('MIKRO_ORM_HOST'),
+        logger: (msg) =>
+          new ConsoleLogger().log(`${colors.yellow('[Database]')} ${msg}`),
         migrations: {
           path: './dist/database/migrations',
           pathTs: './srsc/database/migrations',
