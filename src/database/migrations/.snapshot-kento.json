@@ -91,16 +91,6 @@
           "length": 30,
           "comment": "Unique user name per user.",
           "mappedType": "string"
-        },
-        "full_name": {
-          "name": "full_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "'undefined undefined'",
-          "mappedType": "string"
         }
       },
       "name": "auth_users",
@@ -137,8 +127,8 @@
       "checks": [
         {
           "name": "auth_users_username_check",
-          "expression": "username ~ '/[A-Za-z0-9_\\-]+/im'",
-          "definition": "check ((username ~ '/[A-Za-z0-9_\\-]+/im'))",
+          "expression": "username ~ '^[A-Za-z0-9_-]+$'",
+          "definition": "check ((username ~ '^[A-Za-z0-9_-]+$'))",
           "columnName": "username"
         }
       ],

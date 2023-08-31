@@ -17,6 +17,11 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'uuid'> {
   })
   public updatedAt = new Date();
 
+  /**
+   * Required postgres extension
+   * uuid-ossp
+   * @see https://www.postgresql.org/docs/current/uuid-ossp.html
+   */
   @PrimaryKey({
     columnType: 'text',
     comment: 'UUID v4 unique to the row.',
