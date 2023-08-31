@@ -27,7 +27,7 @@
     "migration:check": "mikro-orm migration:check",
     "migration:pending": "mikro-orm migration:pending",
     "migration:fresh": "mikro-orm migration:fresh",
-    "seed:initial": "mikro-orm seeder:run --class Initial",
+    "seed:initial": "mikro-orm seeder:run",
     "commit": "git-cz",
     "husky:i": "husky install",
     "update:i": "pnpm up --interactive",
@@ -54,6 +54,7 @@
     "@commitlint/config-conventional": "^17.7.0",
     "@commitlint/format": "^17.4.4",
     "@mikro-orm/cli": "^5.7.14",
+    "@mikro-orm/seeder": "^5.7.14",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
@@ -122,6 +123,7 @@
     }
   },
   "mikro-orm": {
+    "useTsNode": true,
     "configPaths": [
       "./src/database/settings.ts",
       "./dist/database/settings.js"
