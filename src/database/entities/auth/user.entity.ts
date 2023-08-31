@@ -36,6 +36,7 @@ export class UserEntity extends ParentEntity {
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
     entity: () => PasswordEntity,
+    hidden: true,
     nullable: true,
   })
   public password: Rel<PasswordEntity>;
