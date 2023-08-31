@@ -4,7 +4,7 @@ const { PostgreSqlDriver, defineConfig } = require('@mikro-orm/postgresql');
 exports.default = defineConfig({
   driver: PostgreSqlDriver,
   entities: ['./dist/database/entities'],
-  entitiesTs: ['./dist/database/entities'],
+  entitiesTs: ['./src/database/entities'],
   forceEntityConstructor: true,
   migrations: {
     path: './dist/database/migrations',
