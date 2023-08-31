@@ -7,7 +7,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { UserEntity } from '../auth/user.entity';
+import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
 import { BoardMembersEntity } from './members.entity';
 import { BoardRolesEntity } from './roles.entity';
@@ -20,10 +20,10 @@ export class BoardEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Creator of the board. When the user is deleted, the associated dashboard is also deleted.',
-    entity: () => UserEntity,
+    entity: () => AuthUserEntity,
     onDelete: 'cascade',
   })
-  public created_by: Rel<UserEntity>;
+  public created_by: Rel<AuthUserEntity>;
 
   @OneToMany(() => BoardMembersEntity, (m) => m.board, {
     comment: 'Users assigned to the board.',

@@ -2,7 +2,7 @@ import { Entity, Enum, ManyToOne, Property, Rel } from '@mikro-orm/core';
 
 import { TokenType } from '../../enums/token.enum';
 import { ParentEntity } from '../base.entity';
-import { UserEntity } from './user.entity';
+import { AuthUserEntity } from './user.entity';
 
 @Entity({
   comment: 'Access and refresh tokens created in user sessions.',
@@ -43,7 +43,7 @@ export class AuthTokensEntity extends ParentEntity {
 
   @ManyToOne({
     comment: 'Relationship to the user assigned to the generated token.',
-    entity: () => UserEntity,
+    entity: () => AuthUserEntity,
   })
-  public user: Rel<UserEntity>;
+  public user: Rel<AuthUserEntity>;
 }

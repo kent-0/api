@@ -6,7 +6,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { UserEntity } from '../auth/user.entity';
+import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
 import { BoardEntity } from './board.entity';
 import { BoardRolesEntity } from './roles.entity';
@@ -30,7 +30,7 @@ export class BoardMembersEntity extends ParentEntity {
 
   @ManyToOne({
     comment: 'User member of the board.',
-    entity: () => UserEntity,
+    entity: () => AuthUserEntity,
   })
-  public user: Rel<UserEntity>;
+  public user: Rel<AuthUserEntity>;
 }

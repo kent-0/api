@@ -1,7 +1,7 @@
 import { Entity, OneToOne, Property, Rel } from '@mikro-orm/core';
 
 import { ParentEntity } from '../base.entity';
-import { UserEntity } from './user.entity';
+import { AuthUserEntity } from './user.entity';
 
 @Entity({
   comment: 'Passwords assigned to user accounts.',
@@ -25,8 +25,8 @@ export class AuthPasswordEntity extends ParentEntity {
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
-    entity: () => UserEntity,
+    entity: () => AuthUserEntity,
     onDelete: 'cascade',
   })
-  public user: Rel<UserEntity>;
+  public user: Rel<AuthUserEntity>;
 }

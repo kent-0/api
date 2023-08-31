@@ -7,7 +7,7 @@ import { AuthPasswordEntity } from './passwords.entity';
   comment: 'Information about all users on the platform.',
   tableName: 'auth_users',
 })
-export class UserEntity extends ParentEntity {
+export class AuthUserEntity extends ParentEntity {
   @Property({
     check: "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
     columnType: 'varchar',
