@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { PostgreSqlDriver, defineConfig } = require('@mikro-orm/postgresql');
-const { TsMorphMetadataProvider } = require('@mikro-orm/reflection');
 
 const { config } = require('dotenv');
 const { join } = require('path');
@@ -16,7 +15,6 @@ exports.default = defineConfig({
   entitiesTs: [join(process.cwd(), 'src/database/entities/index.ts')],
   forceEntityConstructor: true,
   host: settings.parsed.MIKRO_ORM_HOST,
-  metadataProvider: TsMorphMetadataProvider,
   migrations: {
     path: './dist/database/migrations',
     pathTs: './srsc/database/migrations',
