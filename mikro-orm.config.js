@@ -8,7 +8,7 @@ exports.default = defineConfig({
   forceEntityConstructor: true,
   migrations: {
     path: './dist/database/migrations',
-    pathTs: './srsc/database/migrations',
+    pathTs: './src/database/migrations',
   },
   seeder: {
     defaultSeeder: 'InitialSeeder',
