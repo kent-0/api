@@ -18,6 +18,15 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:initial": "pnpm dlx mikro-orm migration:create --initial",
+    "migration:create": "pnpm dlx mikro-orm migration:create",
+    "migration:up": "pnpm dlx mikro-orm migration:up",
+    "migration:down": "pnpm dlx mikro-orm migration:down",
+    "migration:list": "pnpm dlx mikro-orm migration:list",
+    "migration:check": "pnpm dlx mikro-orm migration:check",
+    "migration:pending": "pnpm dlx mikro-orm migration:pending",
+    "migration:fresh": "pnpm dlx mikro-orm migration:fresh",
+    "seed:initial": "pnpm dlx mikro-orm seeder:run --class Initial",
     "commit": "git-cz",
     "husky:i": "husky install",
     "update:i": "pnpm up --interactive",
@@ -108,5 +117,11 @@
       "@apollo/server-plugin-landing-page-graphql-playground": "4.0.0",
       "subscriptions-transport-ws": "0.11.0"
     }
+  },
+  "mikro-orm": {
+    "configPaths": [
+      "./src/database/settings.ts",
+      "./dist/database/settings.js"
+    ]
   }
 }

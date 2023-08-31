@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 
-import { BaseEntities } from './database/entities/base';
+import DatabaseSettings from './database/settings';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -30,10 +30,10 @@ import { UserModule } from './modules/user/user.module';
         autoLoadEntities: true,
         dbName: _configService.get<string>('DB_NAME', { infer: true }),
         driver: PostgreSqlDriver,
-        entities: BaseEntities,
         host: _configService.get<string>('DB_HOST', { infer: true }),
         password: _configService.get<string>('DB_PASS', { infer: true }),
         user: _configService.get<string>('DB_USER', { infer: true }),
+        ...DatabaseSettings,
       }),
     }),
 
