@@ -244,6 +244,17 @@
           "comment": "Token expiration date.",
           "mappedType": "datetime"
         },
+        "revoked": {
+          "name": "revoked",
+          "type": "bool",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "comment": "Token revocation status.",
+          "mappedType": "boolean"
+        },
         "token_type": {
           "name": "token_type",
           "type": "text",
