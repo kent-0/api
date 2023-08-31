@@ -1,8 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { UserEntity } from 'src/database/entities';
-import { TokensEntity } from 'src/database/entities/auth/tokens.entity';
 
+import { TokensEntity, UserEntity } from '../../database/entities';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './services/auth.service';
 
