@@ -4,6 +4,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { BaseEntities } from './entities/base';
 
 export default defineConfig<PostgreSqlDriver>({
+  driver: PostgreSqlDriver,
   entities: BaseEntities,
   migrations: {
     path: './dist/database/migrations',
@@ -13,4 +14,5 @@ export default defineConfig<PostgreSqlDriver>({
     path: './dist/database/seeds',
     pathTs: './srsc/database/seeds',
   },
+  type: 'postgresql',
 });
