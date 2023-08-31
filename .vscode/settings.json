@@ -10,4 +10,5 @@
         "source.fixAll": true,
         "source.organizeImports": true
     },
+    "commentTranslate.targetLanguage": "en",
 }
