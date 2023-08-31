@@ -3,9 +3,9 @@ import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
 @Entity({ abstract: true, comment: 'Default configuration of all entities.' })
 export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
   @Property({
-    columnType: 'date',
+    columnType: 'timestamp',
     comment: 'Date when the row was created.',
-    type: 'date',
+    type: 'timestamp',
   })
   public createdAt = new Date();
 
@@ -22,10 +22,10 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
   public id: number;
 
   @Property({
-    columnType: 'date',
+    columnType: 'timestamp',
     comment: 'Date when the row was last updated.',
     onUpdate: () => new Date(),
-    type: 'date',
+    type: 'timestamp',
   })
   public updatedAt = new Date();
 

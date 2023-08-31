@@ -19,23 +19,25 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "date",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 6,
           "comment": "Date when the row was created.",
-          "mappedType": "date"
+          "mappedType": "datetime"
         },
         "updated_at": {
           "name": "updated_at",
-          "type": "date",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 6,
           "comment": "Date when the row was last updated.",
-          "mappedType": "date"
+          "mappedType": "datetime"
         },
         "version": {
           "name": "version",
