@@ -19,7 +19,7 @@ export class UserEntity extends ParentEntity {
 
   @Property({
     columnType: 'varchar',
-    comment: 'First name of the user',
+    comment: 'First name of the user.',
     hidden: true,
     length: 30,
   })
@@ -27,7 +27,7 @@ export class UserEntity extends ParentEntity {
 
   @Property({
     columnType: 'varchar',
-    comment: 'Last name of the user',
+    comment: 'Last name of the user.',
     hidden: true,
     length: 30,
   })
