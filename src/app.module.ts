@@ -36,9 +36,7 @@ import { UserModule } from './modules/user/user.module';
           path: './dist/database/migrations',
           pathTs: './srsc/database/migrations',
         },
-        password: _configService.getOrThrow<string>('MIKRO_ORM_PASSWORD', {
-          infer: true,
-        }),
+        password: _configService.getOrThrow<string>('MIKRO_ORM_PASSWORD'),
         port: _configService.getOrThrow<number>('MIKRO_ORM_PORT'),
         seeder: {
           path: './dist/database/seeds',
