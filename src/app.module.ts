@@ -8,7 +8,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 
-import { UserEntity } from './database/entities';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -33,7 +32,6 @@ import { UserModule } from './modules/user/user.module';
         dbName: _configService.getOrThrow<string>('MIKRO_ORM_DB_NAME'),
         debug: true,
         driver: PostgreSqlDriver,
-        entities: [UserEntity],
         forceEntityConstructor: true,
         highlighter: new SqlHighlighter(),
         host: _configService.getOrThrow<string>('MIKRO_ORM_HOST'),

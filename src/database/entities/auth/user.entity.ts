@@ -1,8 +1,9 @@
 import { Entity, Property } from '@mikro-orm/core';
 
-import { ParentEntity } from '../base';
+import { ParentEntity } from '../base.entity';
 
 @Entity({
+  comment: 'Information about all users on the platform.',
   tableName: 'auth_users',
 })
 export class UserEntity extends ParentEntity {

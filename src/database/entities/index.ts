@@ -1,3 +1,3 @@
 export * from './auth/user.entity';
 
-export * from './base';
+export * from './base.entity';

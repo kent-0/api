@@ -5,7 +5,7 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
   @Property({
     columnType: 'timestamp',
     comment: 'Date when the row was created.',
-    type: 'timestamp',
+    type: 'date',
   })
   public createdAt = new Date();
 
@@ -25,7 +25,7 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
     columnType: 'timestamp',
     comment: 'Date when the row was last updated.',
     onUpdate: () => new Date(),
-    type: 'timestamp',
+    type: 'date',
   })
   public updatedAt = new Date();
 

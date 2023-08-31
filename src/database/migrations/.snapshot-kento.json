@@ -140,7 +140,150 @@
           "columnName": "username"
         }
       ],
-      "foreignKeys": {}
+      "foreignKeys": {},
+      "comment": "Information about all users on the platform."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "device": {
+          "name": "device",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Name of the device used to generate the token.",
+          "mappedType": "string"
+        },
+        "expiration": {
+          "name": "expiration",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Token expiration date.",
+          "mappedType": "datetime"
+        },
+        "token_type": {
+          "name": "token_type",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "auth",
+            "refresh"
+          ],
+          "comment": "Type of token generated.",
+          "mappedType": "enum"
+        },
+        "token_value": {
+          "name": "token_value",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Relationship to the user assigned to the generated token.",
+          "mappedType": "uuid"
+        }
+      },
+      "name": "auth_tokens",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "token_value"
+          ],
+          "composite": false,
+          "keyName": "auth_tokens_token_value_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "auth_tokens_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "auth_tokens_user_id_foreign": {
+          "constraintName": "auth_tokens_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.auth_tokens",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Access and refresh tokens created in user sessions."
     }
   ]
 }
