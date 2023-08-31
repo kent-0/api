@@ -7,7 +7,7 @@ import { UserEntity } from './user.entity';
   comment: 'Passwords assigned to user accounts.',
   tableName: 'auth_passwords',
 })
-export class PasswordEntity extends ParentEntity {
+export class AuthPasswordEntity extends ParentEntity {
   @Property({
     columnType: 'varchar',
     comment: 'Hash resulting from the password combined with the "salt".',

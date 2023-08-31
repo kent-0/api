@@ -1,14 +1,22 @@
-import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { ParentEntity } from '../base.entity';
 import { BoardEntity } from './board.entity';
+import { BoardMembersEntity } from './members.entity';
 
 @Entity({
   comment:
     'Roles to manage the boards. Role permissions use the bit-based permission system.',
-  tableName: 'board_roles',
+  tableName: 'boards_roles',
 })
-export class RolesEntity extends ParentEntity {
+export class BoardRolesEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Board assigned to the role. When the board is removed, its available roles are also removed.',
@@ -16,6 +24,11 @@ export class RolesEntity extends ParentEntity {
     onDelete: 'cascade',
   })
   public board: Rel<BoardEntity>;
+
+  @ManyToMany(() => BoardMembersEntity, (member) => member.roles, {
+    comment: 'Board members who have this role.',
+  })
+  public members = new Collection<BoardMembersEntity>(this);
 
   @Property({
     columnType: 'varchar',

@@ -1,7 +1,7 @@
 import { Entity, OneToOne, Property, Rel } from '@mikro-orm/core';
 
 import { ParentEntity } from '../base.entity';
-import { PasswordEntity } from './passwords.entity';
+import { AuthPasswordEntity } from './passwords.entity';
 
 @Entity({
   comment: 'Information about all users on the platform.',
@@ -35,11 +35,11 @@ export class UserEntity extends ParentEntity {
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
-    entity: () => PasswordEntity,
+    entity: () => AuthPasswordEntity,
     hidden: true,
     nullable: true,
   })
-  public password: Rel<PasswordEntity>;
+  public password: Rel<AuthPasswordEntity>;
 
   @Property({
     check: "username ~ '^[A-Za-z0-9_-]+$'",

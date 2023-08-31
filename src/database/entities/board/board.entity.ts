@@ -9,7 +9,8 @@ import {
 
 import { UserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
-import { RolesEntity } from './roles.entity';
+import { BoardMembersEntity } from './members.entity';
+import { BoardRolesEntity } from './roles.entity';
 
 @Entity({
   comment: 'Task table information.',
@@ -24,6 +25,11 @@ export class BoardEntity extends ParentEntity {
   })
   public created_by: Rel<UserEntity>;
 
+  @OneToMany(() => BoardMembersEntity, (m) => m.board, {
+    comment: 'Users assigned to the board.',
+  })
+  public members = new Collection<BoardMembersEntity>(this);
+
   @Property({
     columnType: 'varchar',
     comment: 'Name of the board.',
@@ -31,8 +37,8 @@ export class BoardEntity extends ParentEntity {
   })
   public name: string;
 
-  @OneToMany(() => RolesEntity, (r) => r.board, {
-    comment: 'Roles to manage the board',
+  @OneToMany(() => BoardRolesEntity, (r) => r.board, {
+    comment: 'Roles to manage the board.',
   })
-  public roles = new Collection<RolesEntity>(this);
+  public roles = new Collection<BoardRolesEntity>(this);
 }

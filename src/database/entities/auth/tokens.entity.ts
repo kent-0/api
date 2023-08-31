@@ -8,7 +8,7 @@ import { UserEntity } from './user.entity';
   comment: 'Access and refresh tokens created in user sessions.',
   tableName: 'auth_tokens',
 })
-export class TokensEntity extends ParentEntity {
+export class AuthTokensEntity extends ParentEntity {
   @Property({
     columnType: 'varchar',
     comment: 'Name of the device used to generate the token.',

@@ -222,6 +222,388 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Creator of the board. When the user is deleted, the associated dashboard is also deleted.",
+          "mappedType": "uuid"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Name of the board.",
+          "mappedType": "string"
+        }
+      },
+      "name": "boards",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_created_by_id_foreign": {
+          "constraintName": "boards_created_by_id_foreign",
+          "columnNames": [
+            "created_by_id"
+          ],
+          "localTableName": "public.boards",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Task table information."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Board assigned to the role. When the board is removed, its available roles are also removed.",
+          "mappedType": "uuid"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "comment": "Name representing the role.",
+          "mappedType": "string"
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "numeric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Role bit-based permissions",
+          "mappedType": "decimal"
+        }
+      },
+      "name": "boards_roles",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_roles_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_roles_board_id_foreign": {
+          "constraintName": "boards_roles_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_roles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Roles to manage the boards. Role permissions use the bit-based permission system."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Board to which the user is a member.",
+          "mappedType": "uuid"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "User member of the board.",
+          "mappedType": "uuid"
+        }
+      },
+      "name": "boards_members",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_members_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_members_board_id_foreign": {
+          "constraintName": "boards_members_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_members",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "updateRule": "cascade"
+        },
+        "boards_members_user_id_foreign": {
+          "constraintName": "boards_members_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.boards_members",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Users assigned to boards."
+    },
+    {
+      "columns": {
+        "board_members_entity_id": {
+          "name": "board_members_entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "board_roles_entity_id": {
+          "name": "board_roles_entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "boards_members_roles",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_members_roles_pkey",
+          "columnNames": [
+            "board_members_entity_id",
+            "board_roles_entity_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_members_roles_board_members_entity_id_foreign": {
+          "constraintName": "boards_members_roles_board_members_entity_id_foreign",
+          "columnNames": [
+            "board_members_entity_id"
+          ],
+          "localTableName": "public.boards_members_roles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_members",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "boards_members_roles_board_roles_entity_id_foreign": {
+          "constraintName": "boards_members_roles_board_roles_entity_id_foreign",
+          "columnNames": [
+            "board_roles_entity_id"
+          ],
+          "localTableName": "public.boards_members_roles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_roles",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
         "device": {
           "name": "device",
           "type": "varchar",
@@ -456,214 +838,6 @@
         }
       },
       "comment": "Passwords assigned to user accounts."
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "uuid_generate_v4()",
-          "comment": "UUID v4 unique to the row.",
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was created.",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was last updated.",
-          "mappedType": "datetime"
-        },
-        "version": {
-          "name": "version",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "1",
-          "comment": "Optimistic Locking transactions.",
-          "mappedType": "integer"
-        },
-        "created_by_id": {
-          "name": "created_by_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "comment": "Creator of the board. When the user is deleted, the associated dashboard is also deleted.",
-          "mappedType": "uuid"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 100,
-          "comment": "Name of the board.",
-          "mappedType": "string"
-        }
-      },
-      "name": "boards",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "boards_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "boards_created_by_id_foreign": {
-          "constraintName": "boards_created_by_id_foreign",
-          "columnNames": [
-            "created_by_id"
-          ],
-          "localTableName": "public.boards",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.auth_users",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "comment": "Task table information."
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "uuid_generate_v4()",
-          "comment": "UUID v4 unique to the row.",
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was created.",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was last updated.",
-          "mappedType": "datetime"
-        },
-        "version": {
-          "name": "version",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "1",
-          "comment": "Optimistic Locking transactions.",
-          "mappedType": "integer"
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "comment": "Board assigned to the role. When the board is removed, its available roles are also removed.",
-          "mappedType": "uuid"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 50,
-          "comment": "Name representing the role.",
-          "mappedType": "string"
-        },
-        "permissions": {
-          "name": "permissions",
-          "type": "numeric",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "comment": "Role bit-based permissions",
-          "mappedType": "decimal"
-        }
-      },
-      "name": "board_roles",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "board_roles_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "board_roles_board_id_foreign": {
-          "constraintName": "board_roles_board_id_foreign",
-          "columnNames": [
-            "board_id"
-          ],
-          "localTableName": "public.board_roles",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.boards",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "comment": "Roles to manage the boards. Role permissions use the bit-based permission system."
     }
   ]
 }
