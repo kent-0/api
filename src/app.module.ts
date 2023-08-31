@@ -14,7 +14,6 @@ import { UserModule } from './modules/user/user.module';
     // Extensions
     ConfigModule.forRoot({
       cache: true,
-      envFilePath: '.env.local',
       isGlobal: true,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
