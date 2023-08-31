@@ -6,16 +6,16 @@
   "tables": [
     {
       "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text",
+        "id": {
+          "name": "id",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "default": "uuid_generate_v4()",
           "comment": "UUID v4 unique to the row.",
-          "mappedType": "text"
+          "mappedType": "uuid"
         },
         "created_at": {
           "name": "created_at",
@@ -117,7 +117,7 @@
         {
           "keyName": "auth_users_pkey",
           "columnNames": [
-            "uuid"
+            "id"
           ],
           "composite": false,
           "primary": true,
