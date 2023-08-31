@@ -1,11 +1,13 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 
-import DatabaseSettings from './database/settings';
+import { UserEntity } from './database/entities';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -27,11 +29,27 @@ import { UserModule } from './modules/user/user.module';
       inject: [ConfigService],
       useFactory: (_configService: ConfigService) => ({
         autoLoadEntities: true,
-        dbName: _configService.get<string>('DB_NAME', { infer: true }),
-        host: _configService.get<string>('DB_HOST', { infer: true }),
-        password: _configService.get<string>('DB_PASS', { infer: true }),
-        user: _configService.get<string>('DB_USER', { infer: true }),
-        ...DatabaseSettings,
+        dbName: _configService.get<string>('MIKRO_ORM_DB_NAME', {
+          infer: true,
+        }),
+        driver: PostgreSqlDriver,
+        entities: [UserEntity],
+        forceEntityConstructor: true,
+        host: _configService.get<string>('MIKRO_ORM_HOST', { infer: true }),
+        metadataProvider: TsMorphMetadataProvider,
+        migrations: {
+          path: './dist/database/migrations',
+          pathTs: './srsc/database/migrations',
+        },
+        password: _configService.get<string>('MIKRO_ORM_PASSWORD', {
+          infer: true,
+        }),
+        seeder: {
+          path: './dist/database/seeds',
+          pathTs: './srsc/database/seeds',
+        },
+        type: 'postgresql',
+        user: _configService.get<string>('MIKRO_ORM_USER', { infer: true }),
       }),
     }),
 

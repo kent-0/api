@@ -1,7 +1,5 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
-import { UserEntity } from './auth/user.entity';
-
 @Entity({ abstract: true, comment: 'Default configuration of all entities.' })
 export abstract class ParentEntity extends BaseEntity<ParentEntity, 'uuid'> {
   @Property({
@@ -30,5 +28,3 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'uuid'> {
   @Property({ comment: 'Optimistic Locking transactions.', version: true })
   public version: number;
 }
-
-export const BaseEntities = [UserEntity];
