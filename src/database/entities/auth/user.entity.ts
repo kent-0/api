@@ -7,6 +7,7 @@ import { ParentEntity } from '../base';
 })
 export class UserEntity extends ParentEntity {
   @Property({
+    check: "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
     columnType: 'varchar',
     comment: 'Unique email per user.',
     length: 100,

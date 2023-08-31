@@ -128,6 +128,12 @@
       ],
       "checks": [
         {
+          "name": "auth_users_email_check",
+          "expression": "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
+          "definition": "check ((email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'))",
+          "columnName": "email"
+        },
+        {
           "name": "auth_users_username_check",
           "expression": "username ~ '^[A-Za-z0-9_-]+$'",
           "definition": "check ((username ~ '^[A-Za-z0-9_-]+$'))",
