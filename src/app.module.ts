@@ -1,6 +1,5 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -36,7 +35,6 @@ import { UserModule } from './modules/user/user.module';
         entities: [UserEntity],
         forceEntityConstructor: true,
         host: _configService.get<string>('MIKRO_ORM_HOST', { infer: true }),
-        metadataProvider: TsMorphMetadataProvider,
         migrations: {
           path: './dist/database/migrations',
           pathTs: './srsc/database/migrations',
