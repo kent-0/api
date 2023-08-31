@@ -27,26 +27,25 @@ import { UserModule } from './modules/user/user.module';
       inject: [ConfigService],
       useFactory: (_configService: ConfigService) => ({
         autoLoadEntities: true,
-        dbName: _configService.get<string>('MIKRO_ORM_DB_NAME', {
-          infer: true,
-        }),
+        dbName: _configService.getOrThrow<string>('MIKRO_ORM_DB_NAME'),
         driver: PostgreSqlDriver,
         entities: [UserEntity],
         forceEntityConstructor: true,
-        host: _configService.get<string>('MIKRO_ORM_HOST', { infer: true }),
+        host: _configService.getOrThrow<string>('MIKRO_ORM_HOST'),
         migrations: {
           path: './dist/database/migrations',
           pathTs: './srsc/database/migrations',
         },
-        password: _configService.get<string>('MIKRO_ORM_PASSWORD', {
+        password: _configService.getOrThrow<string>('MIKRO_ORM_PASSWORD', {
           infer: true,
         }),
+        port: _configService.getOrThrow<number>('MIKRO_ORM_PORT'),
         seeder: {
           path: './dist/database/seeds',
           pathTs: './srsc/database/seeds',
         },
         type: 'postgresql',
-        user: _configService.get<string>('MIKRO_ORM_USER', { infer: true }),
+        user: _configService.getOrThrow<string>('MIKRO_ORM_USER'),
       }),
     }),
 
