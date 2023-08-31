@@ -1,4 +1,4 @@
-import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { Entity, Enum, ManyToOne, Property, Rel } from '@mikro-orm/core';
 
 import { TokenType } from '../../enums/token.enum';
 import { ParentEntity } from '../base.entity';
@@ -23,6 +23,13 @@ export class TokensEntity extends ParentEntity {
   })
   public expiration: Date;
 
+  @Property({
+    columnType: 'bool',
+    comment: 'Token revocation status.',
+    type: 'boolean',
+  })
+  public revoked = false;
+
   @Enum({ comment: 'Type of token generated.', items: () => TokenType })
   public token_type: TokenType;
 
@@ -36,6 +43,7 @@ export class TokensEntity extends ParentEntity {
 
   @ManyToOne({
     comment: 'Relationship to the user assigned to the generated token.',
+    entity: () => UserEntity,
   })
-  public user: UserEntity;
+  public user: Rel<UserEntity>;
 }

@@ -83,6 +83,16 @@
           "comment": "Last name of the user",
           "mappedType": "string"
         },
+        "password_id": {
+          "name": "password_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Relationship to the user assigned to the created password.",
+          "mappedType": "uuid"
+        },
         "username": {
           "name": "username",
           "type": "varchar",
@@ -104,6 +114,15 @@
           ],
           "composite": false,
           "keyName": "auth_users_email_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "password_id"
+          ],
+          "composite": false,
+          "keyName": "auth_users_password_id_unique",
           "primary": false,
           "unique": true
         },
@@ -140,7 +159,21 @@
           "columnName": "username"
         }
       ],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "auth_users_password_id_foreign": {
+          "constraintName": "auth_users_password_id_foreign",
+          "columnNames": [
+            "password_id"
+          ],
+          "localTableName": "public.auth_users",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_passwords",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
       "comment": "Information about all users on the platform."
     },
     {
@@ -284,6 +317,134 @@
         }
       },
       "comment": "Access and refresh tokens created in user sessions."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Hash resulting from the password combined with the \"salt\".",
+          "mappedType": "string"
+        },
+        "salt": {
+          "name": "salt",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "comment": "Salt used during the hashing process.",
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Relationship to the user assigned to the created password.",
+          "mappedType": "uuid"
+        }
+      },
+      "name": "auth_passwords",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "password_hash"
+          ],
+          "composite": false,
+          "keyName": "auth_passwords_password_hash_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "user_id"
+          ],
+          "composite": false,
+          "keyName": "auth_passwords_user_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "auth_passwords_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "auth_passwords_user_id_foreign": {
+          "constraintName": "auth_passwords_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.auth_passwords",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Passwords assigned to user accounts."
     }
   ]
 }
