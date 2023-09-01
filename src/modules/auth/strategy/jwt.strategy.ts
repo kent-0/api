@@ -1,5 +1,5 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -20,6 +20,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     @InjectRepository(AuthTokensEntity)
     private readonly tokensRepository: EntityRepository<AuthTokensEntity>,
     private readonly _jwtService: JwtService,
+    private readonly em: EntityManager,
     public readonly _configService: ConfigService,
   ) {
     super({
@@ -49,8 +50,11 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
 
     if (!tokenSession) throw new UnauthorizedException();
     if (tokenSession.revoked) throw new UnauthorizedException();
-    if (tokenSession.expiration < currentDate)
+    if (tokenSession.expiration < currentDate) {
+      tokenSession.revoked = true;
+      await this.em.persistAndFlush(tokenSession);
       throw new UnauthorizedException();
+    }
 
     return payload;
   }

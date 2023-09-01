@@ -1,6 +1,21 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType({
+  description: 'Email associated with the user account.',
+})
+export class AuthUserEmail {
+  @Field({
+    description: 'Email confirmation status.',
+  })
+  public is_confirmed!: boolean;
+
+  @Field({
+    description: 'Email address',
+  })
+  public value!: string;
+}
+
+@ObjectType({
   description: 'Information about all users on the platform.',
 })
 export class AuthUserObject {
@@ -23,19 +38,4 @@ export class AuthUserObject {
     description: 'Unique user name per user.',
   })
   public username!: string;
-}
-
-@ObjectType({
-  description: 'Email associated with the user account.',
-})
-export class AuthUserEmail {
-  @Field({
-    description: 'Email confirmation status.',
-  })
-  public is_confirmed!: boolean;
-
-  @Field({
-    description: 'Email address',
-  })
-  public value!: string;
 }

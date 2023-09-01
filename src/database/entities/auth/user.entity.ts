@@ -16,7 +16,11 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
   tableName: 'auth_users',
 })
 export class AuthUserEntity extends ParentEntity {
-  public [OptionalProps]?: 'fullName' | 'password' | OptionalParentProps;
+  public [OptionalProps]?:
+    | 'email'
+    | 'fullName'
+    | 'password'
+    | OptionalParentProps;
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created email.',

@@ -101,7 +101,7 @@ export class AuthService {
     username,
   }: AuthSignUpInput): Promise<AuthUserObject> {
     const userExist = await this.usersRespository.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username }, { email: { value: email } }],
     });
 
     if (userExist) {
@@ -121,7 +121,6 @@ export class AuthService {
     }
 
     const user = this.usersRespository.create({
-      email,
       first_name,
       last_name,
       username,

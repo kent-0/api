@@ -587,8 +587,8 @@
       "checks": [
         {
           "name": "auth_emails_value_check",
-          "expression": "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
-          "definition": "check ((email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'))",
+          "expression": "value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
+          "definition": "check ((value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'))",
           "columnName": "value"
         }
       ],
