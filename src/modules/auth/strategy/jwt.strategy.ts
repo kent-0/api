@@ -6,9 +6,9 @@ import { JwtService } from '@nestjs/jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy, type StrategyOptions } from 'passport-jwt';
-import { AuthTokensEntity } from 'src/database/entities';
-import { TokenType } from 'src/database/enums/token.enum';
 
+import { AuthTokensEntity } from '../../../database/entities';
+import { TokenType } from '../../../database/enums/token.enum';
 import { JWTPayload } from '../interfaces/jwt.interface';
 
 @Injectable()
