@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-import { colors } from '@mikro-orm/core';
+import { LoadStrategy, colors } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
@@ -38,6 +38,7 @@ import { AuthModule } from './modules/auth/auth.module';
         forceEntityConstructor: true,
         highlighter: new SqlHighlighter(),
         host: _configService.getOrThrow<string>('MIKRO_ORM_HOST'),
+        loadStrategy: LoadStrategy.JOINED,
         logger: (msg) =>
           new ConsoleLogger().log(`${colors.yellow('[Database]')} ${msg}`),
         migrations: {
