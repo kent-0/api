@@ -7,7 +7,7 @@ export class AuthUserObject {
   @Field({
     description: 'Unique email per user.',
   })
-  public email!: string;
+  public email!: AuthUserEmail;
 
   @Field({
     description: 'First name of the user.',
@@ -23,4 +23,19 @@ export class AuthUserObject {
     description: 'Unique user name per user.',
   })
   public username!: string;
+}
+
+@ObjectType({
+  description: 'Email associated with the user account.',
+})
+export class AuthUserEmail {
+  @Field({
+    description: 'Email confirmation status.',
+  })
+  public is_confirmed!: boolean;
+
+  @Field({
+    description: 'Email address',
+  })
+  public value!: string;
 }

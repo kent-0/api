@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import {
+  AuthEmailsEntity,
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
@@ -18,7 +19,12 @@ import { JWTStrategy } from './strategy/jwt.strategy';
 @Module({
   imports: [
     MikroOrmModule.forFeature({
-      entities: [AuthTokensEntity, AuthUserEntity, AuthPasswordEntity],
+      entities: [
+        AuthTokensEntity,
+        AuthUserEntity,
+        AuthPasswordEntity,
+        AuthEmailsEntity,
+      ],
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({

@@ -6,7 +6,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthEmails } from './emails.entity';
+import { AuthEmailsEntity } from './emails.entity';
 import { AuthPasswordEntity } from './passwords.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
@@ -20,11 +20,11 @@ export class AuthUserEntity extends ParentEntity {
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created email.',
-    entity: () => AuthEmails,
+    entity: () => AuthEmailsEntity,
     hidden: true,
     nullable: true,
   })
-  public email!: string;
+  public email!: Rel<AuthEmailsEntity>;
 
   @Property({
     columnType: 'varchar',

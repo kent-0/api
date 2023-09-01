@@ -11,6 +11,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 
 import {
+  AuthEmailsEntity,
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
@@ -35,6 +36,8 @@ export class AuthService {
     private readonly passwordRepository: EntityRepository<AuthPasswordEntity>,
     @InjectRepository(AuthTokensEntity)
     private readonly tokensRepository: EntityRepository<AuthTokensEntity>,
+    @InjectRepository(AuthEmailsEntity)
+    private readonly authEmailsRepository: EntityRepository<AuthEmailsEntity>,
     private readonly em: EntityManager,
     private readonly _jwtService: JwtService,
   ) {}
@@ -107,6 +110,16 @@ export class AuthService {
       );
     }
 
+    const isEmailRegistered = await this.authEmailsRepository.findOne({
+      value: email,
+    });
+
+    if (isEmailRegistered) {
+      throw new BadRequestException(
+        'There is already a registered user with that email.',
+      );
+    }
+
     const user = this.usersRespository.create({
       email,
       first_name,
@@ -118,13 +131,22 @@ export class AuthService {
 
     const passwordSalt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, passwordSalt);
-    const passwordSaved = this.passwordRepository.create({
+    const userPassword = this.passwordRepository.create({
       password_hash: passwordHash,
       salt: passwordSalt,
-      user: user,
+      user,
     });
 
-    user.password = passwordSaved;
+    user.password = userPassword;
+
+    const userEmail = this.authEmailsRepository.create({
+      user,
+      value: email,
+    });
+
+    user.email = userEmail;
+
+    await this.em.persistAndFlush(userEmail);
     await this.em.persistAndFlush(user);
 
     return user;
@@ -136,7 +158,7 @@ export class AuthService {
         id: userId,
       },
       {
-        populate: ['password'],
+        populate: ['email'],
       },
     );
 

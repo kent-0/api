@@ -1,12 +1,25 @@
-import { Entity, OneToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  OneToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { AuthUserEntity } from './user.entity';
+
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Status of emails linked to user accounts.',
   tableName: 'auth_emails',
 })
-export class AuthEmails {
+export class AuthEmailsEntity extends ParentEntity {
+  public [OptionalProps]?:
+    | 'activation_token'
+    | 'is_confirmed'
+    | OptionalParentProps;
+
   @Property({
     comment: 'Mail confirmation token.',
     defaultRaw: 'substr(md5(random()::text), 0, 10)',
