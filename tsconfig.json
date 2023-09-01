@@ -16,6 +16,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "strict": true,
+    "noUnusedLocals": true,
     "paths": {
       "~/*": ["./src/*"],
       "~/entities": ["./src/database/entities/index"],

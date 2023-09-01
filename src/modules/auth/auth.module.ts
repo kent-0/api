@@ -5,7 +5,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthTokensEntity, AuthUserEntity } from '~/database/entities';
+import {
+  AuthPasswordEntity,
+  AuthTokensEntity,
+  AuthUserEntity,
+} from '~/database/entities';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './services/auth.service';
@@ -13,7 +17,9 @@ import { JWTStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature({ entities: [AuthTokensEntity, AuthUserEntity] }),
+    MikroOrmModule.forFeature({
+      entities: [AuthTokensEntity, AuthUserEntity, AuthPasswordEntity],
+    }),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
