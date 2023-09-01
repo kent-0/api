@@ -23,6 +23,7 @@ export class AuthTokensEntity extends ParentEntity {
     columnType: 'varchar',
     comment: 'Name of the device used to generate the token.',
     length: 100,
+    type: 'string',
   })
   public device!: string;
 
@@ -40,7 +41,11 @@ export class AuthTokensEntity extends ParentEntity {
   })
   public revoked = false;
 
-  @Enum({ comment: 'Type of token generated.', items: () => TokenType })
+  @Enum({
+    comment: 'Type of token generated.',
+    items: () => TokenType,
+    type: 'enum',
+  })
   public token_type!: TokenType;
 
   @Property({

@@ -11,7 +11,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +21,8 @@ import { UserModule } from './modules/user/user.module';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'scheme.graphql'),
+      context: ({ connection, req }) =>
+        connection ? { req: connection.context } : { req },
       driver: ApolloDriver,
       playground: true,
       sortSchema: true,
@@ -55,8 +56,6 @@ import { UserModule } from './modules/user/user.module';
     }),
 
     // App modules
-    UserModule,
-
     AuthModule,
   ],
 })

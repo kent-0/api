@@ -20,7 +20,7 @@ import { JWTStrategy } from './strategy/jwt.strategy';
     MikroOrmModule.forFeature({
       entities: [AuthTokensEntity, AuthUserEntity, AuthPasswordEntity],
     }),
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

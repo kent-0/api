@@ -21,6 +21,7 @@ export class AuthPasswordEntity extends ParentEntity {
     columnType: 'varchar',
     comment: 'Hash resulting from the password combined with the "salt".',
     length: 100,
+    type: 'string',
     unique: true,
   })
   public password_hash!: string;
@@ -29,6 +30,7 @@ export class AuthPasswordEntity extends ParentEntity {
     columnType: 'varchar',
     comment: 'Salt used during the hashing process.',
     length: 50,
+    type: 'string',
   })
   public salt!: string;
 

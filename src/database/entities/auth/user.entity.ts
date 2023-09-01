@@ -22,6 +22,7 @@ export class AuthUserEntity extends ParentEntity {
     columnType: 'varchar',
     comment: 'Unique email per user.',
     length: 100,
+    type: 'string',
     unique: true,
   })
   public email!: string;
@@ -31,6 +32,7 @@ export class AuthUserEntity extends ParentEntity {
     comment: 'First name of the user.',
     hidden: true,
     length: 30,
+    type: 'string',
   })
   public first_name!: string;
 
@@ -39,6 +41,7 @@ export class AuthUserEntity extends ParentEntity {
     comment: 'Last name of the user.',
     hidden: true,
     length: 30,
+    type: 'string',
   })
   public last_name!: string;
 
@@ -55,6 +58,7 @@ export class AuthUserEntity extends ParentEntity {
     columnType: 'varchar',
     comment: 'Unique user name per user.',
     length: 30,
+    type: 'string',
     unique: true,
   })
   public username!: string;
