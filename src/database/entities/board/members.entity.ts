@@ -3,19 +3,23 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OptionalProps,
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
 import { BoardEntity } from './board.entity';
 import { BoardRolesEntity } from './roles.entity';
+
+import { AuthUserEntity } from '../auth/user.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Users assigned to boards.',
   tableName: 'boards_members',
 })
 export class BoardMembersEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @ManyToOne({
     comment: 'Board to which the user is a member.',
     entity: () => BoardEntity,

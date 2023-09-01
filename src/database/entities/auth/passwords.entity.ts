@@ -1,13 +1,22 @@
-import { Entity, OneToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  OneToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
-import { ParentEntity } from '../base.entity';
 import { AuthUserEntity } from './user.entity';
+
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Passwords assigned to user accounts.',
   tableName: 'auth_passwords',
 })
 export class AuthPasswordEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @Property({
     columnType: 'varchar',
     comment: 'Hash resulting from the password combined with the "salt".',

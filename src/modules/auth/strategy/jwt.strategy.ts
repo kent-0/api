@@ -1,14 +1,17 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PassportStrategy } from '@nestjs/passport';
+
+import { AuthTokensEntity } from '~/database/entities';
+import { TokenType } from '~/database/enums/token.enum';
+
 import { Request } from 'express';
 import { ExtractJwt, Strategy, type StrategyOptions } from 'passport-jwt';
 
-import { AuthTokensEntity } from '../../../database/entities';
-import { TokenType } from '../../../database/enums/token.enum';
 import { JWTPayload } from '../interfaces/jwt.interface';
 
 @Injectable()

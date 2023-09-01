@@ -1,14 +1,24 @@
-import { Entity, Enum, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  Enum,
+  ManyToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
+
+import { AuthUserEntity } from './user.entity';
 
 import { TokenType } from '../../enums/token.enum';
-import { ParentEntity } from '../base.entity';
-import { AuthUserEntity } from './user.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Access and refresh tokens created in user sessions.',
   tableName: 'auth_tokens',
 })
 export class AuthTokensEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @Property({
     columnType: 'varchar',
     comment: 'Name of the device used to generate the token.',

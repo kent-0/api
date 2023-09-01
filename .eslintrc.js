@@ -29,7 +29,17 @@ module.exports = {
         order: 'asc',
         'internal-pattern': ['~/**'],
         'newlines-between': 'always',
-        groups: ['mikro-orm', 'nestjs', 'internal', 'internal-type'],
+        groups: [
+          'builtin',
+          'mikro-orm',
+          'nestjs',
+          'internal',
+          'internal-type',
+          'external',
+          'external-type',
+          'parent',
+          'siblings',
+        ],
         'custom-groups': {
           value: {
             nestjs: '@nestjs/**',

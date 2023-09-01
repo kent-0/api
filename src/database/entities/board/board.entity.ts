@@ -3,20 +3,24 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
 import { BoardMembersEntity } from './members.entity';
 import { BoardRolesEntity } from './roles.entity';
+
+import { AuthUserEntity } from '../auth/user.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Task table information.',
   tableName: 'boards',
 })
 export class BoardEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @ManyToOne({
     comment:
       'Creator of the board. When the user is deleted, the associated dashboard is also deleted.',

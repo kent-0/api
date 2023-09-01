@@ -1,5 +1,7 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
+export type OptionalParentProps = 'createdAt' | 'id' | 'updatedAt' | 'version';
+
 @Entity({ abstract: true, comment: 'Default configuration of all entities.' })
 export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
   @Property({

@@ -3,13 +3,15 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
 
-import { ParentEntity } from '../base.entity';
 import { BoardEntity } from './board.entity';
 import { BoardMembersEntity } from './members.entity';
+
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment:
@@ -17,6 +19,8 @@ import { BoardMembersEntity } from './members.entity';
   tableName: 'boards_roles',
 })
 export class BoardRolesEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @ManyToOne({
     comment:
       'Board assigned to the role. When the board is removed, its available roles are also removed.',

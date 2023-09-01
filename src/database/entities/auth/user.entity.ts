@@ -1,13 +1,22 @@
-import { Entity, OneToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  OneToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
-import { ParentEntity } from '../base.entity';
 import { AuthPasswordEntity } from './passwords.entity';
+
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Information about all users on the platform.',
   tableName: 'auth_users',
 })
 export class AuthUserEntity extends ParentEntity {
+  public [OptionalProps]?: 'fullName' | 'password' | OptionalParentProps;
+
   @Property({
     check: "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
     columnType: 'varchar',
@@ -39,7 +48,7 @@ export class AuthUserEntity extends ParentEntity {
     hidden: true,
     nullable: true,
   })
-  public password!: Rel<AuthPasswordEntity>;
+  public password?: Rel<AuthPasswordEntity>;
 
   @Property({
     check: "username ~ '^[A-Za-z0-9_-]+$'",
