@@ -6,6 +6,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
+import { AuthEmails } from './emails.entity';
 import { AuthPasswordEntity } from './passwords.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
@@ -17,13 +18,11 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 export class AuthUserEntity extends ParentEntity {
   public [OptionalProps]?: 'fullName' | 'password' | OptionalParentProps;
 
-  @Property({
-    check: "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
-    columnType: 'varchar',
-    comment: 'Unique email per user.',
-    length: 100,
-    type: 'string',
-    unique: true,
+  @OneToOne({
+    comment: 'Relationship to the user assigned to the created email.',
+    entity: () => AuthEmails,
+    hidden: true,
+    nullable: true,
   })
   public email!: string;
 
