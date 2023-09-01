@@ -19,7 +19,7 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
     defaultRaw: 'uuid_generate_v4()',
     type: 'uuid',
   })
-  public id: number;
+  public id: string;
 
   @Property({
     columnType: 'timestamp',
