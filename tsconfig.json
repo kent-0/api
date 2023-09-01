@@ -12,11 +12,17 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
     "noImplicitAny": false,
-    "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "~/*": ["./src/*"],
+      "~/entities": ["./src/database/entities/index"],
+      "~/auth/guard": ["./src/auth/guards/jwt.guard"],
+      "~/auth/decorator": ["./src/auth/decorators/user.decorator"],
+      "~/permissions": ["./src/permissions/services/manager.service"],
+      "~/permissions/list": ["./src/permissions/enums/index"]
+    }
   }
 }

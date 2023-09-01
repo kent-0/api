@@ -19,7 +19,7 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
     defaultRaw: 'uuid_generate_v4()',
     type: 'uuid',
   })
-  public id: string;
+  public id!: string;
 
   @Property({
     columnType: 'timestamp',
@@ -30,5 +30,5 @@ export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
   public updatedAt = new Date();
 
   @Property({ comment: 'Optimistic Locking transactions.', version: true })
-  public version: number;
+  public version!: number;
 }

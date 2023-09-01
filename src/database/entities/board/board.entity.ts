@@ -23,7 +23,7 @@ export class BoardEntity extends ParentEntity {
     entity: () => AuthUserEntity,
     onDelete: 'cascade',
   })
-  public created_by: Rel<AuthUserEntity>;
+  public created_by!: Rel<AuthUserEntity>;
 
   @OneToMany(() => BoardMembersEntity, (m) => m.board, {
     comment: 'Users assigned to the board.',
@@ -35,7 +35,7 @@ export class BoardEntity extends ParentEntity {
     comment: 'Name of the board.',
     length: 100,
   })
-  public name: string;
+  public name!: string;
 
   @OneToMany(() => BoardRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',

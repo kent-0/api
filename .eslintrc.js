@@ -9,7 +9,7 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
-    'plugin:perfectionist/recommended-natural'
+    'plugin:perfectionist/recommended-natural',
   ],
   root: true,
   env: {
@@ -22,5 +22,21 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'perfectionist/sort-imports': [
+      'error',
+      {
+        type: 'natural',
+        order: 'asc',
+        'internal-pattern': ['~/**'],
+        'newlines-between': 'always',
+        groups: ['mikro-orm', 'nestjs', 'internal', 'internal-type'],
+        'custom-groups': {
+          value: {
+            nestjs: '@nestjs/**',
+            'mikro-orm': '@mikro-orm/**',
+          },
+        },
+      },
+    ],
   },
 };

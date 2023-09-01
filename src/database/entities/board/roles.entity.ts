@@ -23,7 +23,7 @@ export class BoardRolesEntity extends ParentEntity {
     entity: () => BoardEntity,
     onDelete: 'cascade',
   })
-  public board: Rel<BoardEntity>;
+  public board!: Rel<BoardEntity>;
 
   @ManyToMany(() => BoardMembersEntity, (member) => member.roles, {
     comment: 'Board members who have this role.',
@@ -36,12 +36,12 @@ export class BoardRolesEntity extends ParentEntity {
     length: 50,
     type: 'string',
   })
-  public name: string;
+  public name!: string;
 
   @Property({
     columnType: 'numeric',
     comment: 'Role bit-based permissions',
     type: 'numeric',
   })
-  public permissions: number;
+  public permissions!: number;
 }

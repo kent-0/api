@@ -14,19 +14,19 @@ export class AuthPasswordEntity extends ParentEntity {
     length: 100,
     unique: true,
   })
-  public password_hash: string;
+  public password_hash!: string;
 
   @Property({
     columnType: 'varchar',
     comment: 'Salt used during the hashing process.',
     length: 50,
   })
-  public salt: string;
+  public salt!: string;
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
     entity: () => AuthUserEntity,
     onDelete: 'cascade',
   })
-  public user: Rel<AuthUserEntity>;
+  public user!: Rel<AuthUserEntity>;
 }

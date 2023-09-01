@@ -1,4 +1,15 @@
 {
-    "$schema": "https://json.schemastore.org/swcrc",
-    "sourceMaps": true
+  "$schema": "https://json.schemastore.org/swcrc",
+  "sourceMaps": true,
+  "jsc": {
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./dist/*"],
+      "~/entities": ["./dist/database/entities/index.js"],
+      "~/auth/guard": ["./dist/auth/guards/jwt.guard.js"],
+      "~/auth/decorator": ["./dist/auth/decorators/user.decorator.js"],
+      "~/permissions": ["./dist/permissions/services/manager.service.js"],
+      "~/permissions/list": ["./dist/permissions/enums/index.js"]
+    }
+  }
 }

@@ -15,7 +15,7 @@ export class AuthUserEntity extends ParentEntity {
     length: 100,
     unique: true,
   })
-  public email: string;
+  public email!: string;
 
   @Property({
     columnType: 'varchar',
@@ -23,7 +23,7 @@ export class AuthUserEntity extends ParentEntity {
     hidden: true,
     length: 30,
   })
-  public first_name: string;
+  public first_name!: string;
 
   @Property({
     columnType: 'varchar',
@@ -31,7 +31,7 @@ export class AuthUserEntity extends ParentEntity {
     hidden: true,
     length: 30,
   })
-  public last_name: string;
+  public last_name!: string;
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
@@ -39,7 +39,7 @@ export class AuthUserEntity extends ParentEntity {
     hidden: true,
     nullable: true,
   })
-  public password: Rel<AuthPasswordEntity>;
+  public password!: Rel<AuthPasswordEntity>;
 
   @Property({
     check: "username ~ '^[A-Za-z0-9_-]+$'",
@@ -48,7 +48,7 @@ export class AuthUserEntity extends ParentEntity {
     length: 30,
     unique: true,
   })
-  public username: string;
+  public username!: string;
 
   @Property({ persist: false })
   public get fullName(): string {

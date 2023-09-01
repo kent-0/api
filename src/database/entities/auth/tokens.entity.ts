@@ -14,14 +14,14 @@ export class AuthTokensEntity extends ParentEntity {
     comment: 'Name of the device used to generate the token.',
     length: 100,
   })
-  public device: string;
+  public device!: string;
 
   @Property({
     columnType: 'timestamp',
     comment: 'Token expiration date.',
     type: 'date',
   })
-  public expiration: Date;
+  public expiration!: Date;
 
   @Property({
     columnType: 'bool',
@@ -31,7 +31,7 @@ export class AuthTokensEntity extends ParentEntity {
   public revoked = false;
 
   @Enum({ comment: 'Type of token generated.', items: () => TokenType })
-  public token_type: TokenType;
+  public token_type!: TokenType;
 
   @Property({
     columnType: 'varchar',
@@ -39,11 +39,11 @@ export class AuthTokensEntity extends ParentEntity {
     type: 'string',
     unique: true,
   })
-  public token_value: string;
+  public token_value!: string;
 
   @ManyToOne({
     comment: 'Relationship to the user assigned to the generated token.',
     entity: () => AuthUserEntity,
   })
-  public user: Rel<AuthUserEntity>;
+  public user!: Rel<AuthUserEntity>;
 }

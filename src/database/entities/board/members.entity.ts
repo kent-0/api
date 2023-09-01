@@ -20,7 +20,7 @@ export class BoardMembersEntity extends ParentEntity {
     comment: 'Board to which the user is a member.',
     entity: () => BoardEntity,
   })
-  public board: Rel<BoardEntity>;
+  public board!: Rel<BoardEntity>;
 
   @ManyToMany(() => BoardRolesEntity, (role) => role.members, {
     comment: 'User member roles in the board.',
@@ -32,5 +32,5 @@ export class BoardMembersEntity extends ParentEntity {
     comment: 'User member of the board.',
     entity: () => AuthUserEntity,
   })
-  public user: Rel<AuthUserEntity>;
+  public user!: Rel<AuthUserEntity>;
 }
