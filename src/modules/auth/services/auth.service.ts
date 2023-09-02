@@ -18,7 +18,7 @@ import {
 } from '~/database/entities';
 import { DeviceTypes } from '~/database/enums/devices.enum';
 import { TokenType } from '~/database/enums/token.enum';
-import { PasswordService } from '~/modules/auth/services/password.service';
+import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import * as bcrypt from 'bcrypt';
 
@@ -41,7 +41,7 @@ export class AuthService {
     private readonly authEmailsRepository: EntityRepository<AuthEmailsEntity>,
     private readonly em: EntityManager,
     private readonly _jwtService: JwtService,
-    private readonly _passwordService: PasswordService,
+    private readonly _passwordService: AuthPasswordService,
   ) {}
 
   public async logOut(userToken: string, userId: string): Promise<string> {

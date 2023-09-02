@@ -15,7 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthChangePasswordInput } from '../inputs/change-password.input';
 
 @Injectable()
-export class PasswordService {
+export class AuthPasswordService {
   constructor(
     @InjectRepository(AuthPasswordEntity)
     private readonly passwordRepository: EntityRepository<AuthPasswordEntity>,

@@ -1,23 +1,26 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { PasswordService } from '~/modules/auth/services/password.service';
+import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import { UserToken } from './decorators/user.decorator';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthChangePasswordInput } from './inputs/change-password.input';
+import { AuthConfirmEmailInput } from './inputs/confirm-email.object';
 import { AuthSignInInput } from './inputs/sign-in.input';
 import { AuthSignUpInput } from './inputs/sign-up.input';
 import { JWTPayload } from './interfaces/jwt.interface';
 import { AuthSignInObject } from './objects/sign-in.object';
-import { AuthUserObject } from './objects/user.object';
+import { AuthUserEmailObject, AuthUserObject } from './objects/user.object';
 import { AuthService } from './services/auth.service';
+import { AuthEmailService } from './services/email.service';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private _authService: AuthService,
-    private _passwordService: PasswordService,
+    private _passwordService: AuthPasswordService,
+    private _emailService: AuthEmailService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -29,6 +32,13 @@ export class AuthResolver {
     @UserToken() token: JWTPayload,
   ) {
     return this._passwordService.change(input, token.sub);
+  }
+
+  @Mutation(() => AuthUserEmailObject, {
+    description: 'Activate the email of the user account.',
+  })
+  public confirmEmail(@Args('input') input: AuthConfirmEmailInput) {
+    return this._emailService.confirm(input);
   }
 
   @UseGuards(JwtAuthGuard)

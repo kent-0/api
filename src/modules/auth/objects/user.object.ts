@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType({
   description: 'Email associated with the user account.',
 })
-export class AuthUserEmail {
+export class AuthUserEmailObject {
   @Field({
     description: 'Email confirmation status.',
   })
@@ -22,7 +22,7 @@ export class AuthUserObject {
   @Field({
     description: 'Unique email per user.',
   })
-  public email!: AuthUserEmail;
+  public email!: AuthUserEmailObject;
 
   @Field({
     description: 'First name of the user.',

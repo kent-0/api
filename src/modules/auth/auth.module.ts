@@ -11,10 +11,11 @@ import {
   AuthTokensEntity,
   AuthUserEntity,
 } from '~/database/entities';
-import { PasswordService } from '~/modules/auth/services/password.service';
+import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './services/auth.service';
+import { AuthEmailService } from './services/email.service';
 import { JWTStrategy } from './strategy/jwt.strategy';
 
 @Module({
@@ -42,6 +43,12 @@ import { JWTStrategy } from './strategy/jwt.strategy';
       }),
     }),
   ],
-  providers: [AuthService, AuthResolver, JWTStrategy, PasswordService],
+  providers: [
+    AuthService,
+    AuthResolver,
+    JWTStrategy,
+    AuthPasswordService,
+    AuthEmailService,
+  ],
 })
 export class AuthModule {}
