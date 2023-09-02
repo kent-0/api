@@ -49,6 +49,14 @@ export class AuthResolver {
     return this._accountService.logOut(token.raw, token.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Query(() => AuthUserObject, {
+    description: 'Current information of the authenticated user.',
+  })
+  public me(@UserToken() token: JWTPayload) {
+    return this._accountService.user(token.sub);
+  }
+
   @Mutation(() => AuthSignInObject, {
     description: 'Log in to the user account.',
   })
@@ -61,13 +69,5 @@ export class AuthResolver {
   })
   public signUp(@Args('input') input: AuthSignUpInput) {
     return this._accountService.signUp(input);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Query(() => AuthUserObject, {
-    description: 'Current information of the authenticated user.',
-  })
-  public user(@UserToken() token: JWTPayload) {
-    return this._accountService.user(token.sub);
   }
 }
