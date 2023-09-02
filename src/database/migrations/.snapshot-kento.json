@@ -666,33 +666,77 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
-        "created_by_id": {
-          "name": "created_by_id",
+        "description": {
+          "name": "description",
+          "type": "varchar(300)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 300,
+          "comment": "Brief description of what the project is about.",
+          "mappedType": "string"
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "comment": "Expected completion date for the project.",
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "comment": "Project's name.",
+          "mappedType": "string"
+        },
+        "owner_id": {
+          "name": "owner_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "Creator of the board. When the user is deleted, the associated dashboard is also deleted.",
+          "comment": "Project owner user. If the owner deletes his account, the projects will also be affected.",
           "mappedType": "uuid"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar",
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 100,
-          "comment": "Name of the board.",
-          "mappedType": "string"
+          "length": 6,
+          "comment": "Project start date. By default it is not set until the project is marked as in progress.",
+          "mappedType": "datetime"
+        },
+        "status": {
+          "name": "status",
+          "type": "smallint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "3",
+          "comment": "Current status of the project.",
+          "mappedType": "enum"
         }
       },
-      "name": "boards",
+      "name": "projects",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "boards_pkey",
+          "keyName": "projects_pkey",
           "columnNames": [
             "id"
           ],
@@ -703,12 +747,12 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "boards_created_by_id_foreign": {
-          "constraintName": "boards_created_by_id_foreign",
+        "projects_owner_id_foreign": {
+          "constraintName": "projects_owner_id_foreign",
           "columnNames": [
-            "created_by_id"
+            "owner_id"
           ],
-          "localTableName": "public.boards",
+          "localTableName": "public.projects",
           "referencedColumnNames": [
             "id"
           ],
@@ -717,7 +761,7 @@
           "updateRule": "cascade"
         }
       },
-      "comment": "Task table information."
+      "comment": "Projects to manage and group boards."
     },
     {
       "columns": {
@@ -765,32 +809,43 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
-        "board_id": {
-          "name": "board_id",
+        "created_by_id": {
+          "name": "created_by_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "Board to which the user is a member.",
+          "comment": "Creator of the board. When the user is deleted, the associated dashboard is also deleted.",
           "mappedType": "uuid"
         },
-        "user_id": {
-          "name": "user_id",
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Name of the board.",
+          "mappedType": "string"
+        },
+        "project_id": {
+          "name": "project_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "User member of the board.",
+          "comment": "Project owner of the board.",
           "mappedType": "uuid"
         }
       },
-      "name": "boards_members",
+      "name": "boards",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "boards_members_pkey",
+          "keyName": "boards_pkey",
           "columnNames": [
             "id"
           ],
@@ -801,32 +856,33 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "boards_members_board_id_foreign": {
-          "constraintName": "boards_members_board_id_foreign",
+        "boards_created_by_id_foreign": {
+          "constraintName": "boards_created_by_id_foreign",
           "columnNames": [
-            "board_id"
+            "created_by_id"
           ],
-          "localTableName": "public.boards_members",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.boards",
-          "updateRule": "cascade"
-        },
-        "boards_members_user_id_foreign": {
-          "constraintName": "boards_members_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.boards_members",
+          "localTableName": "public.boards",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.auth_users",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "boards_project_id_foreign": {
+          "constraintName": "boards_project_id_foreign",
+          "columnNames": [
+            "project_id"
+          ],
+          "localTableName": "public.boards",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.projects",
           "updateRule": "cascade"
         }
       },
-      "comment": "Users assigned to boards."
+      "comment": "Task table information."
     },
     {
       "columns": {
@@ -939,6 +995,115 @@
     },
     {
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Board to which the user is a member.",
+          "mappedType": "uuid"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "User member of the board.",
+          "mappedType": "uuid"
+        }
+      },
+      "name": "boards_members",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_members_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_members_board_id_foreign": {
+          "constraintName": "boards_members_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_members",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "updateRule": "cascade"
+        },
+        "boards_members_user_id_foreign": {
+          "constraintName": "boards_members_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.boards_members",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Users assigned to boards."
+    },
+    {
+      "columns": {
         "board_members_entity_id": {
           "name": "board_members_entity_id",
           "type": "uuid",
@@ -1001,149 +1166,6 @@
           "updateRule": "cascade"
         }
       }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "uuid_generate_v4()",
-          "comment": "UUID v4 unique to the row.",
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was created.",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was last updated.",
-          "mappedType": "datetime"
-        },
-        "version": {
-          "name": "version",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "1",
-          "comment": "Optimistic Locking transactions.",
-          "mappedType": "integer"
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar(300)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 300,
-          "comment": "Brief description of what the project is about.",
-          "mappedType": "string"
-        },
-        "end_date": {
-          "name": "end_date",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "comment": "Expected completion date for the project.",
-          "mappedType": "datetime"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(50)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 50,
-          "comment": "Project's name.",
-          "mappedType": "string"
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "comment": "Project owner user. If the owner deletes his account, the projects will also be affected.",
-          "mappedType": "uuid"
-        },
-        "start_date": {
-          "name": "start_date",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Project start date. By default it is not set until the project is marked as in progress.",
-          "mappedType": "datetime"
-        },
-        "status": {
-          "name": "status",
-          "type": "smallint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "3",
-          "comment": "Current status of the project.",
-          "mappedType": "enum"
-        }
-      },
-      "name": "projects",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "projects_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "projects_owner_id_foreign": {
-          "constraintName": "projects_owner_id_foreign",
-          "columnNames": [
-            "owner_id"
-          ],
-          "localTableName": "public.projects",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.auth_users",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "comment": "Projects to manage and group boards."
     },
     {
       "columns": {

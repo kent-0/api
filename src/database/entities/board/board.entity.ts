@@ -30,6 +30,13 @@ export class BoardEntity extends ParentEntity {
   })
   public created_by!: Rel<AuthUserEntity>;
 
+  @Property({
+    columnType: 'varchar',
+    comment: 'Brief description of the board.',
+    length: 500,
+  })
+  public description!: string;
+
   @OneToMany(() => BoardMembersEntity, (m) => m.board, {
     comment: 'Users assigned to the board.',
   })
