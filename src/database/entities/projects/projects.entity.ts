@@ -1,7 +1,19 @@
-import { Entity, Enum, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToOne,
+  OneToMany,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { ProjectStatus } from '~/database/enums/status.enum';
 
+import { ProjectMembersEntity } from './members.entity';
+import { ProjectRolesEntity } from './roles.entity';
+
+import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
 
 @Entity({
@@ -23,12 +35,30 @@ export class ProjectEntity extends ParentEntity {
   })
   public end_date!: Date;
 
+  @OneToMany(() => ProjectMembersEntity, (m) => m.project, {
+    comment: 'Users invited to the project.',
+  })
+  public members = new Collection<ProjectMembersEntity>(this);
+
   @Property({
     comment: "Project's name.",
     length: 50,
     type: 'varchar',
   })
   public name!: string;
+
+  @ManyToOne({
+    comment:
+      'Project owner user. If the owner deletes his account, the projects will also be affected.',
+    entity: () => AuthUserEntity,
+    onDelete: 'cascade',
+  })
+  public owner!: Rel<AuthUserEntity>;
+
+  @OneToMany(() => ProjectRolesEntity, (r) => r.project, {
+    comment: 'Roles to manage the project and boards.',
+  })
+  public roles = new Collection<ProjectRolesEntity>(this);
 
   @Property({
     columnType: 'datetime',

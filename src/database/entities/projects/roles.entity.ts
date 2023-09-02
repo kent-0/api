@@ -16,9 +16,9 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 @Entity({
   comment:
     'Roles to manage the projects. Role permissions use the bit-based permission system.',
-  tableName: 'boards_roles',
+  tableName: 'projects_roles',
 })
-export class BoardRolesEntity extends ParentEntity {
+export class ProjectRolesEntity extends ParentEntity {
   public [OptionalProps]?: OptionalParentProps;
 
   @ManyToMany(() => ProjectMembersEntity, (member) => member.roles, {

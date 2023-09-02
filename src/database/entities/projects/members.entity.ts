@@ -8,7 +8,7 @@ import {
 } from '@mikro-orm/core';
 
 import { ProjectEntity } from './projects.entity';
-import { BoardRolesEntity } from './roles.entity';
+import { ProjectRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
@@ -23,18 +23,20 @@ export class ProjectMembersEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Board to which the user is a member.',
     entity: () => ProjectEntity,
+    onDelete: 'cascade',
   })
   public project!: Rel<ProjectEntity>;
 
-  @ManyToMany(() => BoardRolesEntity, (role) => role.members, {
+  @ManyToMany(() => ProjectRolesEntity, (role) => role.members, {
     comment: 'User member roles in the board.',
     owner: true,
   })
-  public roles = new Collection<BoardRolesEntity>(this);
+  public roles = new Collection<ProjectRolesEntity>(this);
 
   @ManyToOne({
     comment: 'User member of the board.',
     entity: () => AuthUserEntity,
+    onDelete: 'cascade',
   })
   public user!: Rel<AuthUserEntity>;
 }
