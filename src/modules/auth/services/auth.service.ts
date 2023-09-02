@@ -18,6 +18,7 @@ import {
 } from '~/database/entities';
 import { DeviceTypes } from '~/database/enums/devices.enum';
 import { TokenType } from '~/database/enums/token.enum';
+import { PasswordService } from '~/modules/auth/services/password.service';
 
 import * as bcrypt from 'bcrypt';
 
@@ -40,6 +41,7 @@ export class AuthService {
     private readonly authEmailsRepository: EntityRepository<AuthEmailsEntity>,
     private readonly em: EntityManager,
     private readonly _jwtService: JwtService,
+    private readonly _passwordService: PasswordService,
   ) {}
 
   public async signIn({
@@ -128,11 +130,10 @@ export class AuthService {
 
     await this.em.persistAndFlush(user);
 
-    const passwordSalt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, passwordSalt);
+    const passwordHashed = await this._passwordService.generate(password);
     const userPassword = this.passwordRepository.create({
-      password_hash: passwordHash,
-      salt: passwordSalt,
+      password_hash: passwordHashed.hash,
+      salt: passwordHashed.salt,
       user,
     });
 

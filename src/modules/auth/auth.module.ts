@@ -11,6 +11,7 @@ import {
   AuthTokensEntity,
   AuthUserEntity,
 } from '~/database/entities';
+import { PasswordService } from '~/modules/auth/services/password.service';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './services/auth.service';
@@ -41,6 +42,6 @@ import { JWTStrategy } from './strategy/jwt.strategy';
       }),
     }),
   ],
-  providers: [AuthService, AuthResolver, JWTStrategy],
+  providers: [AuthService, AuthResolver, JWTStrategy, PasswordService],
 })
 export class AuthModule {}

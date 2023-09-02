@@ -1,6 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
+import { PasswordService } from '~/modules/auth/services/password.service';
+
 import { UserToken } from './decorators/user.decorator';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { AuthSignInInput } from './inputs/sign-in.input';
@@ -12,7 +14,26 @@ import { AuthService } from './services/auth.service';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private _authService: AuthService) {}
+  constructor(
+    private _authService: AuthService,
+    private _passwordService: PasswordService,
+  ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => String, {
+    description: 'Change the user current password.',
+  })
+  public changePassword(
+    @Args('currentPassword') currentPassword: string,
+    @Args('newPassword') newPassword: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._passwordService.change(
+      currentPassword,
+      newPassword,
+      token.sub,
+    );
+  }
 
   @Mutation(() => AuthSignInObject, {
     description: 'Log in to the user account.',
