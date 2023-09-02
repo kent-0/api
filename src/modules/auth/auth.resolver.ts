@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
@@ -17,6 +17,7 @@ import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 
 @Resolver()
+@UsePipes(ValidationPipe)
 export class AuthResolver {
   constructor(
     private _accountService: AuthAccountService,
