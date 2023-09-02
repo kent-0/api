@@ -6,7 +6,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { ProjectEntity } from './projects.entity';
+import { ProjectEntity } from './project.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';

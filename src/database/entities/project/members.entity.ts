@@ -7,7 +7,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { ProjectEntity } from './projects.entity';
+import { ProjectEntity } from './project.entity';
 import { ProjectRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';

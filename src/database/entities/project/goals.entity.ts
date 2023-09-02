@@ -9,7 +9,7 @@ import {
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 
-import { ProjectEntity } from './projects.entity';
+import { ProjectEntity } from './project.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 

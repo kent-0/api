@@ -9,7 +9,7 @@ import {
 } from '@mikro-orm/core';
 
 import { ProjectMembersEntity } from './members.entity';
-import { ProjectEntity } from './projects.entity';
+import { ProjectEntity } from './project.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 

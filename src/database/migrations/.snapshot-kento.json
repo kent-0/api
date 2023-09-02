@@ -819,6 +819,17 @@
           "comment": "Creator of the board. When the user is deleted, the associated dashboard is also deleted.",
           "mappedType": "uuid"
         },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 500,
+          "comment": "Brief description of the board.",
+          "mappedType": "string"
+        },
         "name": {
           "name": "name",
           "type": "varchar",
