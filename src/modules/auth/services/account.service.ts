@@ -83,6 +83,60 @@ export class AuthAccountService {
     return user;
   }
 
+  public async refreshSession(
+    token: string,
+    userId: string,
+  ): Promise<AuthSignInObject> {
+    const refreshToken = await this.tokensRepository.findOne({
+      token_type: TokenType.REFRESH,
+      token_value: token,
+      user: userId,
+    });
+
+    if (!refreshToken) {
+      throw new NotFoundException(
+        'No information found for that session refresh token.',
+      );
+    }
+
+    if (refreshToken.revoked) {
+      throw new NotFoundException('The refresh token has been revoked.');
+    }
+
+    const refreshTokenValid = await this._jwtService.verifyAsync(
+      refreshToken.token_value,
+    );
+    if (!refreshTokenValid) {
+      refreshToken.revoked = true;
+
+      await this.em.persistAndFlush(refreshToken);
+      throw new UnauthorizedException(
+        'The refresh token has expired, please log in again.',
+      );
+    }
+    const tokenExp = Date.now() + 288e5;
+    const tokenPayload: Omit<JWTPayload, 'raw'> = {
+      iat: Date.now(),
+      sub: userId,
+    };
+
+    const tokenAuth = await this._jwtService.signAsync(tokenPayload);
+    const tokenAuthCreated = this.tokensRepository.create({
+      device: DeviceTypes.NotFound,
+      expiration: new Date(tokenExp),
+      revoked: false,
+      token_type: TokenType.AUTH,
+      token_value: tokenAuth,
+      user: userId,
+    });
+
+    await this.em.persistAndFlush(tokenAuthCreated);
+    return {
+      access_token: tokenAuthCreated.token_value,
+      refresh_token: refreshToken.token_value,
+    };
+  }
+
   public async signIn({
     password,
     username,
@@ -225,7 +279,7 @@ export class AuthAccountService {
       username,
     });
 
-    if (usernameExist) {
+    if (usernameExist && usernameExist.id !== userId) {
       throw new BadRequestException(
         "You can't select that username because another user already has it.",
       );

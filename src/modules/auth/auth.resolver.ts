@@ -58,6 +58,17 @@ export class AuthResolver {
     return this._accountService.me(token.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => AuthSignInObject, {
+    description: 'Refresh access token with refresh token.',
+  })
+  public refreshSession(
+    @Args('refresh_token') refreshToken: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._accountService.refreshSession(refreshToken, token.sub);
+  }
+
   @Mutation(() => AuthSignInObject, {
     description: 'Log in to the user account.',
   })

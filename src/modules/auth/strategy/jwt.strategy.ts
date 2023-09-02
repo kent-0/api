@@ -37,10 +37,16 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     const token = request.headers.authorization?.split(' ')?.[1];
     const currentDate = new Date();
 
-    if (!token) throw new UnauthorizedException();
+    if (!token) {
+      throw new UnauthorizedException(
+        'An authentication token is required to use this resource.',
+      );
+    }
 
     const isValidToken = await this._jwtService.verifyAsync(token);
-    if (!isValidToken) throw new UnauthorizedException();
+    if (!isValidToken) {
+      throw new UnauthorizedException('The authentication token is invalid.');
+    }
 
     const tokenSession = await this.tokensRepository.findOne({
       revoked: false,
@@ -49,12 +55,22 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       user: payload.sub,
     });
 
-    if (!tokenSession) throw new UnauthorizedException();
-    if (tokenSession.revoked) throw new UnauthorizedException();
+    if (!tokenSession) {
+      throw new UnauthorizedException(
+        'Could not find information about your authentication token.',
+      );
+    }
+
+    if (tokenSession.revoked) {
+      throw new UnauthorizedException(
+        'The authentication token has been revoked.',
+      );
+    }
+
     if (tokenSession.expiration < currentDate) {
       tokenSession.revoked = true;
       await this.em.persistAndFlush(tokenSession);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('The authentication token has expired.');
     }
 
     return payload;
