@@ -9,6 +9,17 @@ export class AuthUpdateAccountInput {
   @Field({
     description: 'First name of the person who owns the user account.',
   })
+  @MaxLength(300, {
+    message: 'The biography cannot exceed 300 characters.',
+  })
+  @IsString({
+    message: 'This field can only be of text type.',
+  })
+  public biography!: string;
+
+  @Field({
+    description: 'First name of the person who owns the user account.',
+  })
   @MaxLength(30, {
     message: 'The first name cannot exceed 30 characters.',
   })

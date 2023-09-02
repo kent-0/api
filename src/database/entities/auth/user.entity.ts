@@ -17,10 +17,20 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class AuthUserEntity extends ParentEntity {
   public [OptionalProps]?:
+    | 'biography'
     | 'email'
     | 'fullName'
     | 'password'
     | OptionalParentProps;
+
+  @Property({
+    columnType: 'varchar',
+    comment: 'Biography of the user account.',
+    length: 300,
+    nullable: true,
+    type: 'string',
+  })
+  public biography!: string;
 
   @OneToOne({
     comment: 'Relationship to the user assigned to the created email.',

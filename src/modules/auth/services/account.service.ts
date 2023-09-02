@@ -257,7 +257,7 @@ export class AuthAccountService {
   }
 
   public async update(
-    { first_name, last_name, username }: AuthUpdateAccountInput,
+    { biography, first_name, last_name, username }: AuthUpdateAccountInput,
     userId: string,
   ): Promise<AuthUserObject> {
     const user = await this.usersRespository.findOne(
@@ -288,6 +288,7 @@ export class AuthAccountService {
     user.username = username;
     user.first_name = first_name;
     user.last_name = last_name;
+    user.biography = biography;
 
     await this.em.persistAndFlush(user);
     return user;
