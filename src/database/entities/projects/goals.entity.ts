@@ -1,16 +1,25 @@
-import { Entity, Enum, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  Enum,
+  ManyToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 
 import { ProjectEntity } from './projects.entity';
 
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Goals to be achieved in the project.',
   tableName: 'projects_goals',
 })
 export class ProjectGoalsEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @Property({
     columnType: 'varchar',
     comment: 'Brief description of the goal to achieve.',

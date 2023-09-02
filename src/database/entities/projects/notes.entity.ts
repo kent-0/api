@@ -1,15 +1,23 @@
-import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { ProjectEntity } from './projects.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Notes related to the project.',
   tableName: 'projects_notes',
 })
 export class ProjectNotesEntity extends ParentEntity {
+  public [OptionalProps]?: OptionalParentProps;
+
   @Property({
     columnType: 'varchar',
     comment: 'Content that describes the title of the note.',
