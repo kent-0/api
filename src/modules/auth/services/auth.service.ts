@@ -145,9 +145,7 @@ export class AuthService {
 
     user.email = userEmail;
 
-    await this.em.persistAndFlush(userEmail);
-    await this.em.persistAndFlush(user);
-
+    await this.em.persistAndFlush([userEmail, userPassword, user]);
     return user;
   }
 
