@@ -50,6 +50,17 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "biography": {
+          "name": "biography",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 300,
+          "comment": "Biography of the user account.",
+          "mappedType": "string"
+        },
         "email_id": {
           "name": "email_id",
           "type": "uuid",
