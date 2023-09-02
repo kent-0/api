@@ -1267,6 +1267,124 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "author_id": {
+          "name": "author_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Author of the comment.",
+          "mappedType": "uuid"
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Task originating from the comment.",
+          "mappedType": "uuid"
+        },
+        "type": {
+          "name": "type",
+          "type": "smallint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Whether the comment is a general comment or a reply to a comment.",
+          "mappedType": "enum"
+        }
+      },
+      "name": "boards_tasks_comments",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_tasks_comments_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_tasks_comments_author_id_foreign": {
+          "constraintName": "boards_tasks_comments_author_id_foreign",
+          "columnNames": [
+            "author_id"
+          ],
+          "localTableName": "public.boards_tasks_comments",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_comments_task_id_foreign": {
+          "constraintName": "boards_tasks_comments_task_id_foreign",
+          "columnNames": [
+            "task_id"
+          ],
+          "localTableName": "public.boards_tasks_comments",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_tasks",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
         "board_id": {
           "name": "board_id",
           "type": "uuid",
