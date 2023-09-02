@@ -158,8 +158,8 @@
       "checks": [
         {
           "name": "auth_users_username_check",
-          "expression": "username ~ '^[A-Za-z0-9_-]+$'",
-          "definition": "check ((username ~ '^[A-Za-z0-9_-]+$'))",
+          "expression": "username ~* '^[A-Za-z0-9_-]+$'",
+          "definition": "check ((username ~* '^[A-Za-z0-9_-]+$'))",
           "columnName": "username"
         }
       ],
@@ -598,8 +598,8 @@
       "checks": [
         {
           "name": "auth_emails_value_check",
-          "expression": "value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
-          "definition": "check ((value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'))",
+          "expression": "value ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
+          "definition": "check ((value ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'))",
           "columnName": "value"
         }
       ],
@@ -666,6 +666,16 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "color": {
+          "name": "color",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Custom color to display in the tag view.",
+          "mappedType": "string"
+        },
         "created_by_id": {
           "name": "created_by_id",
           "type": "uuid",
@@ -712,7 +722,14 @@
           "unique": true
         }
       ],
-      "checks": [],
+      "checks": [
+        {
+          "name": "boards_tags_color_check",
+          "expression": "color ~* '#[A-Za-z0-9]{1,6}'",
+          "definition": "check ((color ~* '#[A-Za-z0-9]{1,6}'))",
+          "columnName": "color"
+        }
+      ],
       "foreignKeys": {
         "boards_tags_created_by_id_foreign": {
           "constraintName": "boards_tags_created_by_id_foreign",
