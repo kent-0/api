@@ -60,7 +60,7 @@ export class ProjectEntity extends ParentEntity {
   })
   public name!: string;
 
-  @OneToMany(() => ProjectNotesEntity, (g) => g.project, {
+  @OneToMany(() => ProjectNotesEntity, (n) => n.project, {
     comment: 'Notes assigned to the project.',
   })
   public notes!: Rel<ProjectNotesEntity>;

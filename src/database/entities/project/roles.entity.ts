@@ -21,7 +21,7 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 export class ProjectRolesEntity extends ParentEntity {
   public [OptionalProps]?: OptionalParentProps;
 
-  @ManyToMany(() => ProjectMembersEntity, (member) => member.roles, {
+  @ManyToMany(() => ProjectMembersEntity, (m) => m.roles, {
     comment: 'Project members who have this role.',
   })
   public members = new Collection<ProjectMembersEntity>(this);

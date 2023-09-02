@@ -29,7 +29,7 @@ export class BoardRolesEntity extends ParentEntity {
   })
   public board!: Rel<BoardEntity>;
 
-  @ManyToMany(() => BoardMembersEntity, (member) => member.roles, {
+  @ManyToMany(() => BoardMembersEntity, (m) => m.roles, {
     comment: 'Board members who have this role.',
   })
   public members = new Collection<BoardMembersEntity>(this);
