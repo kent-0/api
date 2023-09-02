@@ -5,6 +5,7 @@ import { PasswordService } from '~/modules/auth/services/password.service';
 
 import { UserToken } from './decorators/user.decorator';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { AuthChangePasswordInput } from './inputs/change-password.input';
 import { AuthSignInInput } from './inputs/sign-in.input';
 import { AuthSignUpInput } from './inputs/sign-up.input';
 import { JWTPayload } from './interfaces/jwt.interface';
@@ -24,15 +25,10 @@ export class AuthResolver {
     description: 'Change the user current password.',
   })
   public changePassword(
-    @Args('currentPassword') currentPassword: string,
-    @Args('newPassword') newPassword: string,
+    @Args('input') input: AuthChangePasswordInput,
     @UserToken() token: JWTPayload,
   ) {
-    return this._passwordService.change(
-      currentPassword,
-      newPassword,
-      token.sub,
-    );
+    return this._passwordService.change(input, token.sub);
   }
 
   @Mutation(() => AuthSignInObject, {

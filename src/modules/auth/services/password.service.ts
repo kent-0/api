@@ -8,9 +8,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { AuthPasswordEntity, AuthUserEntity } from '~/entities';
+import { AuthPasswordEntity, AuthUserEntity } from '~/database/entities';
 
 import * as bcrypt from 'bcrypt';
+
+import { AuthChangePasswordInput } from '../inputs/change-password.input';
 
 @Injectable()
 export class PasswordService {
@@ -23,10 +25,9 @@ export class PasswordService {
   ) {}
 
   public async change(
-    currentPassword: string,
-    newPassword: string,
+    { currentPassword, newPassword }: AuthChangePasswordInput,
     userId: string,
-  ) {
+  ): Promise<string> {
     const user = await this.usersRespository.findOne(
       {
         id: userId,
