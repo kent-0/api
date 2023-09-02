@@ -24,6 +24,7 @@ import * as bcrypt from 'bcrypt';
 
 import { AuthSignInInput } from '../inputs/sign-in.input';
 import { AuthSignUpInput } from '../inputs/sign-up.input';
+import { UpdateAccountInput } from '../inputs/update-account.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
 import { AuthSignInObject } from '../objects/sign-in.object';
 import { AuthUserObject } from '../objects/user.object';
@@ -43,36 +44,6 @@ export class AuthAccountService {
     private readonly _jwtService: JwtService,
     private readonly _passwordService: AuthPasswordService,
   ) {}
-
-  public async changeUsername(
-    username: string,
-    userId: string,
-  ): Promise<AuthUserObject> {
-    const user = await this.usersRespository.findOne({
-      id: userId,
-    });
-
-    if (!user) {
-      throw new NotFoundException(
-        'Your account information could not be obtained.',
-      );
-    }
-
-    const usernameExist = await this.usersRespository.findOne({
-      username,
-    });
-
-    if (usernameExist) {
-      throw new BadRequestException(
-        "You can't select that username because another user already has it.",
-      );
-    }
-
-    user.username = username;
-    await this.em.persistAndFlush(user);
-
-    return user;
-  }
 
   public async logOut(userToken: string, userId: string): Promise<string> {
     const token = await this.tokensRepository.findOne({
@@ -215,6 +186,43 @@ export class AuthAccountService {
     user.email = userEmail;
 
     await this.em.persistAndFlush([userEmail, userPassword, user]);
+    return user;
+  }
+
+  public async update(
+    { first_name, last_name, username }: UpdateAccountInput,
+    userId: string,
+  ): Promise<AuthUserObject> {
+    const user = await this.usersRespository.findOne(
+      {
+        id: userId,
+      },
+      {
+        populate: ['email'],
+      },
+    );
+
+    if (!user) {
+      throw new NotFoundException(
+        'Your account information could not be obtained.',
+      );
+    }
+
+    const usernameExist = await this.usersRespository.findOne({
+      username,
+    });
+
+    if (usernameExist) {
+      throw new BadRequestException(
+        "You can't select that username because another user already has it.",
+      );
+    }
+
+    user.username = username;
+    user.first_name = first_name;
+    user.last_name = last_name;
+
+    await this.em.persistAndFlush(user);
     return user;
   }
 }

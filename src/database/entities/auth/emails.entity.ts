@@ -23,6 +23,7 @@ export class AuthEmailsEntity extends ParentEntity {
   @Property({
     comment: 'Mail confirmation token.',
     defaultRaw: 'substr(md5(random()::text), 0, 10)',
+    hidden: true,
     nullable: true,
   })
   public activation_token!: string;
