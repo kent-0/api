@@ -13,7 +13,7 @@ import { BoardRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
-import { ProjectEntity } from '../projects/projects.entity';
+import { ProjectEntity } from '../project/project.entity';
 
 @Entity({
   comment: 'Task table information.',
