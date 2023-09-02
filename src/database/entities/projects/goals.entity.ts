@@ -8,6 +8,7 @@ import { ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Goals to be achieved in the project.',
+  tableName: 'projects_goals',
 })
 export class ProjectGoalsEntity extends ParentEntity {
   @Property({

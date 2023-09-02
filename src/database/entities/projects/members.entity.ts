@@ -15,7 +15,7 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Users invited to projects.',
-  tableName: 'project_members',
+  tableName: 'projects_members',
 })
 export class ProjectMembersEntity extends ParentEntity {
   public [OptionalProps]?: OptionalParentProps;

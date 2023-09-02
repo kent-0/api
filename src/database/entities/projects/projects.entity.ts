@@ -30,7 +30,7 @@ export class ProjectEntity extends ParentEntity {
   public description!: string;
 
   @Property({
-    columnType: 'datetime',
+    columnType: 'timestamp',
     comment: 'Expected completion date for the project.',
     nullable: true,
   })
@@ -67,7 +67,7 @@ export class ProjectEntity extends ParentEntity {
   public roles = new Collection<ProjectRolesEntity>(this);
 
   @Property({
-    columnType: 'datetime',
+    columnType: 'timestamp',
     comment:
       'Project start date. By default it is not set until the project is marked as in progress.',
     type: 'date',
