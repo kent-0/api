@@ -12,6 +12,7 @@ import { ProjectStatus } from '~/database/enums/status.enum';
 
 import { ProjectGoalsEntity } from './goals.entity';
 import { ProjectMembersEntity } from './members.entity';
+import { ProjectNotesEntity } from './notes.entity';
 import { ProjectRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
@@ -52,6 +53,11 @@ export class ProjectEntity extends ParentEntity {
     type: 'varchar',
   })
   public name!: string;
+
+  @OneToMany(() => ProjectNotesEntity, (g) => g.project, {
+    comment: 'Notes assigned to the project.',
+  })
+  public notes!: Rel<ProjectNotesEntity>;
 
   @ManyToOne({
     comment:

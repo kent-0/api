@@ -1423,6 +1423,139 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "content": {
+          "name": "content",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 500,
+          "comment": "Content that describes the title of the note.",
+          "mappedType": "string"
+        },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Author of the note.",
+          "mappedType": "uuid"
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Project assigned to the note.",
+          "mappedType": "uuid"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Title of the note.",
+          "mappedType": "string"
+        }
+      },
+      "name": "projects_notes",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "projects_notes_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "projects_notes_created_by_id_foreign": {
+          "constraintName": "projects_notes_created_by_id_foreign",
+          "columnNames": [
+            "created_by_id"
+          ],
+          "localTableName": "public.projects_notes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "projects_notes_project_id_foreign": {
+          "constraintName": "projects_notes_project_id_foreign",
+          "columnNames": [
+            "project_id"
+          ],
+          "localTableName": "public.projects_notes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.projects",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Notes related to the project."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
         "name": {
           "name": "name",
           "type": "varchar",
