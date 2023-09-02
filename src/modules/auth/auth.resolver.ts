@@ -34,6 +34,17 @@ export class AuthResolver {
     return this._passwordService.change(input, token.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => AuthUserObject, {
+    description: 'Change username of the current user.',
+  })
+  public changeUsername(
+    @Args('username') username: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._accountService.changeUsername(username, token.sub);
+  }
+
   @Mutation(() => AuthUserEmailObject, {
     description: 'Activate the email of the user account.',
   })

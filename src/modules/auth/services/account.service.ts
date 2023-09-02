@@ -44,6 +44,36 @@ export class AuthAccountService {
     private readonly _passwordService: AuthPasswordService,
   ) {}
 
+  public async changeUsername(
+    username: string,
+    userId: string,
+  ): Promise<AuthUserObject> {
+    const user = await this.usersRespository.findOne({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        'Your account information could not be obtained.',
+      );
+    }
+
+    const usernameExist = await this.usersRespository.findOne({
+      username,
+    });
+
+    if (usernameExist) {
+      throw new BadRequestException(
+        "You can't select that username because another user already has it.",
+      );
+    }
+
+    user.username = username;
+    await this.em.persistAndFlush(user);
+
+    return user;
+  }
+
   public async logOut(userToken: string, userId: string): Promise<string> {
     const token = await this.tokensRepository.findOne({
       token_type: TokenType.AUTH,
