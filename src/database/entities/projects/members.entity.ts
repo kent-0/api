@@ -7,30 +7,30 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { BoardEntity } from './board.entity';
-import { AuthRolesEntity } from './roles.entity';
+import { ProjectEntity } from './projects.entity';
+import { BoardRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
-  comment: 'Users assigned to boards.',
-  tableName: 'boards_members',
+  comment: 'Users invited to projects.',
+  tableName: 'project_members',
 })
-export class BoardMembersEntity extends ParentEntity {
+export class ProjectMembersEntity extends ParentEntity {
   public [OptionalProps]?: OptionalParentProps;
 
   @ManyToOne({
     comment: 'Board to which the user is a member.',
-    entity: () => BoardEntity,
+    entity: () => ProjectEntity,
   })
-  public board!: Rel<BoardEntity>;
+  public project!: Rel<ProjectEntity>;
 
-  @ManyToMany(() => AuthRolesEntity, (role) => role.members, {
+  @ManyToMany(() => BoardRolesEntity, (role) => role.members, {
     comment: 'User member roles in the board.',
     owner: true,
   })
-  public roles = new Collection<AuthRolesEntity>(this);
+  public roles = new Collection<BoardRolesEntity>(this);
 
   @ManyToOne({
     comment: 'User member of the board.',

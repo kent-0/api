@@ -9,7 +9,7 @@ import {
 } from '@mikro-orm/core';
 
 import { BoardMembersEntity } from './members.entity';
-import { BoardRolesEntity } from './roles.entity';
+import { AuthRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
@@ -41,8 +41,8 @@ export class BoardEntity extends ParentEntity {
   })
   public name!: string;
 
-  @OneToMany(() => BoardRolesEntity, (r) => r.board, {
+  @OneToMany(() => AuthRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',
   })
-  public roles = new Collection<BoardRolesEntity>(this);
+  public roles = new Collection<AuthRolesEntity>(this);
 }
