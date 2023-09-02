@@ -24,7 +24,7 @@ import * as bcrypt from 'bcrypt';
 
 import { AuthSignInInput } from '../inputs/sign-in.input';
 import { AuthSignUpInput } from '../inputs/sign-up.input';
-import { UpdateAccountInput } from '../inputs/update-account.input';
+import { AuthUpdateAccountInput } from '../inputs/update-account.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
 import { AuthSignInObject } from '../objects/sign-in.object';
 import { AuthUserObject } from '../objects/user.object';
@@ -190,7 +190,7 @@ export class AuthAccountService {
   }
 
   public async update(
-    { first_name, last_name, username }: UpdateAccountInput,
+    { first_name, last_name, username }: AuthUpdateAccountInput,
     userId: string,
   ): Promise<AuthUserObject> {
     const user = await this.usersRespository.findOne(

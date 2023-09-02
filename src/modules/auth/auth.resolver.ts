@@ -9,6 +9,7 @@ import { AuthChangePasswordInput } from './inputs/change-password.input';
 import { AuthConfirmEmailInput } from './inputs/confirm-email.object';
 import { AuthSignInInput } from './inputs/sign-in.input';
 import { AuthSignUpInput } from './inputs/sign-up.input';
+import { AuthUpdateAccountInput } from './inputs/update-account.input';
 import { JWTPayload } from './interfaces/jwt.interface';
 import { AuthSignInObject } from './objects/sign-in.object';
 import { AuthUserEmailObject, AuthUserObject } from './objects/user.object';
@@ -32,17 +33,6 @@ export class AuthResolver {
     @UserToken() token: JWTPayload,
   ) {
     return this._passwordService.change(input, token.sub);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => AuthUserObject, {
-    description: 'Change username of the current user.',
-  })
-  public changeUsername(
-    @Args('username') username: string,
-    @UserToken() token: JWTPayload,
-  ) {
-    return this._accountService.changeUsername(username, token.sub);
   }
 
   @Mutation(() => AuthUserEmailObject, {
@@ -80,5 +70,16 @@ export class AuthResolver {
   })
   public signUp(@Args('input') input: AuthSignUpInput) {
     return this._accountService.signUp(input);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => AuthUserObject, {
+    description: 'Change username of the current user.',
+  })
+  public update(
+    @Args('input') input: AuthUpdateAccountInput,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._accountService.update(input, token.sub);
   }
 }

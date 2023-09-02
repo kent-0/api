@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType({
   description: 'Update the personal information of the user account.',
 })
-export class UpdateAccountInput {
+export class AuthUpdateAccountInput {
   @Field({
     description: 'First name of the person who owns the user account.',
   })
