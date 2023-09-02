@@ -63,6 +63,25 @@ export class AuthAccountService {
     return 'Session closed successfully. See you soon.';
   }
 
+  public async me(userId: string): Promise<AuthUserObject> {
+    const user = await this.usersRespository.findOne(
+      {
+        id: userId,
+      },
+      {
+        populate: ['email'],
+      },
+    );
+
+    if (!user) {
+      throw new NotFoundException(
+        'Your user account information could not be obtained.',
+      );
+    }
+
+    return user;
+  }
+
   public async signIn({
     password,
     username,
@@ -166,25 +185,6 @@ export class AuthAccountService {
     user.email = userEmail;
 
     await this.em.persistAndFlush([userEmail, userPassword, user]);
-    return user;
-  }
-
-  public async user(userId: string): Promise<AuthUserObject> {
-    const user = await this.usersRespository.findOne(
-      {
-        id: userId,
-      },
-      {
-        populate: ['email'],
-      },
-    );
-
-    if (!user) {
-      throw new NotFoundException(
-        'Your user account information could not be obtained.',
-      );
-    }
-
     return user;
   }
 }

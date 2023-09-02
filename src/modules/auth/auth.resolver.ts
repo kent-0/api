@@ -54,7 +54,7 @@ export class AuthResolver {
     description: 'Current information of the authenticated user.',
   })
   public me(@UserToken() token: JWTPayload) {
-    return this._accountService.user(token.sub);
+    return this._accountService.me(token.sub);
   }
 
   @Mutation(() => AuthSignInObject, {
