@@ -67,7 +67,7 @@ export class AuthUserEntity extends ParentEntity {
   public password?: Rel<AuthPasswordEntity>;
 
   @Property({
-    check: "username ~ '^[A-Za-z0-9_-]+$'",
+    check: "username ~* '^[A-Za-z0-9_-]+$'",
     columnType: 'varchar',
     comment: 'Unique user name per user.',
     length: 30,

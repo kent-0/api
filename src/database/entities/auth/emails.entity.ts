@@ -42,7 +42,7 @@ export class AuthEmailsEntity extends ParentEntity {
   public user!: Rel<AuthUserEntity>;
 
   @Property({
-    check: "value ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
+    check: "value ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",
     columnType: 'varchar',
     comment: 'Unique email per user.',
     length: 100,

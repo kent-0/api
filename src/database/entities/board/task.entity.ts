@@ -1,7 +1,16 @@
-import { Entity, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { BoardEntity } from './board.entity';
 import { BoardStepEntity } from './steps.entity';
+import { BoardTagsEntity } from './tags.entity';
 import { BoardTaskCommentEntity } from './task-comments.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
@@ -73,4 +82,10 @@ export class BoardTaskEntity extends ParentEntity {
     entity: () => BoardStepEntity,
   })
   public step!: Rel<BoardStepEntity>;
+
+  @ManyToMany(() => BoardTagsEntity, (t) => t.tasks, {
+    comment: 'Tags with this task',
+    owner: true,
+  })
+  public tags = new Collection<BoardTagsEntity>(this);
 }

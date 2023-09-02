@@ -8,6 +8,7 @@ import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
 
 @Entity({
+  comment: 'Comments made by members on tasks.',
   tableName: 'boards_tasks_comments',
 })
 export class BoardTaskCommentEntity extends ParentEntity {
