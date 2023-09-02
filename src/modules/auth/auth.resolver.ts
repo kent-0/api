@@ -12,13 +12,13 @@ import { AuthSignUpInput } from './inputs/sign-up.input';
 import { JWTPayload } from './interfaces/jwt.interface';
 import { AuthSignInObject } from './objects/sign-in.object';
 import { AuthUserEmailObject, AuthUserObject } from './objects/user.object';
-import { AuthService } from './services/auth.service';
+import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 
 @Resolver()
 export class AuthResolver {
   constructor(
-    private _authService: AuthService,
+    private _accountService: AuthAccountService,
     private _passwordService: AuthPasswordService,
     private _emailService: AuthEmailService,
   ) {}
@@ -46,21 +46,21 @@ export class AuthResolver {
     description: 'Close current user token session.',
   })
   public logOut(@UserToken() token: JWTPayload) {
-    return this._authService.logOut(token.raw, token.sub);
+    return this._accountService.logOut(token.raw, token.sub);
   }
 
   @Mutation(() => AuthSignInObject, {
     description: 'Log in to the user account.',
   })
   public signIn(@Args('input') input: AuthSignInInput) {
-    return this._authService.signIn(input);
+    return this._accountService.signIn(input);
   }
 
   @Mutation(() => AuthUserObject, {
     description: 'Create a user on the platform.',
   })
   public signUp(@Args('input') input: AuthSignUpInput) {
-    return this._authService.signUp(input);
+    return this._accountService.signUp(input);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -68,6 +68,6 @@ export class AuthResolver {
     description: 'Current information of the authenticated user.',
   })
   public user(@UserToken() token: JWTPayload) {
-    return this._authService.user(token.sub);
+    return this._accountService.user(token.sub);
   }
 }

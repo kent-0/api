@@ -14,7 +14,7 @@ import {
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import { AuthResolver } from './auth.resolver';
-import { AuthService } from './services/auth.service';
+import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 import { JWTStrategy } from './strategy/jwt.strategy';
 
@@ -44,7 +44,7 @@ import { JWTStrategy } from './strategy/jwt.strategy';
     }),
   ],
   providers: [
-    AuthService,
+    AuthAccountService,
     AuthResolver,
     JWTStrategy,
     AuthPasswordService,

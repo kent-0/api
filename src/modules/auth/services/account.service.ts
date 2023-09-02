@@ -29,7 +29,7 @@ import { AuthSignInObject } from '../objects/sign-in.object';
 import { AuthUserObject } from '../objects/user.object';
 
 @Injectable()
-export class AuthService {
+export class AuthAccountService {
   constructor(
     @InjectRepository(AuthUserEntity)
     private readonly usersRespository: EntityRepository<AuthUserEntity>,
