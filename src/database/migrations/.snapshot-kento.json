@@ -948,6 +948,332 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "comment": "Board assigned to the task step.",
+          "mappedType": "uuid"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 300,
+          "comment": "Brief description of what the step is about.",
+          "mappedType": "string"
+        },
+        "max": {
+          "name": "max",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Maximum number of tasks assigned to the step.",
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Name of the step.",
+          "mappedType": "string"
+        },
+        "position": {
+          "name": "position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Step position on the board.",
+          "mappedType": "integer"
+        }
+      },
+      "name": "boards_steps",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_steps_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_steps_board_id_foreign": {
+          "constraintName": "boards_steps_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_steps",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Steps to complete per task."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "assigned_to_id": {
+          "name": "assigned_to_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Member assigned to the task.",
+          "mappedType": "uuid"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Board on which tasks are assigned.",
+          "mappedType": "uuid"
+        },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Member who created the task.",
+          "mappedType": "uuid"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 3000,
+          "comment": "Description about the task, such as how the implementation should work, etc.",
+          "mappedType": "string"
+        },
+        "expiration_date": {
+          "name": "expiration_date",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "comment": "Date on which the task should be finished.",
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Name of the task.",
+          "mappedType": "string"
+        },
+        "position": {
+          "name": "position",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Task position on the step.",
+          "mappedType": "integer"
+        },
+        "step_id": {
+          "name": "step_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Step in which the task is assigned.",
+          "mappedType": "uuid"
+        }
+      },
+      "name": "boards_tasks",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_tasks_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "boards_tasks_assigned_to_id_foreign": {
+          "constraintName": "boards_tasks_assigned_to_id_foreign",
+          "columnNames": [
+            "assigned_to_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_board_id_foreign": {
+          "constraintName": "boards_tasks_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_created_by_id_foreign": {
+          "constraintName": "boards_tasks_created_by_id_foreign",
+          "columnNames": [
+            "created_by_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_step_id_foreign": {
+          "constraintName": "boards_tasks_step_id_foreign",
+          "columnNames": [
+            "step_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_steps",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Tasks created for the board."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
           "comment": "Board assigned to the role. When the board is removed, its available roles are also removed.",
           "mappedType": "uuid"
         },
