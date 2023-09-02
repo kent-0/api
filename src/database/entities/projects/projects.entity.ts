@@ -10,6 +10,7 @@ import {
 
 import { ProjectStatus } from '~/database/enums/status.enum';
 
+import { ProjectGoalsEntity } from './goals.entity';
 import { ProjectMembersEntity } from './members.entity';
 import { ProjectRolesEntity } from './roles.entity';
 
@@ -34,6 +35,11 @@ export class ProjectEntity extends ParentEntity {
     nullable: true,
   })
   public end_date!: Date;
+
+  @OneToMany(() => ProjectGoalsEntity, (g) => g.project, {
+    comment: 'Goals assigned to the project.',
+  })
+  public goals!: Rel<ProjectGoalsEntity>;
 
   @OneToMany(() => ProjectMembersEntity, (m) => m.project, {
     comment: 'Users invited to the project.',
@@ -73,5 +79,5 @@ export class ProjectEntity extends ParentEntity {
     items: () => ProjectStatus,
     type: 'enum',
   })
-  public status = ProjectStatus.NotEstablished;
+  public status = ProjectStatus.Planned;
 }
