@@ -10,7 +10,7 @@ import {
 
 import { BoardMembersEntity } from './members.entity';
 import { BoardRolesEntity } from './roles.entity';
-import { BoardStepsEntity } from './steps.entity';
+import { BoardStepEntity } from './steps.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
@@ -61,8 +61,8 @@ export class BoardEntity extends ParentEntity {
   })
   public roles = new Collection<BoardRolesEntity>(this);
 
-  @OneToMany(() => BoardStepsEntity, (s) => s.board, {
+  @OneToMany(() => BoardStepEntity, (s) => s.board, {
     comment: 'Steps manage the board.',
   })
-  public steps = new Collection<BoardStepsEntity>(this);
+  public steps = new Collection<BoardStepEntity>(this);
 }

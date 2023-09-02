@@ -1,6 +1,7 @@
-import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { Entity, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
 
 import { BoardEntity } from './board.entity';
+import { BoardTaskEntity } from './task.entity';
 
 import { ParentEntity } from '../base.entity';
 
@@ -8,7 +9,7 @@ import { ParentEntity } from '../base.entity';
   comment: 'Steps to complete per task.',
   tableName: 'boards_steps',
 })
-export class BoardStepsEntity extends ParentEntity {
+export class BoardStepEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Board assigned to the task step.',
     entity: () => BoardEntity,
@@ -46,4 +47,9 @@ export class BoardStepsEntity extends ParentEntity {
     type: 'number',
   })
   public position!: number;
+
+  @OneToMany(() => BoardTaskEntity, (t) => t.step, {
+    comment: 'Tasks assigned to the project step.',
+  })
+  public tasks!: Rel<BoardTaskEntity>;
 }
