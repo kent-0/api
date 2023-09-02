@@ -43,6 +43,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     if (!isValidToken) throw new UnauthorizedException();
 
     const tokenSession = await this.tokensRepository.findOne({
+      revoked: false,
       token_type: TokenType.AUTH,
       token_value: token,
       user: payload.sub,

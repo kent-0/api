@@ -44,6 +44,25 @@ export class AuthService {
     private readonly _passwordService: PasswordService,
   ) {}
 
+  public async logOut(userToken: string, userId: string): Promise<string> {
+    const token = await this.tokensRepository.findOne({
+      token_type: TokenType.AUTH,
+      token_value: userToken,
+      user: userId,
+    });
+
+    if (!token) {
+      throw new NotFoundException(
+        'Your current session information could not be found.',
+      );
+    }
+
+    token.revoked = true;
+    await this.em.persistAndFlush(token);
+
+    return 'Session closed successfully. See you soon.';
+  }
+
   public async signIn({
     password,
     username,
@@ -73,7 +92,7 @@ export class AuthService {
     }
 
     const tokenExp = Date.now() + 288e5;
-    const tokenPayload: JWTPayload = {
+    const tokenPayload: Omit<JWTPayload, 'raw'> = {
       iat: Date.now(),
       sub: user.id,
     };

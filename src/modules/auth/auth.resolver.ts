@@ -31,6 +31,14 @@ export class AuthResolver {
     return this._passwordService.change(input, token.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => String, {
+    description: 'Close current user token session.',
+  })
+  public logOut(@UserToken() token: JWTPayload) {
+    return this._authService.logOut(token.raw, token.sub);
+  }
+
   @Mutation(() => AuthSignInObject, {
     description: 'Log in to the user account.',
   })
