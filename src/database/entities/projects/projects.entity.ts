@@ -17,12 +17,18 @@ import { ProjectRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
+import { BoardEntity } from '../board/board.entity';
 
 @Entity({
   comment: 'Projects to manage and group boards.',
   tableName: 'projects',
 })
 export class ProjectEntity extends ParentEntity {
+  @OneToMany(() => BoardEntity, (r) => r.project, {
+    comment: 'Boards created for the project.',
+  })
+  public boards = new Collection<BoardEntity>(this);
+
   @Property({
     comment: 'Brief description of what the project is about.',
     length: 300,

@@ -13,6 +13,7 @@ import { BoardRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
+import { ProjectEntity } from '../projects/projects.entity';
 
 @Entity({
   comment: 'Task table information.',
@@ -40,6 +41,12 @@ export class BoardEntity extends ParentEntity {
     length: 100,
   })
   public name!: string;
+
+  @ManyToOne({
+    comment: 'Project owner of the board.',
+    entity: () => ProjectEntity,
+  })
+  public project!: Rel<ProjectEntity>;
 
   @OneToMany(() => BoardRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',
