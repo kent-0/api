@@ -1,7 +1,8 @@
-import { Entity, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import { Entity, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
 
 import { BoardEntity } from './board.entity';
 import { BoardStepEntity } from './steps.entity';
+import { BoardTaskCommentEntity } from './task-comments.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
@@ -23,6 +24,11 @@ export class BoardTaskEntity extends ParentEntity {
     entity: () => BoardEntity,
   })
   public board!: Rel<BoardEntity>;
+
+  @OneToMany(() => BoardTaskCommentEntity, (c) => c.task, {
+    comment: 'Member feedback on the task.',
+  })
+  public comments!: Rel<BoardTaskCommentEntity>;
 
   @ManyToOne({
     comment: 'Member who created the task.',
