@@ -117,20 +117,33 @@ export class AuthAccountService {
       sub: user.id,
     };
 
-    const token = await this._jwtService.signAsync(tokenPayload);
-    const tokenCreated = this.tokensRepository.create({
+    const tokenAuth = await this._jwtService.signAsync(tokenPayload);
+    const tokenAuthCreated = this.tokensRepository.create({
       device: DeviceTypes.NotFound,
       expiration: new Date(tokenExp),
       revoked: false,
       token_type: TokenType.AUTH,
-      token_value: token,
+      token_value: tokenAuth,
       user,
     });
 
-    await this.em.persistAndFlush(tokenCreated);
+    const tokenRefresh = await this._jwtService.signAsync(tokenPayload, {
+      expiresIn: '14d',
+    });
+    const tokenRefreshCreated = this.tokensRepository.create({
+      device: DeviceTypes.NotFound,
+      expiration: new Date(tokenExp),
+      revoked: false,
+      token_type: TokenType.REFRESH,
+      token_value: tokenRefresh,
+      user,
+    });
+
+    await this.em.persistAndFlush([tokenAuthCreated, tokenRefreshCreated]);
 
     return {
-      access_token: tokenCreated.token_value,
+      access_token: tokenAuthCreated.token_value,
+      refresh_token: tokenRefreshCreated.token_value,
     };
   }
 

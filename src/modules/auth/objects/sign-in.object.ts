@@ -11,7 +11,6 @@ export class AuthSignInObject {
   public access_token!: string;
 
   @Field({
-    defaultValue: null,
     description: 'Refresh token.',
   })
   public refresh_token?: string;
