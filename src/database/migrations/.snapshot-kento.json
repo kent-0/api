@@ -1882,6 +1882,158 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Board where the activity originated.",
+          "mappedType": "uuid"
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Member who performed the action.",
+          "mappedType": "uuid"
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Project where the activity originated.",
+          "mappedType": "uuid"
+        },
+        "reference_id": {
+          "name": "reference_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Reference ID of the managed element.",
+          "mappedType": "uuid"
+        },
+        "type": {
+          "name": "type",
+          "type": "smallint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Type of action performed in the activity.",
+          "mappedType": "enum"
+        }
+      },
+      "name": "activity_history",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "activity_history_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "activity_history_board_id_foreign": {
+          "constraintName": "activity_history_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.activity_history",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "activity_history_member_id_foreign": {
+          "constraintName": "activity_history_member_id_foreign",
+          "columnNames": [
+            "member_id"
+          ],
+          "localTableName": "public.activity_history",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        },
+        "activity_history_project_id_foreign": {
+          "constraintName": "activity_history_project_id_foreign",
+          "columnNames": [
+            "project_id"
+          ],
+          "localTableName": "public.activity_history",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Activity log to audit changes to dashboards and projects."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
         "description": {
           "name": "description",
           "type": "varchar",
