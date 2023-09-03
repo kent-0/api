@@ -1,11 +1,18 @@
-import { Entity, Enum, ManyToOne, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  Enum,
+  ManyToOne,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { ActivityHistoryTypes } from '~/database/enums/activity-history.enum';
 
 import { ProjectEntity } from './project.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 import { BoardEntity } from '../board/board.entity';
 
 @Entity({
@@ -13,6 +20,8 @@ import { BoardEntity } from '../board/board.entity';
   tableName: 'activity_history',
 })
 export class ActivityHistory extends ParentEntity {
+  public [OptionalProps]?: 'reference_id' | OptionalParentProps;
+
   @ManyToOne({
     comment: 'Board where the activity originated.',
     entity: () => BoardEntity,
