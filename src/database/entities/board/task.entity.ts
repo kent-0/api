@@ -4,6 +4,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
@@ -14,13 +15,20 @@ import { BoardTagsEntity } from './tags.entity';
 import { BoardTaskCommentEntity } from './task-comments.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Tasks created for the board.',
   tableName: 'boards_tasks',
 })
 export class BoardTaskEntity extends ParentEntity {
+  public [OptionalProps]?:
+    | 'assigned_to'
+    | 'expiration_date'
+    | 'finish_date'
+    | 'start_date'
+    | OptionalParentProps;
+
   @ManyToOne({
     comment: 'Member assigned to the task.',
     entity: () => AuthUserEntity,
@@ -63,9 +71,16 @@ export class BoardTaskEntity extends ParentEntity {
   public expiration_date!: Date;
 
   @Property({
+    columnType: 'timestamp',
+    comment: 'Date on which the task end.',
+    nullable: true,
+    type: 'date',
+  })
+  public finish_date!: Date;
+
+  @Property({
     columnType: 'varchar',
     comment: 'Name of the task.',
-    nullable: true,
     type: 'string',
   })
   public name!: string;
@@ -76,6 +91,14 @@ export class BoardTaskEntity extends ParentEntity {
     type: 'number',
   })
   public position!: number;
+
+  @Property({
+    columnType: 'timestamp',
+    comment: 'Date on which the task began.',
+    nullable: true,
+    type: 'date',
+  })
+  public start_date!: Date;
 
   @ManyToOne({
     comment: 'Step in which the task is assigned.',

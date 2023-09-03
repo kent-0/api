@@ -1,15 +1,24 @@
-import { Entity, ManyToOne, OneToMany, Property, Rel } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OptionalProps,
+  Property,
+  Rel,
+} from '@mikro-orm/core';
 
 import { BoardEntity } from './board.entity';
 import { BoardTaskEntity } from './task.entity';
 
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Steps to complete per task.',
   tableName: 'boards_steps',
 })
 export class BoardStepEntity extends ParentEntity {
+  public [OptionalProps]?: 'description' | OptionalParentProps;
+
   @ManyToOne({
     comment: 'Board assigned to the task step.',
     entity: () => BoardEntity,

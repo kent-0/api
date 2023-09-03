@@ -3,6 +3,7 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
@@ -10,17 +11,20 @@ import {
 import { BoardTaskEntity } from './task.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 @Entity({
   comment: 'Tags to assign to tasks.',
   tableName: 'boards_tags',
 })
 export class BoardTagsEntity extends ParentEntity {
+  public [OptionalProps]?: 'color' | OptionalParentProps;
+
   @Property({
     check: "color ~* '#[A-Za-z0-9]{1,6}'",
     columnType: 'varchar',
     comment: 'Custom color to display in the tag view.',
+    nullable: true,
     type: 'string',
   })
   public color!: string;
