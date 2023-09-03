@@ -672,7 +672,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "comment": "Custom color to display in the tag view.",
           "mappedType": "string"
         },
@@ -1249,13 +1249,24 @@
           "comment": "Date on which the task should be finished.",
           "mappedType": "datetime"
         },
+        "finish_date": {
+          "name": "finish_date",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "comment": "Date on which the task end.",
+          "mappedType": "datetime"
+        },
         "name": {
           "name": "name",
           "type": "varchar",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "comment": "Name of the task.",
           "mappedType": "string"
         },
@@ -1268,6 +1279,17 @@
           "nullable": false,
           "comment": "Task position on the step.",
           "mappedType": "integer"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "comment": "Date on which the task began.",
+          "mappedType": "datetime"
         },
         "step_id": {
           "name": "step_id",
