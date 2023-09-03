@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "pretty": "pnpm exec prettier --ignore-path .gitignore --cache --no-error-on-unmatched-pattern --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "pretty": "pnpm exec prettier --ignore-path .prettierignore --cache --no-error-on-unmatched-pattern --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
