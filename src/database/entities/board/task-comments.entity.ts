@@ -1,4 +1,11 @@
-import { Entity, Enum, ManyToOne, Rel } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  Enum,
+  ManyToOne,
+  OneToMany,
+  Rel,
+} from '@mikro-orm/core';
 
 import { CommentsTypes } from '~/database/enums/comments.enum';
 
@@ -17,6 +24,20 @@ export class BoardTaskCommentEntity extends ParentEntity {
     entity: () => AuthUserEntity,
   })
   public author!: Rel<AuthUserEntity>;
+
+  @OneToMany({
+    comment: 'Replies to this comment.',
+    entity: () => BoardTaskCommentEntity,
+    mappedBy: 'reply_to',
+  })
+  public replies = new Collection<BoardTaskCommentEntity>(this);
+
+  @ManyToOne({
+    comment: 'Comment to which this comment is replying.',
+    entity: () => BoardTaskCommentEntity,
+    nullable: true,
+  })
+  public reply_to!: BoardTaskCommentEntity;
 
   @ManyToOne({
     comment: 'Task originating from the comment.',
