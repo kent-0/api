@@ -1425,6 +1425,16 @@
           "comment": "Author of the comment.",
           "mappedType": "uuid"
         },
+        "reply_to_id": {
+          "name": "reply_to_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Comment to which this comment is replying.",
+          "mappedType": "uuid"
+        },
         "task_id": {
           "name": "task_id",
           "type": "uuid",
@@ -1471,6 +1481,19 @@
             "id"
           ],
           "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_comments_reply_to_id_foreign": {
+          "constraintName": "boards_tasks_comments_reply_to_id_foreign",
+          "columnNames": [
+            "reply_to_id"
+          ],
+          "localTableName": "public.boards_tasks_comments",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_tasks_comments",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         },
         "boards_tasks_comments_task_id_foreign": {
