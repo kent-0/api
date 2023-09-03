@@ -1,5 +1,5 @@
 /**
- * Permissions to manage the board.
+ * Permissions-bit to manage the board.
  */
 export enum BasePermissions {
   AddMembers = 1 << 2,

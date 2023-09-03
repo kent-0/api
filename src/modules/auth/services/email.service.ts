@@ -12,18 +12,34 @@ import { AuthEmailsEntity } from '~/database/entities';
 import { AuthConfirmEmailInput } from '../inputs/confirm-email.object';
 import { AuthUserEmailObject } from '../objects/user.object';
 
+/**
+ * AuthEmailService class is responsible for managing user email-related operations.
+ * It interacts with the database to handle email confirmation and related tasks.
+ */
 @Injectable()
 export class AuthEmailService {
   constructor(
+    // Inject the repository for AuthEmailsEntity to interact with email data
     @InjectRepository(AuthEmailsEntity)
     private readonly authEmailsRepository: EntityRepository<AuthEmailsEntity>,
+
+    // EntityManager instance to manage database operations
     private readonly em: EntityManager,
   ) {}
 
+  /**
+   * Confirms a user's email address using the provided activation code.
+   *
+   * @param confirmInput - An object containing the activation code and email.
+   * @returns The confirmed user email information.
+   * @throws NotFoundException if no user email information is found with the provided email.
+   * @throws BadRequestException if the account email has already been confirmed or if the activation code is incorrect.
+   */
   public async confirm({
     code,
     email,
   }: AuthConfirmEmailInput): Promise<AuthUserEmailObject> {
+    // Find the user email information by the provided email
     const userEmail = await this.authEmailsRepository.findOne({
       value: email,
     });
@@ -44,6 +60,7 @@ export class AuthEmailService {
       throw new BadRequestException('The activation code is incorrect.');
     }
 
+    // Mark the user's email as confirmed
     userEmail.is_confirmed = true;
     await this.em.persistAndFlush(userEmail);
 

@@ -2,10 +2,16 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsEmail, IsString, Matches, MaxLength } from 'class-validator';
 
+/**
+ * Input type for creating a user account.
+ */
 @InputType({
   description: 'Information needed to create a user account.',
 })
 export class AuthSignUpInput {
+  /**
+   * Account login email address.
+   */
   @Field({
     description: 'Account login email address.',
   })
@@ -20,6 +26,9 @@ export class AuthSignUpInput {
   })
   public email!: string;
 
+  /**
+   * First name of the person who owns the account.
+   */
   @Field({
     description: 'First name of the person who owns the account.',
   })
@@ -34,6 +43,9 @@ export class AuthSignUpInput {
   })
   public first_name!: string;
 
+  /**
+   * Last name of the person who owns the account.
+   */
   @Field({
     description: 'Last name of the person who owns the account.',
   })
@@ -48,11 +60,17 @@ export class AuthSignUpInput {
   })
   public last_name!: string;
 
+  /**
+   * Account login password.
+   */
   @Field({
     description: 'Account login password.',
   })
   public password!: string;
 
+  /**
+   * Unique user name to interact in the application.
+   */
   @Field({
     description: 'Unique user name to interact in the application.',
   })

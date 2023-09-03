@@ -12,13 +12,20 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './modules/auth/auth.module';
 
+/**
+ * AppModule class represents the main module of the application, where various configurations
+ * and dependencies are imported and combined to create the overall application.
+ */
 @Module({
   imports: [
     // Extensions
+    // ConfigModule for loading configuration settings
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
     }),
+
+    // GraphQLModule for setting up the GraphQL API
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'scheme.graphql'),
       context: ({ connection, req }) =>
@@ -27,6 +34,8 @@ import { AuthModule } from './modules/auth/auth.module';
       playground: true,
       sortSchema: true,
     }),
+
+    // MikroOrmModule for setting up the MikroORM database connection
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

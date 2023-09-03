@@ -2,12 +2,18 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsString, Matches, MaxLength } from 'class-validator';
 
+/**
+ * Input type for updating the personal information of the user account.
+ */
 @InputType({
   description: 'Update the personal information of the user account.',
 })
 export class AuthUpdateAccountInput {
+  /**
+   * Biography of the user.
+   */
   @Field({
-    description: 'First name of the person who owns the user account.',
+    description: 'Biography of the user.',
   })
   @MaxLength(300, {
     message: 'The biography cannot exceed 300 characters.',
@@ -17,6 +23,9 @@ export class AuthUpdateAccountInput {
   })
   public biography!: string;
 
+  /**
+   * First name of the person who owns the user account.
+   */
   @Field({
     description: 'First name of the person who owns the user account.',
   })
@@ -31,6 +40,9 @@ export class AuthUpdateAccountInput {
   })
   public first_name!: string;
 
+  /**
+   * Last name of the person who owns the user account.
+   */
   @Field({
     description: 'Last name of the person who owns the user account.',
   })
@@ -45,6 +57,9 @@ export class AuthUpdateAccountInput {
   })
   public last_name!: string;
 
+  /**
+   * Unique username of the user account.
+   */
   @Field({
     description: 'Unique username of the user account.',
   })

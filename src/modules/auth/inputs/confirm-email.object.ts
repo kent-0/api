@@ -2,10 +2,16 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsEmail, IsString } from 'class-validator';
 
+/**
+ * Input type for confirming user email.
+ */
 @InputType({
   description: 'Confirm user email.',
 })
 export class AuthConfirmEmailInput {
+  /**
+   * Activation code for email.
+   */
   @Field({
     description: 'Activation code for email.',
   })
@@ -14,6 +20,9 @@ export class AuthConfirmEmailInput {
   })
   public code!: string;
 
+  /**
+   * Email to confirm.
+   */
   @Field({
     description: 'Email to confirm.',
   })

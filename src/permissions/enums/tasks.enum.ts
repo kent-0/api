@@ -1,5 +1,5 @@
 /**
- * Permissions to manage tasks.
+ * Permissions-bit to manage tasks.
  */
 export enum TasksPermissions {
   Create = 2 << 3,
