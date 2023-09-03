@@ -82,4 +82,4 @@ Contributions are welcome! If you find a bug or want to improve the API, please 
 
 ## License
 
-This project is licensed under the UNLICENSED License. See the LICENSE file for more details.
+This project is licensed under the AGPL-3.0 license License. See the LICENSE file for more details.
