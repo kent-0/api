@@ -1,73 +1,85 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Kento API Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Introduction
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The Kento API is an application for managing users and authentication, built using NestJS and MikroORM.
 
 ## Installation
 
-```bash
-$ pnpm install
-```
+1. Clone this repository:
 
-## Running the app
+   ```bash
+   git clone https://github.com/kent-0/kento-api.git
+   ```
 
-```bash
-# development
-$ pnpm run start
+2. Install dependencies:
 
-# watch mode
-$ pnpm run start:dev
+   ```bash
+   cd kento-api
+   npm install
+   ```
 
-# production mode
-$ pnpm run start:prod
-```
+3. Configure the database:
 
-## Test
+   Create a `mikro-orm.config.js` file in the project root with the database configuration.
 
-```bash
-# unit tests
-$ pnpm run test
+4. Run migrations and seeders:
 
-# e2e tests
-$ pnpm run test:e2e
+   ```bash
+   npm run migration:up
+   npm run seed:initial
+   ```
 
-# test coverage
-$ pnpm run test:cov
-```
+5. Start the development server:
 
-## Support
+   ```bash
+   npm run start:dev
+   ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Project Structure
 
-## Stay in touch
+To see the current structure of the project, view the file `PROJECT_STRUCTURE.md`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Services
+
+### AuthPasswordService
+
+Handles logic related to user passwords.
+
+### AuthEmailService
+
+Handles logic for confirming user email.
+
+### AuthAccountService
+
+Handles user account management logic, including login, registration, and updating.
+
+## Resolvers
+
+### AuthResolver
+
+Resolver for operations related to authentication and user management. Utilizes the services mentioned above to perform operations.
+
+## Authentication Strategies
+
+### JWTStrategy
+
+JWT-based authentication strategy. Validates and verifies JWT tokens to authenticate users.
+
+## Main Dependencies
+
+- `@nestjs/graphql`: Library for creating GraphQL APIs with NestJS.
+- `@nestjs/jwt`: JWT support for NestJS.
+- `@nestjs/passport`: Authentication library for NestJS.
+- `@mikro-orm/core`: ORM for database manipulation.
+- `bcrypt`: Library for password hashing.
+- `graphql`: Library for creating GraphQL APIs.
+- `passport-jwt`: JWT strategy for Passport.
+
+## Contribution
+
+Contributions are welcome! If you find a bug or want to improve the API, please open an issue or submit a pull request.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the UNLICENSED License. See the LICENSE file for more details.
