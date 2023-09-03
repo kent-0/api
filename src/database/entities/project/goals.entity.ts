@@ -13,13 +13,22 @@ import { ProjectEntity } from './project.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
+/**
+ * Entity representing goals to be achieved in the project.
+ */
 @Entity({
   comment: 'Goals to be achieved in the project.',
   tableName: 'projects_goals',
 })
 export class ProjectGoalsEntity extends ParentEntity {
+  /**
+   * Optional properties that can be set on the entity.
+   */
   public [OptionalProps]?: OptionalParentProps;
 
+  /**
+   * Brief description of the goal to achieve.
+   */
   @Property({
     columnType: 'varchar',
     comment: 'Brief description of the goal to achieve.',
@@ -27,6 +36,9 @@ export class ProjectGoalsEntity extends ParentEntity {
   })
   public description!: string;
 
+  /**
+   * Name of the goal to achieve.
+   */
   @Property({
     columnType: 'varchar',
     comment: 'Name of the goal to achieve.',
@@ -34,6 +46,9 @@ export class ProjectGoalsEntity extends ParentEntity {
   })
   public name!: string;
 
+  /**
+   * Project assigned to the goal.
+   */
   @ManyToOne({
     comment: 'Project assigned to the goal.',
     entity: () => ProjectEntity,
@@ -41,6 +56,9 @@ export class ProjectGoalsEntity extends ParentEntity {
   })
   public project!: Rel<ProjectEntity>;
 
+  /**
+   * Current status of the goal.
+   */
   @Enum({
     comment: 'Current status of the goal.',
     items: () => ProjectGoalsStatus,

@@ -12,13 +12,22 @@ import { BoardTaskEntity } from './task.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
+/**
+ * Entity representing steps to complete per task.
+ */
 @Entity({
   comment: 'Steps to complete per task.',
   tableName: 'boards_steps',
 })
 export class BoardStepEntity extends ParentEntity {
+  /**
+   * Optional properties that can be set on the entity.
+   */
   public [OptionalProps]?: 'description' | OptionalParentProps;
 
+  /**
+   * Board assigned to the task step.
+   */
   @ManyToOne({
     comment: 'Board assigned to the task step.',
     entity: () => BoardEntity,
@@ -26,6 +35,9 @@ export class BoardStepEntity extends ParentEntity {
   })
   public board!: Rel<BoardEntity>;
 
+  /**
+   * Brief description of what the step is about.
+   */
   @Property({
     columnType: 'varchar',
     comment: 'Brief description of what the step is about.',
@@ -35,6 +47,9 @@ export class BoardStepEntity extends ParentEntity {
   })
   public description!: string;
 
+  /**
+   * Maximum number of tasks assigned to the step.
+   */
   @Property({
     columnType: 'int',
     comment: 'Maximum number of tasks assigned to the step.',
@@ -42,6 +57,9 @@ export class BoardStepEntity extends ParentEntity {
   })
   public max!: number;
 
+  /**
+   * Name of the step.
+   */
   @Property({
     columnType: 'varchar',
     comment: 'Name of the step.',
@@ -50,6 +68,9 @@ export class BoardStepEntity extends ParentEntity {
   })
   public name!: string;
 
+  /**
+   * Step position on the board.
+   */
   @Property({
     columnType: 'int',
     comment: 'Step position on the board.',
@@ -57,6 +78,9 @@ export class BoardStepEntity extends ParentEntity {
   })
   public position!: number;
 
+  /**
+   * Tasks assigned to the project step.
+   */
   @OneToMany(() => BoardTaskEntity, (t) => t.step, {
     comment: 'Tasks assigned to the project step.',
   })
