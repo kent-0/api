@@ -25,7 +25,7 @@ export class ProjectRolesEntity extends ParentEntity {
   /**
    * Optional properties that can be set on the entity.
    */
-  public [OptionalProps]?: OptionalParentProps;
+  public [OptionalProps]?: 'members' | OptionalParentProps;
 
   /**
    * Project members who have this role.

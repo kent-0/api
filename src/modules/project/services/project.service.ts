@@ -9,7 +9,7 @@ import {
 
 import { ProjectMembersEntity } from '~/database/entities';
 import { ProjectEntity } from '~/database/entities/project/project.entity';
-import { ToCollection } from '~/utils/types/to-collection';
+import { ToCollections } from '~/utils/types/to-collection';
 
 import { CreateProjectInput, UpdateProjectInput } from '../inputs';
 import { ProjectObject } from '../objects/project.object';
@@ -37,12 +37,12 @@ export class ProjectService {
    * Creates a new project and assigns the owner as a member.
    * @param {CreateProjectInput} projectData - The input data for creating the project.
    * @param {string} userId - The ID of the user creating the project.
-   * @returns {Promise<ToCollection<ProjectObject>>} The newly created project.
+   * @returns {Promise<ToCollections<ProjectObject>>} The newly created project.
    */
   public async create(
     { description, name }: CreateProjectInput,
     userId: string,
-  ): Promise<ToCollection<ProjectObject>> {
+  ): Promise<ToCollections<ProjectObject>> {
     // Create a new project entity
     const newProject = this.projectRepository.create({
       description,
@@ -105,14 +105,14 @@ export class ProjectService {
    * Retrieves project details based on the provided ID and user ID.
    * @param {string} projectId - The ID of the project to be retrieved.
    * @param {string} userId - The ID of the user requesting the project details.
-   * @returns {Promise<ToCollection<ProjectObject>>} The requested project details.
+   * @returns {Promise<ToCollections<ProjectObject>>} The requested project details.
    * @throws {NotFoundException} If the project is not found.
    * @throws {ForbiddenException} If the requester is not a member or owner of the project.
    */
   public async get(
     projectId: string,
     userId: string,
-  ): Promise<ToCollection<ProjectObject>> {
+  ): Promise<ToCollections<ProjectObject>> {
     // Find the project entity and populate related entities
     const project = await this.projectRepository.findOne(
       {
@@ -149,14 +149,14 @@ export class ProjectService {
   /**
    * Updates project details based on the provided input.
    * @param {UpdateProjectInput} projectData - The input data for updating the project.
-   * @returns {Promise<ToCollection<ProjectObject>>} The updated project details.
+   * @returns {Promise<ToCollections<ProjectObject>>} The updated project details.
    * @throws {NotFoundException} If the project is not found.
    */
   public async update({
     description,
     id,
     name,
-  }: UpdateProjectInput): Promise<ToCollection<ProjectObject>> {
+  }: UpdateProjectInput): Promise<ToCollections<ProjectObject>> {
     // Find the project entity to be updated
     const project = await this.projectRepository.findOne(
       {

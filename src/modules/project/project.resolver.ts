@@ -6,8 +6,10 @@ import { ProjectPermissions } from '~/permissions/enums';
 
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import { CreateProjectInput, UpdateProjectInput } from './inputs';
-import { ProjectObject } from './objects';
+import { CreateProjectRoleInput } from './inputs/role-create.input';
+import { ProjectObject, ProjectRolesObject } from './objects';
 import { ProjectService } from './services/project.service';
+import { ProjectRolesService } from './services/roles.service';
 
 import { UserToken } from '../auth/decorators/user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -17,13 +19,15 @@ import { JWTPayload } from '../auth/interfaces/jwt.interface';
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard)
 export class ProjectResolver {
-  constructor(private _projectService: ProjectService) {}
+  constructor(
+    private _projectService: ProjectService,
+    private _roleService: ProjectRolesService,
+  ) {}
 
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
-    name: 'createProject',
   })
-  public create(
+  public createProject(
     @Args('input') input: CreateProjectInput,
     @UserToken() token: JWTPayload,
   ) {
@@ -31,11 +35,18 @@ export class ProjectResolver {
     return this._projectService.create(input, token.sub);
   }
 
+  @Mutation(() => ProjectRolesObject, {
+    description: 'Create a new project role.',
+  })
+  public createRole(@Args('input') input: CreateProjectRoleInput) {
+    // Call the 'create' method of the RolesService to create a new role.
+    return this._roleService.create(input);
+  }
+
   @Mutation(() => String, {
     description: 'Delete a project.',
-    name: 'deleteProject',
   })
-  public delete(
+  public deleteProject(
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
   ) {
@@ -45,11 +56,10 @@ export class ProjectResolver {
 
   @Mutation(() => ProjectObject, {
     description: 'Get a project.',
-    name: 'getProject',
   })
   @UseGuards(ProjectPermissionsGuard)
   @RequestPermissions([ProjectPermissions.UpdateProject])
-  public get(
+  public getProject(
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
   ) {
@@ -59,9 +69,8 @@ export class ProjectResolver {
 
   @Mutation(() => ProjectObject, {
     description: 'Update current project.',
-    name: 'updateProject',
   })
-  public update(@Args('input') input: UpdateProjectInput) {
+  public updateProject(@Args('input') input: UpdateProjectInput) {
     // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
   }
