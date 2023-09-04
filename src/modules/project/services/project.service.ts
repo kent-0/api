@@ -1,12 +1,12 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProjectEntity } from '~/database/entities/project/project.entity';
 import { ToCollection } from '~/utils/types/to-collection';
 
-import { CreateUpdateProjectInput } from '../inputs/create-update-project.input';
+import { CreateProjectInput, UpdateProjectInput } from '../inputs';
 import { ProjectObject } from '../objects/project.object';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ProjectService {
   ) {}
 
   public async create(
-    { description, name }: CreateUpdateProjectInput,
+    { description, name }: CreateProjectInput,
     userId: string,
   ): Promise<ToCollection<ProjectObject>> {
     const newProject = this.projectRepository.create({
@@ -29,5 +29,26 @@ export class ProjectService {
 
     await this.em.persistAndFlush(newProject);
     return newProject;
+  }
+
+  public async update({
+    description,
+    id,
+    name,
+  }: UpdateProjectInput): Promise<ToCollection<ProjectObject>> {
+    const project = await this.projectRepository.findOne({
+      id,
+    });
+
+    if (!project)
+      throw new NotFoundException(
+        'The project you wanted to update has not been found.',
+      );
+
+    project.name = name;
+    project.description = description;
+
+    await this.em.persistAndFlush(project);
+    return project;
   }
 }
