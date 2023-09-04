@@ -2,7 +2,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 
 import { Module } from '@nestjs/common';
 
-import { ProjectEntity } from '~/database/entities';
+import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 
 import { ProjectResolver } from './project.resolver';
 import { ProjectService } from './services/project.service';
@@ -10,7 +10,7 @@ import { ProjectService } from './services/project.service';
 @Module({
   imports: [
     MikroOrmModule.forFeature({
-      entities: [ProjectEntity],
+      entities: [ProjectEntity, ProjectMembersEntity],
     }),
   ],
   providers: [ProjectService, ProjectResolver],

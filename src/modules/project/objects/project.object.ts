@@ -1,7 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { ProjectStatus } from '~/database/enums/status.enum';
-import { AuthUserObject } from '~/modules/auth/objects/user.object';
 
 import {
   ProjectGoalsObject,
@@ -9,6 +8,7 @@ import {
   ProjectNotesObject,
   ProjectRolesObject,
 } from '.';
+import { ProjectMemberObject } from './project-member.object';
 
 /* import { BoardObject } from './board.object'; */
 
@@ -78,8 +78,8 @@ export class ProjectObject {
   /**
    * Project owner user.
    */
-  @Field(() => AuthUserObject, { description: 'Project owner user.' })
-  public owner!: AuthUserObject;
+  @Field(() => ProjectMemberObject, { description: 'Project owner user.' })
+  public owner!: ProjectMemberObject;
 
   /**
    * Roles to manage the project and boards.

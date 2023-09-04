@@ -1,8 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserObject } from '~/modules/auth/objects/user.object';
-
-import { ProjectObject, ProjectRolesObject } from '.';
+import { ProjectMemberObject, ProjectObject, ProjectRolesObject } from '.';
 
 /**
  * Represents users invited to projects.
@@ -30,6 +28,8 @@ export class ProjectMembersObject {
   /**
    * User member of the project.
    */
-  @Field(() => AuthUserObject, { description: 'User member of the project.' })
-  public user!: AuthUserObject;
+  @Field(() => ProjectMemberObject, {
+    description: 'User member of the project.',
+  })
+  public user!: ProjectMemberObject;
 }

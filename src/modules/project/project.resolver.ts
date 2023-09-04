@@ -27,8 +27,30 @@ export class ProjectResolver {
     return this._projectService.create(input, token.sub);
   }
 
+  @Mutation(() => String, {
+    description: 'Delete a project.',
+    name: 'deleteProject',
+  })
+  public delete(
+    @Args('projectId') projectId: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._projectService.delete(projectId, token.sub);
+  }
+
   @Mutation(() => ProjectObject, {
-    description: 'Updater current project.',
+    description: 'Get a project.',
+    name: 'getProject',
+  })
+  public get(
+    @Args('projectId') projectId: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._projectService.get(projectId, token.sub);
+  }
+
+  @Mutation(() => ProjectObject, {
+    description: 'Update current project.',
     name: 'updateProject',
   })
   public update(@Args('input') input: UpdateProjectInput) {
