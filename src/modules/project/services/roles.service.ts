@@ -33,6 +33,17 @@ export class ProjectRolesService {
     return role;
   }
 
+  public async delete(roleId: string) {
+    const role = await this.rolesRepository.findOne({
+      id: roleId,
+    });
+
+    if (!role) throw new NotFoundException('Could not find role to delete.');
+
+    await this.em.removeAndFlush(role);
+    return 'The role for project has been removed.';
+  }
+
   public async update({
     name,
     permissions,

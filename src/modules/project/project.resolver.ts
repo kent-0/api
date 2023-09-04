@@ -58,6 +58,14 @@ export class ProjectResolver {
     return this._projectService.delete(projectId, token.sub);
   }
 
+  @Mutation(() => String, {
+    description: 'Delete a project role.',
+  })
+  public deleteRole(@Args('roleId') roleId: string) {
+    // Call the 'delete' method of the RoleService to delete a role.
+    return this._roleService.delete(roleId);
+  }
+
   @Mutation(() => ProjectObject, {
     description: 'Get a project.',
   })
