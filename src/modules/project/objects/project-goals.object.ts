@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 
-import { ProjectObject } from './project.object';
+import { ProjectObject } from '.';
 
 /**
  * Represents goals to be achieved in the project.

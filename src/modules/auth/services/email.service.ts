@@ -9,8 +9,8 @@ import {
 
 import { AuthEmailsEntity } from '~/database/entities';
 
-import { AuthConfirmEmailInput } from '../inputs/confirm-email.object';
-import { AuthUserEmailObject } from '../objects/user.object';
+import { AuthConfirmEmailInput } from '../inputs';
+import { AuthUserEmailObject } from '../objects';
 
 /**
  * AuthEmailService class is responsible for managing user email-related operations.

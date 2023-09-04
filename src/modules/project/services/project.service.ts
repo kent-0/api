@@ -4,8 +4,10 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 
 import { ProjectEntity } from '~/database/entities/project/project.entity';
+import { ToCollection } from '~/utils/types/to-collection';
 
 import { CreateUpdateProjectInput } from '../inputs/create-update-project.input';
+import { ProjectObject } from '../objects/project.object';
 
 @Injectable()
 export class ProjectService {
@@ -18,7 +20,7 @@ export class ProjectService {
   public async create(
     { description, name }: CreateUpdateProjectInput,
     userId: string,
-  ) /* : Promise<ProjectObject> */ {
+  ): Promise<ToCollection<ProjectObject>> {
     const newProject = this.projectRepository.create({
       description,
       name,

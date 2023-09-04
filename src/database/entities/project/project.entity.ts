@@ -76,7 +76,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectGoalsEntity, (g) => g.project, {
     comment: 'Goals assigned to the project.',
   })
-  public goals!: Rel<ProjectGoalsEntity>;
+  public goals = new Collection<ProjectGoalsEntity>(this);
 
   /**
    * Users invited to the project.
@@ -102,7 +102,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectNotesEntity, (n) => n.project, {
     comment: 'Notes assigned to the project.',
   })
-  public notes!: Rel<ProjectNotesEntity>;
+  public notes = new Collection<ProjectNotesEntity>(this);
 
   /**
    * Project owner user. If the owner deletes their account, the projects will also be affected.

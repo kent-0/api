@@ -5,14 +5,19 @@ import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import { UserToken } from './decorators/user.decorator';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { AuthChangePasswordInput } from './inputs/change-password.input';
-import { AuthConfirmEmailInput } from './inputs/confirm-email.object';
-import { AuthSignInInput } from './inputs/sign-in.input';
-import { AuthSignUpInput } from './inputs/sign-up.input';
+import {
+  AuthChangePasswordInput,
+  AuthConfirmEmailInput,
+  AuthSignInInput,
+  AuthSignUpInput,
+} from './inputs';
 import { AuthUpdateAccountInput } from './inputs/update-account.input';
 import { JWTPayload } from './interfaces/jwt.interface';
-import { AuthSignInObject } from './objects/sign-in.object';
-import { AuthUserEmailObject, AuthUserObject } from './objects/user.object';
+import {
+  AuthSignInObject,
+  AuthUserEmailObject,
+  AuthUserObject,
+} from './objects';
 import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 

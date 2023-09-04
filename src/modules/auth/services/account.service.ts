@@ -22,12 +22,10 @@ import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
 import * as bcrypt from 'bcrypt';
 
-import { AuthSignInInput } from '../inputs/sign-in.input';
-import { AuthSignUpInput } from '../inputs/sign-up.input';
+import { AuthSignInInput, AuthSignUpInput } from '../inputs';
 import { AuthUpdateAccountInput } from '../inputs/update-account.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
-import { AuthSignInObject } from '../objects/sign-in.object';
-import { AuthUserObject } from '../objects/user.object';
+import { AuthSignInObject, AuthUserObject } from '../objects';
 
 /**
  * AuthAccountService class is responsible for managing user account-related operations.

@@ -3,11 +3,14 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { ProjectStatus } from '~/database/enums/status.enum';
 import { AuthUserObject } from '~/modules/auth/objects/user.object';
 
+import {
+  ProjectGoalsObject,
+  ProjectMembersObject,
+  ProjectNotesObject,
+  ProjectRolesObject,
+} from '.';
+
 /* import { BoardObject } from './board.object'; */
-import { ProjectGoalsObject } from './project-goals.object';
-import { ProjectMembersObject } from './project-members.object';
-import { ProjectNotesObject } from './project-notes.object';
-import { ProjectRolesObject } from './project-roles.object';
 
 /**
  * Represents projects to manage and group boards.

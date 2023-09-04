@@ -2,9 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserObject } from '~/modules/auth/objects/user.object';
 
-import { ProjectRolesObject } from './project-roles.object';
-// eslint-disable-next-line perfectionist/sort-imports
-import { ProjectObject } from './project.object';
+import { ProjectObject, ProjectRolesObject } from '.';
 
 /**
  * Represents users invited to projects.

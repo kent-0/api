@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserObject } from '~/modules/auth/objects/user.object';
 
-import { ProjectObject } from './project.object';
+import { ProjectObject } from '.';
 
 /**
  * Represents notes associated with a project.

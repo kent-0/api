@@ -1,8 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMembersObject } from './project-members.object';
-// eslint-disable-next-line perfectionist/sort-imports
-import { ProjectObject } from './project.object';
+import { ProjectMembersObject, ProjectObject } from '.';
 
 /**
  * Represents roles to manage the projects using a bit-based permission system.

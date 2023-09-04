@@ -12,7 +12,7 @@ import { AuthPasswordEntity, AuthUserEntity } from '~/database/entities';
 
 import * as bcrypt from 'bcrypt';
 
-import { AuthChangePasswordInput } from '../inputs/change-password.input';
+import { AuthChangePasswordInput } from '../inputs';
 
 /**
  * AuthPasswordService class is responsible for managing user password-related operations.
