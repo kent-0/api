@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 /**
  * Object type representing an email associated with the user account.
@@ -46,6 +46,12 @@ export class AuthUserObject {
     description: 'First name of the user.',
   })
   public first_name!: string;
+
+  /**
+   * Unique identifier for the project.
+   */
+  @Field(() => ID, { description: 'Unique identifier for the project.' })
+  public id!: string;
 
   /**
    * Last name of the user.

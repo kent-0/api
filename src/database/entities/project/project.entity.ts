@@ -4,6 +4,7 @@ import {
   Enum,
   ManyToOne,
   OneToMany,
+  OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
@@ -16,7 +17,7 @@ import { ProjectNotesEntity } from './notes.entity';
 import { ProjectRolesEntity } from './roles.entity';
 
 import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity } from '../base.entity';
 import { BoardEntity } from '../board/board.entity';
 
 /**
@@ -27,6 +28,20 @@ import { BoardEntity } from '../board/board.entity';
   tableName: 'projects',
 })
 export class ProjectEntity extends ParentEntity {
+  /**
+   * Optional properties that can be set on the entity.
+   */
+  public [OptionalProps]?:
+    | 'boards'
+    | 'end_date'
+    | 'goals'
+    | 'members'
+    | 'notes'
+    | 'roles'
+    | 'start_date'
+    | 'status'
+    | OptionalParentProps;
+
   /**
    * Boards created for the project.
    */
