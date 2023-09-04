@@ -1,12 +1,12 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { AuthGuard } from '@nestjs/passport';
 
 import { CreateUpdateProjectInput } from './inputs/create-update-project.input';
 import { ProjectObject } from './objects/project.object';
 import { ProjectService } from './services/project.service';
 
 import { UserToken } from '../auth/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { JWTPayload } from '../auth/interfaces/jwt.interface';
 
 @Resolver()
@@ -17,7 +17,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
   })
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   public create(
     @Args('input') input: CreateUpdateProjectInput,
     @UserToken() token: JWTPayload,

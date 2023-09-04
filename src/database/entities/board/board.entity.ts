@@ -56,7 +56,7 @@ export class BoardEntity extends ParentEntity {
   @OneToMany(() => BoardMembersEntity, (m) => m.board, {
     comment: 'Users assigned to the board.',
   })
-  public members = new Collection<BoardMembersEntity>(this);
+  public members = new Collection<Rel<BoardMembersEntity>>(this);
 
   /**
    * Name of the board.
@@ -83,7 +83,7 @@ export class BoardEntity extends ParentEntity {
   @OneToMany(() => BoardRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',
   })
-  public roles = new Collection<BoardRolesEntity>(this);
+  public roles = new Collection<Rel<BoardMembersEntity>>(this);
 
   /**
    * Steps that manage the board.
@@ -91,5 +91,5 @@ export class BoardEntity extends ParentEntity {
   @OneToMany(() => BoardStepEntity, (s) => s.board, {
     comment: 'Steps that manage the board.',
   })
-  public steps = new Collection<BoardStepEntity>(this);
+  public steps = new Collection<Rel<BoardStepEntity>>(this);
 }

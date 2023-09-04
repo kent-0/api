@@ -14,21 +14,21 @@ registerEnumType(ActivityHistory, {
 });
 
 registerEnumType(CommentsTypes, {
-  name: 'ActivityHistory',
+  name: 'CommentsTypes',
 });
 
 registerEnumType(DeviceTypes, {
-  name: 'ActivityHistory',
+  name: 'DeviceTypes',
 });
 
 registerEnumType(ProjectStatus, {
-  name: 'ActivityHistory',
+  name: 'ProjectStatus',
 });
 
 registerEnumType(ProjectGoalsStatus, {
-  name: 'ActivityHistory',
+  name: 'ProjectGoalsStatus',
 });
 
 registerEnumType(TokenType, {
-  name: 'ActivityHistory',
+  name: 'TokenType',
 });

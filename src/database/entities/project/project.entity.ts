@@ -48,7 +48,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => BoardEntity, (r) => r.project, {
     comment: 'Boards created for the project.',
   })
-  public boards = new Collection<BoardEntity>(this);
+  public boards = new Collection<Rel<BoardEntity>>(this);
 
   /**
    * Brief description of what the project is about.
@@ -76,7 +76,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectGoalsEntity, (g) => g.project, {
     comment: 'Goals assigned to the project.',
   })
-  public goals = new Collection<ProjectGoalsEntity>(this);
+  public goals = new Collection<Rel<ProjectGoalsEntity>>(this);
 
   /**
    * Users invited to the project.
@@ -84,7 +84,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectMembersEntity, (m) => m.project, {
     comment: 'Users invited to the project.',
   })
-  public members = new Collection<ProjectMembersEntity>(this);
+  public members = new Collection<Rel<ProjectMembersEntity>>(this);
 
   /**
    * Project's name.
@@ -102,7 +102,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectNotesEntity, (n) => n.project, {
     comment: 'Notes assigned to the project.',
   })
-  public notes = new Collection<ProjectNotesEntity>(this);
+  public notes = new Collection<Rel<ProjectNotesEntity>>(this);
 
   /**
    * Project owner user. If the owner deletes their account, the projects will also be affected.
@@ -121,7 +121,7 @@ export class ProjectEntity extends ParentEntity {
   @OneToMany(() => ProjectRolesEntity, (r) => r.project, {
     comment: 'Roles to manage the project and boards.',
   })
-  public roles = new Collection<ProjectRolesEntity>(this);
+  public roles = new Collection<Rel<ProjectRolesEntity>>(this);
 
   /**
    * Project start date. By default, it is not set until the project is marked as in progress.
