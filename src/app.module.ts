@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { ProjectModule } from './modules/project/project.module';
 
 /**
  * AppModule class represents the main module of the application, where various configurations
@@ -67,6 +68,8 @@ import { AuthModule } from './modules/auth/auth.module';
 
     // App modules
     AuthModule,
+
+    ProjectModule,
   ],
 })
 export class AppModule {}
