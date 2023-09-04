@@ -109,37 +109,20 @@ export class ProjectService {
    * @throws {NotFoundException} If the project is not found.
    * @throws {ForbiddenException} If the requester is not a member or owner of the project.
    */
-  public async get(
-    projectId: string,
-    userId: string,
-  ): Promise<ToCollections<ProjectObject>> {
+  public async get(projectId: string): Promise<ToCollections<ProjectObject>> {
     // Find the project entity and populate related entities
     const project = await this.projectRepository.findOne(
       {
         id: projectId,
       },
       {
-        populate: ['owner', 'members'],
+        populate: ['owner', 'members', 'roles', 'members.roles'],
       },
     );
 
     if (!project) {
       throw new NotFoundException(
         'The project you are trying to view does not exist.',
-      );
-    }
-
-    // TODO: Missing roles
-    const members = await project.members.loadItems({ populate: ['user'] });
-
-    // Check if the requester is a member or owner of the project
-    if (
-      members.length &&
-      project.owner.id !== userId &&
-      !members.some(({ id }) => id === userId)
-    ) {
-      throw new ForbiddenException(
-        'You are not a member or owner of the project to view it.',
       );
     }
 

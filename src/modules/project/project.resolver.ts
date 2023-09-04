@@ -5,7 +5,11 @@ import { RequestPermissions } from '~/permissions/decorators/request-permissions
 import { ProjectPermissions } from '~/permissions/enums';
 
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
-import { CreateProjectInput, UpdateProjectInput } from './inputs';
+import {
+  CreateProjectInput,
+  UpdateProjectInput,
+  UpdateProjectRoleInput,
+} from './inputs';
 import { CreateProjectRoleInput } from './inputs/role-create.input';
 import { ProjectObject, ProjectRolesObject } from './objects';
 import { ProjectService } from './services/project.service';
@@ -59,12 +63,9 @@ export class ProjectResolver {
   })
   @UseGuards(ProjectPermissionsGuard)
   @RequestPermissions([ProjectPermissions.UpdateProject])
-  public getProject(
-    @Args('projectId') projectId: string,
-    @UserToken() token: JWTPayload,
-  ) {
+  public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
-    return this._projectService.get(projectId, token.sub);
+    return this._projectService.get(projectId);
   }
 
   @Mutation(() => ProjectObject, {
@@ -73,5 +74,13 @@ export class ProjectResolver {
   public updateProject(@Args('input') input: UpdateProjectInput) {
     // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
+  }
+
+  @Mutation(() => ProjectRolesObject, {
+    description: 'Update role of a project.',
+  })
+  public updateRole(@Args('input') input: UpdateProjectRoleInput) {
+    // Call the 'update' method of the RoleService to update a role.
+    return this._roleService.update(input);
   }
 }
