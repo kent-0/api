@@ -16,6 +16,7 @@ export class ProjectResolver {
 
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
+    name: 'createProject',
   })
   @UseGuards(JwtAuthGuard)
   public create(

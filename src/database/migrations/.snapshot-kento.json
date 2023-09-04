@@ -68,7 +68,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "comment": "Relationship to the user assigned to the created email.",
+          "comment": "Relationship to the email assigned to the user.",
           "mappedType": "uuid"
         },
         "first_name": {
@@ -100,7 +100,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "comment": "Relationship to the user assigned to the created password.",
+          "comment": "Relationship to the password assigned to the user.",
           "mappedType": "uuid"
         },
         "username": {
@@ -111,7 +111,7 @@
           "primary": false,
           "nullable": false,
           "length": 30,
-          "comment": "Unique user name per user.",
+          "comment": "Unique username per user.",
           "mappedType": "string"
         }
       },
@@ -832,7 +832,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "Project owner user. If the owner deletes his account, the projects will also be affected.",
+          "comment": "Project owner user. If the owner deletes their account, the projects will also be affected.",
           "mappedType": "uuid"
         },
         "start_date": {
@@ -841,9 +841,9 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 6,
-          "comment": "Project start date. By default it is not set until the project is marked as in progress.",
+          "comment": "Project start date. By default, it is not set until the project is marked as in progress.",
           "mappedType": "datetime"
         },
         "status": {
@@ -1257,7 +1257,7 @@
           "primary": false,
           "nullable": true,
           "length": 6,
-          "comment": "Date on which the task end.",
+          "comment": "Date on which the task ends.",
           "mappedType": "datetime"
         },
         "name": {
@@ -2005,7 +2005,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.boards",
+          "referencedTableName": "public.projects",
           "updateRule": "cascade"
         }
       },
@@ -2185,7 +2185,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "Board to which the user is a member.",
+          "comment": "Project to which the user is a member.",
           "mappedType": "uuid"
         },
         "user_id": {
@@ -2195,7 +2195,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "User member of the board.",
+          "comment": "User member of the project.",
           "mappedType": "uuid"
         }
       },
@@ -2450,7 +2450,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "comment": "Project assigned to the role. When the board is removed, its available roles are also removed.",
+          "comment": "Project assigned to the role. When the project is removed, its available roles are also removed.",
           "mappedType": "uuid"
         }
       },

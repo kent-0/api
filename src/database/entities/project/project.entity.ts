@@ -130,6 +130,7 @@ export class ProjectEntity extends ParentEntity {
     columnType: 'timestamp',
     comment:
       'Project start date. By default, it is not set until the project is marked as in progress.',
+    nullable: true,
     type: 'date',
   })
   public start_date!: Date;
