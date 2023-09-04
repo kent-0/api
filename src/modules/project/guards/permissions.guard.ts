@@ -34,13 +34,10 @@ export class ProjectPermissionsGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const args: Args = ctx.getArgs();
     const userReq: JWTPayload = ctx.getContext().req.user;
-    const requiredPermissions = this.reflector.get(
+    const requestPermissions = this.reflector.get(
       RequestPermissions,
       ctx.getHandler(),
     );
-
-    const permissionsRequired =
-      this._permissionsManager.bulkAdd(requiredPermissions);
 
     const project = await this.projectRepository.findOne(
       {
@@ -65,8 +62,11 @@ export class ProjectPermissionsGuard implements CanActivate {
 
     const roles = await project.roles.loadCount();
     if (roles) {
+      const requiredPermissions =
+        this._permissionsManager.bulkAdd(requestPermissions);
+
       const memberPermissions = await member.permissions();
-      return memberPermissions.has(permissionsRequired.permissions);
+      return memberPermissions.has(requiredPermissions.permissions);
     }
 
     throw new ForbiddenException(
