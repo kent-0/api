@@ -10,8 +10,13 @@ import {
   UpdateProjectInput,
   UpdateProjectRoleInput,
 } from './inputs';
+import { AssignProjectRoleInput } from './inputs/role-assign.input';
 import { CreateProjectRoleInput } from './inputs/role-create.input';
-import { ProjectObject, ProjectRolesObject } from './objects';
+import {
+  ProjectMembersObject,
+  ProjectObject,
+  ProjectRolesObject,
+} from './objects';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
 
@@ -28,6 +33,15 @@ export class ProjectResolver {
     private _roleService: ProjectRolesService,
   ) {}
 
+  @Mutation(() => ProjectMembersObject, {
+    description: 'Assign project role to members.',
+  })
+  @UseGuards(ProjectPermissionsGuard)
+  public assignRole(@Args('input') input: AssignProjectRoleInput) {
+    // Call the 'update' method of the RoleService to assign a role to member.
+    return this._roleService.assignRole(input);
+  }
+
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
   })
@@ -42,6 +56,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectRolesObject, {
     description: 'Create a new project role.',
   })
+  @UseGuards(ProjectPermissionsGuard)
   public createRole(@Args('input') input: CreateProjectRoleInput) {
     // Call the 'create' method of the RolesService to create a new role.
     return this._roleService.create(input);
@@ -50,6 +65,7 @@ export class ProjectResolver {
   @Mutation(() => String, {
     description: 'Delete a project.',
   })
+  @UseGuards(ProjectPermissionsGuard)
   public deleteProject(
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
@@ -61,6 +77,7 @@ export class ProjectResolver {
   @Mutation(() => String, {
     description: 'Delete a project role.',
   })
+  @UseGuards(ProjectPermissionsGuard)
   public deleteRole(@Args('roleId') roleId: string) {
     // Call the 'delete' method of the RoleService to delete a role.
     return this._roleService.delete(roleId);
@@ -79,6 +96,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectObject, {
     description: 'Update current project.',
   })
+  @UseGuards(ProjectPermissionsGuard)
   public updateProject(@Args('input') input: UpdateProjectInput) {
     // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
@@ -87,6 +105,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectRolesObject, {
     description: 'Update role of a project.',
   })
+  @UseGuards(ProjectPermissionsGuard)
   public updateRole(@Args('input') input: UpdateProjectRoleInput) {
     // Call the 'update' method of the RoleService to update a role.
     return this._roleService.update(input);

@@ -14,6 +14,7 @@ import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
 import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
+import { deepFindKey } from '~/utils/functions/deep-find';
 
 interface Args {
   projectId: string;
@@ -33,6 +34,8 @@ export class ProjectPermissionsGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const args: Args = ctx.getArgs();
+    const projectId = deepFindKey<string>(args, 'projectId');
+
     const userReq: JWTPayload = ctx.getContext().req.user;
     const requestPermissions = this.reflector.get(
       RequestPermissions,
@@ -41,7 +44,7 @@ export class ProjectPermissionsGuard implements CanActivate {
 
     const project = await this.projectRepository.findOne(
       {
-        id: args.projectId,
+        id: projectId,
       },
       {
         populate: ['owner'],
