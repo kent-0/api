@@ -1,6 +1,10 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
+import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
+import { ProjectPermissions } from '~/permissions/enums';
+
+import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import { CreateProjectInput, UpdateProjectInput } from './inputs';
 import { ProjectObject } from './objects';
 import { ProjectService } from './services/project.service';
@@ -43,6 +47,8 @@ export class ProjectResolver {
     description: 'Get a project.',
     name: 'getProject',
   })
+  @UseGuards(ProjectPermissionsGuard)
+  @RequestPermissions([ProjectPermissions.UpdateProject])
   public get(
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,

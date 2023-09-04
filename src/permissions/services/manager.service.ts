@@ -6,14 +6,43 @@ import { Injectable } from '@nestjs/common';
  */
 @Injectable()
 export class PermissionManagerService {
-  constructor(private _perms = 0) {}
+  private _perms = 0;
 
   /**
    * Add permissions to the base permissions passed in the admin constructor.
    * @param permission Permission bit to add.
    */
   public add(permission: number) {
+    // Add the specified permission bit to the managed permissions.
     this._perms |= permission;
+
+    return this;
+  }
+
+  /**
+   * Add multiple permissions to the base permissions passed in the admin constructor.
+   * @param permissions Array of permission bits to add.
+   */
+  public bulkAdd(permissions: number[]) {
+    // Loop through the array of permissions and add each one.
+    for (const p of permissions) {
+      this.add(p);
+    }
+
+    return this;
+  }
+
+  /**
+   * Remove permissions from the base permissions passed in the admin constructor.
+   * @param permissions Array of permission bits to remove.
+   */
+  public bulkRemove(permissions: number[]) {
+    // Loop through the array of permissions and remove each one.
+    for (const p of permissions) {
+      this.remove(p);
+    }
+
+    return this;
   }
 
   /**
@@ -21,21 +50,26 @@ export class PermissionManagerService {
    * @param permission Permission bit to verify.
    */
   public has(permission: number) {
-    this._perms & permission;
+    // Check if the specified permission bit is present in the managed permissions.
+    return (this._perms & permission) === permission;
   }
 
   /**
-   * Gets the new, managed permissions bit.\
+   * Gets the new, managed permissions bit.
    */
   public get permissions() {
+    // Get the current managed permissions.
     return this._perms;
   }
 
   /**
-   * Remove permissions to the base permissions passed in the admin constructor.
+   * Remove permissions from the base permissions passed in the admin constructor.
    * @param permission Permission bit to remove.
    */
   public remove(permission: number) {
-    this._perms &= permission;
+    // Remove the specified permission bit from the managed permissions.
+    this._perms &= ~permission;
+
+    return this;
   }
 }

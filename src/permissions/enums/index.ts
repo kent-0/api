@@ -1,2 +1,2 @@
-export * from './base.enum';
+export * from './project.enum';
 export * from './tasks.enum';

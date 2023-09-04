@@ -7,6 +7,8 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
+import { PermissionManagerService } from '~/permissions/services/manager.service';
+
 import { ProjectEntity } from './project.entity';
 import { ProjectRolesEntity } from './roles.entity';
 
@@ -54,4 +56,23 @@ export class ProjectMembersEntity extends ParentEntity {
     onDelete: 'cascade',
   })
   public user!: Rel<AuthUserEntity>;
+
+  /**
+   * Get and manage permissions for the user member based on their roles.
+   */
+  public async permissions() {
+    // Load roles associated with the user member.
+    const roles = await this.roles.loadItems();
+
+    // Extract permissions from roles.
+    const permissions = roles.flatMap(({ permissions }) => permissions);
+
+    // Create a new PermissionManagerService instance.
+    const manager = new PermissionManagerService();
+
+    // Bulk add permissions to the manager.
+    manager.bulkAdd(permissions);
+
+    return manager;
+  }
 }
