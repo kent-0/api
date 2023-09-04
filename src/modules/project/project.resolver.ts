@@ -1,9 +1,8 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { UpdateProjectInput } from './inputs';
-import { CreateProjectInput } from './inputs/project-create.input';
-import { ProjectObject } from './objects/project.object';
+import { CreateProjectInput, UpdateProjectInput } from './inputs';
+import { ProjectObject } from './objects';
 import { ProjectService } from './services/project.service';
 
 import { UserToken } from '../auth/decorators/user.decorator';
@@ -24,6 +23,7 @@ export class ProjectResolver {
     @Args('input') input: CreateProjectInput,
     @UserToken() token: JWTPayload,
   ) {
+    // Call the 'create' method of the ProjectService to create a new project.
     return this._projectService.create(input, token.sub);
   }
 
@@ -35,6 +35,7 @@ export class ProjectResolver {
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
   ) {
+    // Call the 'delete' method of the ProjectService to delete a project.
     return this._projectService.delete(projectId, token.sub);
   }
 
@@ -46,6 +47,7 @@ export class ProjectResolver {
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
   ) {
+    // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId, token.sub);
   }
 
@@ -54,6 +56,7 @@ export class ProjectResolver {
     name: 'updateProject',
   })
   public update(@Args('input') input: UpdateProjectInput) {
+    // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
   }
 }

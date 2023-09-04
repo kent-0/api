@@ -9,6 +9,7 @@ import { ProjectService } from './services/project.service';
 
 @Module({
   imports: [
+    // Importing MikroORM module for features related to ProjectEntity and ProjectMembersEntity.
     MikroOrmModule.forFeature({
       entities: [ProjectEntity, ProjectMembersEntity],
     }),
