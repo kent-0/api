@@ -26,7 +26,7 @@ export class ProjectMembersEntity extends ParentEntity {
   /**
    * Optional properties that can be set on the entity.
    */
-  public [OptionalProps]?: OptionalParentProps;
+  public [OptionalProps]?: 'permissions' | OptionalParentProps;
 
   /**
    * Project to which the user is a member.
