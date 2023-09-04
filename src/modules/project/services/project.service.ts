@@ -36,9 +36,14 @@ export class ProjectService {
     id,
     name,
   }: UpdateProjectInput): Promise<ToCollection<ProjectObject>> {
-    const project = await this.projectRepository.findOne({
-      id,
-    });
+    const project = await this.projectRepository.findOne(
+      {
+        id,
+      },
+      {
+        populate: ['owner'],
+      },
+    );
 
     if (!project)
       throw new NotFoundException(

@@ -92,8 +92,8 @@ export class ProjectObject {
   /**
    * Project start date.
    */
-  @Field({ description: 'Project start date.' })
-  public start_date!: Date;
+  @Field({ description: 'Project start date.', nullable: true })
+  public start_date?: Date;
 
   /**
    * Current status of the project.
