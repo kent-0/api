@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
@@ -10,11 +11,14 @@ async function bootstrap() {
   // Create an instance of the Nest.js application using AppModule
   const app = await NestFactory.create(AppModule);
 
+  // Get config from env file
+  const config = app.get(ConfigService);
+
   // Enable shutdown hooks to perform cleanup before application termination
   app.enableShutdownHooks();
 
-  // Start the application and listen on port 3000
-  await app.listen(3000);
+  // Start the application and listen on port defined by config env file
+  await app.listen(config.getOrThrow('APP_PORT'));
 }
 
 // Call the bootstrap function to start the application
