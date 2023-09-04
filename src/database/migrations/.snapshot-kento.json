@@ -1796,8 +1796,8 @@
     },
     {
       "columns": {
-        "board_members_entity_id": {
-          "name": "board_members_entity_id",
+        "role_id": {
+          "name": "role_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
@@ -1821,7 +1821,7 @@
         {
           "keyName": "boards_members_roles_pkey",
           "columnNames": [
-            "board_members_entity_id",
+            "role_id",
             "board_roles_entity_id"
           ],
           "composite": true,
@@ -1831,10 +1831,10 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "boards_members_roles_board_members_entity_id_foreign": {
-          "constraintName": "boards_members_roles_board_members_entity_id_foreign",
+        "boards_members_roles_role_id_foreign": {
+          "constraintName": "boards_members_roles_role_id_foreign",
           "columnNames": [
-            "board_members_entity_id"
+            "role_id"
           ],
           "localTableName": "public.boards_members_roles",
           "referencedColumnNames": [
@@ -2487,8 +2487,8 @@
     },
     {
       "columns": {
-        "project_members_entity_id": {
-          "name": "project_members_entity_id",
+        "role_id": {
+          "name": "role_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
@@ -2512,7 +2512,7 @@
         {
           "keyName": "projects_members_roles_pkey",
           "columnNames": [
-            "project_members_entity_id",
+            "role_id",
             "project_roles_entity_id"
           ],
           "composite": true,
@@ -2522,10 +2522,10 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "projects_members_roles_project_members_entity_id_foreign": {
-          "constraintName": "projects_members_roles_project_members_entity_id_foreign",
+        "projects_members_roles_role_id_foreign": {
+          "constraintName": "projects_members_roles_role_id_foreign",
           "columnNames": [
-            "project_members_entity_id"
+            "role_id"
           ],
           "localTableName": "public.projects_members_roles",
           "referencedColumnNames": [

@@ -40,6 +40,7 @@ export class BoardMembersEntity extends ParentEntity {
    */
   @ManyToMany(() => BoardRolesEntity, (r) => r.members, {
     comment: 'User member roles in the board.',
+    joinColumn: 'role_id',
     owner: true,
   })
   public roles = new Collection<BoardRolesEntity>(this);

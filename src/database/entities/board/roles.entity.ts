@@ -43,6 +43,7 @@ export class BoardRolesEntity extends ParentEntity {
    */
   @ManyToMany(() => BoardMembersEntity, (m) => m.roles, {
     comment: 'Board members who have this role.',
+    inverseJoinColumn: 'member_id',
   })
   public members = new Collection<BoardMembersEntity>(this);
 
