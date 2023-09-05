@@ -7,6 +7,7 @@ import { ProjectPermissions } from '~/permissions/enums';
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import {
   CreateProjectInput,
+  UnassignProjectRoleInput,
   UpdateProjectInput,
   UpdateProjectRoleInput,
 } from './inputs';
@@ -39,7 +40,7 @@ export class ProjectResolver {
   @UseGuards(ProjectPermissionsGuard)
   public assignRole(@Args('input') input: AssignProjectRoleInput) {
     // Call the 'update' method of the RoleService to assign a role to member.
-    return this._roleService.assignRole(input);
+    return this._roleService.assign(input);
   }
 
   @Mutation(() => ProjectObject, {
@@ -91,6 +92,15 @@ export class ProjectResolver {
   public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);
+  }
+
+  @Mutation(() => ProjectMembersObject, {
+    description: 'Assign project role to members.',
+  })
+  @UseGuards(ProjectPermissionsGuard)
+  public unassignRole(@Args('input') input: UnassignProjectRoleInput) {
+    // Call the 'update' method of the RoleService to unassign a role to member.
+    return this._roleService.unassing(input);
   }
 
   @Mutation(() => ProjectObject, {

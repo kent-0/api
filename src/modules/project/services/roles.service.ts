@@ -10,9 +10,12 @@ import {
 import { ProjectMembersEntity, ProjectRolesEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { UpdateProjectRoleInput } from '../inputs';
-import { AssignProjectRoleInput } from '../inputs/role-assign.input';
-import { CreateProjectRoleInput } from '../inputs/role-create.input';
+import {
+  AssignProjectRoleInput,
+  CreateProjectRoleInput,
+  UnassignProjectRoleInput,
+  UpdateProjectRoleInput,
+} from '../inputs';
 import { ProjectMembersObject, ProjectRolesObject } from '../objects';
 
 @Injectable()
@@ -25,7 +28,7 @@ export class ProjectRolesService {
     private readonly em: EntityManager,
   ) {}
 
-  public async assignRole({
+  public async assign({
     memberId,
     projectId,
     roleId,
@@ -93,6 +96,50 @@ export class ProjectRolesService {
 
     await this.em.removeAndFlush(role);
     return 'The role for project has been removed.';
+  }
+
+  public async unassing({
+    memberId,
+    projectId,
+    roleId,
+  }: UnassignProjectRoleInput): Promise<ToCollections<ProjectMembersObject>> {
+    const role = await this.rolesRepository.findOne({
+      id: roleId,
+      project: projectId,
+    });
+
+    const member = await this.membersRepository.findOne(
+      {
+        id: memberId,
+      },
+      {
+        populate: ['roles', 'user'],
+      },
+    );
+
+    if (!role) {
+      throw new NotFoundException(
+        'No information was found about the project role to be assigned.',
+      );
+    }
+
+    if (!member) {
+      throw new NotFoundException(
+        'No information about the project member was found.',
+      );
+    }
+
+    const memberRoles = await member.roles.loadItems();
+    if (!memberRoles.some(({ id }) => id === roleId)) {
+      throw new ConflictException(
+        'The member does not have the role you are trying to remove.',
+      );
+    }
+
+    member.roles.remove(role);
+    await this.em.persistAndFlush(member);
+
+    return member;
   }
 
   public async update({
