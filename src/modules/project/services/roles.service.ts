@@ -98,6 +98,8 @@ export class ProjectRolesService {
     return 'The role for project has been removed.';
   }
 
+  public getAll() {}
+
   public async unassing({
     memberId,
     projectId,

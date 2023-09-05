@@ -10,9 +10,9 @@ import { ConsoleLogger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
-import './graphql.register';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProjectModule } from './modules/project/project.module';
+import './utils/graphql/registers/enum.register';
 
 /**
  * AppModule class represents the main module of the application, where various configurations
