@@ -44,18 +44,6 @@ export class ProjectPermissionsGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-
-    // Check if this guard is ignored
-    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
-    if (
-      isExcludeGuard &&
-      isExcludeGuard.some(
-        (guard) => guard.name === ProjectPermissionsGuard.name,
-      )
-    ) {
-      return true;
-    }
-
     const args: { projectId: string } = ctx.getArgs();
     const projectId = deepFindKey<string>(args, 'projectId');
 
@@ -83,6 +71,17 @@ export class ProjectPermissionsGuard implements CanActivate {
 
     // If the user is the owner of the project, they have access.
     if (project.owner.id === userReq.sub) return true;
+
+    // Check if this guard is ignored
+    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
+    if (
+      isExcludeGuard &&
+      isExcludeGuard.some(
+        (guard) => guard.name === ProjectPermissionsGuard.name,
+      )
+    ) {
+      return true;
+    }
 
     // Find the member associated with the user.
     const member = await this.membersRepository.findOne({

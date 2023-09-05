@@ -200,8 +200,8 @@ export class ProjectService {
     }
 
     // Update the project's name and description with the provided values.
-    project.name = name;
-    project.description = description;
+    project.name = name ?? project.name;
+    project.description = description ?? project.description;
 
     // Persist the changes to the database.
     await this.em.persistAndFlush(project);

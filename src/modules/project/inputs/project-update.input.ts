@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 /**
  * Input type for updating a project.
@@ -14,12 +14,14 @@ export class UpdateProjectInput {
    */
   @Field({
     description: 'Brief description of what the project will be about.',
+    nullable: true,
   })
+  @IsOptional()
   @IsString({ message: 'The project description must be a text string.' })
   @MaxLength(300, {
     message: 'The project description cannot be longer than 300 characters.',
   })
-  public description!: string;
+  public description?: string;
 
   /**
    * ID of the project.
@@ -35,10 +37,12 @@ export class UpdateProjectInput {
    */
   @Field({
     description: 'Name for the new project.',
+    nullable: true,
   })
+  @IsOptional()
   @IsString({ message: 'The project name must be a text string.' })
   @MaxLength(50, {
     message: 'The project name cannot be longer than 50 characters.',
   })
-  public name!: string;
+  public name?: string;
 }
