@@ -43,7 +43,6 @@ export class ProjectMembersEntity extends ParentEntity {
    */
   @ManyToMany(() => ProjectRolesEntity, (r) => r.members, {
     comment: 'User member roles in the project.',
-    joinColumn: 'role_id',
     owner: true,
   })
   public roles = new Collection<ProjectRolesEntity>(this);

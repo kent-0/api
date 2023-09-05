@@ -2487,8 +2487,8 @@
     },
     {
       "columns": {
-        "role_id": {
-          "name": "role_id",
+        "project_members_entity_id": {
+          "name": "project_members_entity_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
@@ -2512,7 +2512,7 @@
         {
           "keyName": "projects_members_roles_pkey",
           "columnNames": [
-            "role_id",
+            "project_members_entity_id",
             "project_roles_entity_id"
           ],
           "composite": true,
@@ -2522,10 +2522,10 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "projects_members_roles_role_id_foreign": {
-          "constraintName": "projects_members_roles_role_id_foreign",
+        "projects_members_roles_project_members_entity_id_foreign": {
+          "constraintName": "projects_members_roles_project_members_entity_id_foreign",
           "columnNames": [
-            "role_id"
+            "project_members_entity_id"
           ],
           "localTableName": "public.projects_members_roles",
           "referencedColumnNames": [
