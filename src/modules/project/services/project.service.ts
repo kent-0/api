@@ -148,7 +148,13 @@ export class ProjectService {
         id: projectId,
       },
       {
-        populate: ['owner', 'members', 'roles', 'members.roles'],
+        populate: [
+          'owner',
+          'members',
+          'roles',
+          'members.roles',
+          'members.user',
+        ],
       },
     );
 
@@ -179,16 +185,22 @@ export class ProjectService {
    */
   public async update({
     description,
-    id,
     name,
+    projectId,
   }: UpdateProjectInput): Promise<ToCollections<ProjectObject>> {
     // Fetch the project entity using the provided project ID.
     const project = await this.projectRepository.findOne(
       {
-        id,
+        id: projectId,
       },
       {
-        populate: ['owner'],
+        populate: [
+          'owner',
+          'members',
+          'roles',
+          'members.roles',
+          'members.user',
+        ],
       },
     );
 

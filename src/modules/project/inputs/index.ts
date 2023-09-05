@@ -1,3 +1,4 @@
+export * from './member-add-remove.input';
 export * from './project-create.input';
 export * from './project-update.input';
 export * from './role-assign.input';

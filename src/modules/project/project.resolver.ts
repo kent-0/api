@@ -7,6 +7,7 @@ import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import {
+  AddRemoveProjectMemberInput,
   CreateProjectInput,
   UnassignProjectRoleInput,
   UpdateProjectInput,
@@ -21,6 +22,7 @@ import {
   ProjectPaginatedProjectRoles,
   ProjectRolesObject,
 } from './objects';
+import { ProjectMembersService } from './services/members.service';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
 
@@ -45,7 +47,16 @@ export class ProjectResolver {
   constructor(
     private _projectService: ProjectService,
     private _roleService: ProjectRolesService,
+    private _memberServie: ProjectMembersService,
   ) {}
+
+  @Mutation(() => ProjectMembersObject, {
+    description: 'Add a user as a member of a project.',
+  })
+  @ProjectPermissions([Permissions.AddMember])
+  public addProjectMember(@Args('input') input: AddRemoveProjectMemberInput) {
+    return this._memberServie.add(input);
+  }
 
   /**
    * Assigns a role to project members.
@@ -152,6 +163,16 @@ export class ProjectResolver {
   })
   public projectRoles(@Args('input') input: ProjectRolePaginationInput) {
     return this._roleService.paginate(input);
+  }
+
+  @Mutation(() => ProjectMembersObject, {
+    description: 'Add a user as a member of a project.',
+  })
+  @ProjectPermissions([Permissions.AddMember])
+  public removeProjectMember(
+    @Args('input') input: AddRemoveProjectMemberInput,
+  ) {
+    return this._memberServie.remove(input);
   }
 
   /**

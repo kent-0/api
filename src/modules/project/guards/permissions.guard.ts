@@ -51,6 +51,17 @@ export class ProjectPermissionsGuard implements CanActivate {
       ctx.getHandler(),
     );
 
+    // Determine if the current guard should be excluded for the route or resolver.
+    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
+    if (
+      isExcludeGuard &&
+      isExcludeGuard.some(
+        (guard) => guard.name === ProjectPermissionsGuard.name,
+      )
+    ) {
+      return true;
+    }
+
     // Retrieve the project based on the provided projectId.
     const project = await this.projectRepository.findOne(
       {
@@ -66,17 +77,6 @@ export class ProjectPermissionsGuard implements CanActivate {
 
     // If the user is the project's owner, grant access.
     if (project.owner.id === userReq.sub) return true;
-
-    // Determine if the current guard should be excluded for the route or resolver.
-    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
-    if (
-      isExcludeGuard &&
-      isExcludeGuard.some(
-        (guard) => guard.name === ProjectPermissionsGuard.name,
-      )
-    ) {
-      return true;
-    }
 
     // Find the project's associated member.
     const member = await this.membersRepository.findOne({

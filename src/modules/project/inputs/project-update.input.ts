@@ -36,19 +36,6 @@ export class UpdateProjectInput {
   public description?: string;
 
   /**
-   * This field represents the unique identifier of the project that
-   * needs to be updated. It's mandatory for locating the project
-   * within the database and applying the necessary changes.
-   *
-   * The ID must be a valid UUID.
-   */
-  @Field({
-    description: 'ID of the project.',
-  })
-  @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
-  public id!: string;
-
-  /**
    * This field captures the updated name of the project. Like the
    * initial project name, this should be concise and reflective
    * of the project's nature or purpose.
@@ -66,4 +53,17 @@ export class UpdateProjectInput {
     message: 'The project name cannot be longer than 50 characters.',
   })
   public name?: string;
+
+  /**
+   * This field represents the unique identifier of the project that
+   * needs to be updated. It's mandatory for locating the project
+   * within the database and applying the necessary changes.
+   *
+   * The ID must be a valid UUID.
+   */
+  @Field({
+    description: 'ID of the project.',
+  })
+  @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
+  public projectId!: string;
 }

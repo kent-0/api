@@ -10,6 +10,7 @@ import {
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { ProjectResolver } from './project.resolver';
+import { ProjectMembersService } from './services/members.service';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
 
@@ -36,6 +37,7 @@ import { ProjectRolesService } from './services/roles.service';
     ProjectResolver,
     PermissionManagerService,
     ProjectRolesService,
+    ProjectMembersService,
   ],
 })
 export class ProjectModule {}
