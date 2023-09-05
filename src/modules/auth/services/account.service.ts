@@ -28,40 +28,57 @@ import { JWTPayload } from '../interfaces/jwt.interface';
 import { AuthSignInObject, AuthUserObject } from '../objects';
 
 /**
- * AuthAccountService class is responsible for managing user account-related operations.
- * It interacts with the database to handle user registration, authentication, and more.
+ * `AuthAccountService` is a service class that provides functionality to manage
+ * operations related to user accounts. This includes actions like user registration,
+ * authentication, password handling, and token management.
+ *
+ * This class collaborates with various repositories and services to perform its operations,
+ * and they are injected into this service through its constructor.
  */
 @Injectable()
 export class AuthAccountService {
+  /**
+   * Constructor for the AuthAccountService class.
+   *
+   * Initializes the class with necessary repositories and services.
+   *
+   * @param {EntityRepository<AuthUserEntity>} usersRespository - Repository for interacting with user data.
+   * @param {EntityRepository<AuthPasswordEntity>} passwordRepository - Repository for handling password data.
+   * @param {EntityRepository<AuthTokensEntity>} tokensRepository - Repository for managing authentication tokens.
+   * @param {EntityRepository<AuthEmailsEntity>} authEmailsRepository - Repository for working with email data.
+   * @param {EntityManager} em - Entity manager for direct database operations.
+   * @param {JwtService} _jwtService - Service for handling JSON Web Token operations.
+   * @param {AuthPasswordService} _passwordService - Service for password-related operations.
+   */
   constructor(
-    // Inject the repository for AuthUserEntity to interact with user data
     @InjectRepository(AuthUserEntity)
     private readonly usersRespository: EntityRepository<AuthUserEntity>,
 
-    // Inject the repository for AuthPasswordEntity to interact with password data
     @InjectRepository(AuthPasswordEntity)
     private readonly passwordRepository: EntityRepository<AuthPasswordEntity>,
 
-    // Inject the repository for AuthTokensEntity to interact with authentication tokens data
     @InjectRepository(AuthTokensEntity)
     private readonly tokensRepository: EntityRepository<AuthTokensEntity>,
 
-    // Inject the repository for AuthEmailsEntity to interact with email data
     @InjectRepository(AuthEmailsEntity)
     private readonly authEmailsRepository: EntityRepository<AuthEmailsEntity>,
 
-    // EntityManager instance to manage database operations
     private readonly em: EntityManager,
 
-    // JwtService instance to handle JWT operations
     private readonly _jwtService: JwtService,
 
-    // AuthPasswordService instance to handle password-related operations
     private readonly _passwordService: AuthPasswordService,
   ) {}
 
   /**
    * Logs out the user by revoking the provided token.
+   *
+   * This method carries out the following steps:
+   * 1. Fetches the token associated with the user session from the database using the provided userToken and userId.
+   * 2. If the token doesn't exist, throws a NotFoundException.
+   * 3. Sets the token's "revoked" status to true.
+   * 4. Persists the changes to the database.
+   * 5. Returns a success message indicating the session has been closed.
    *
    * @param userToken - The token associated with the user session.
    * @param userId - The ID of the user whose session should be logged out.
@@ -69,37 +86,44 @@ export class AuthAccountService {
    * @throws NotFoundException if the provided token is not found.
    */
   public async logOut(userToken: string, userId: string): Promise<string> {
-    // Find the token associated with the user session
+    // Fetch the token associated with the user session from the database.
     const token = await this.tokensRepository.findOne({
       token_type: TokenType.AUTH,
       token_value: userToken,
       user: userId,
     });
 
-    // If token not found, throw an exception
+    // If the token doesn't exist in the database, throw a NotFoundException.
     if (!token) {
       throw new NotFoundException(
         'Your current session information could not be found.',
       );
     }
 
-    // Revoke the token and update it in the database
+    // Set the token's "revoked" status to true.
     token.revoked = true;
+
+    // Persist the changes to the database.
     await this.em.persistAndFlush(token);
 
-    // Return a success message
+    // Return a success message.
     return 'Session closed successfully. See you soon.';
   }
 
   /**
    * Retrieves the user's information based on the provided user ID.
    *
+   * This method carries out the following steps:
+   * 1. Fetches the user's information from the database using the provided userId. It also populates the user's email.
+   * 2. If the user doesn't exist in the database, throws a NotFoundException.
+   * 3. Returns the fetched user's information.
+   *
    * @param userId - The ID of the user whose information is being retrieved.
    * @returns The user's information.
    * @throws NotFoundException if the user with the provided ID is not found.
    */
   public async me(userId: string): Promise<AuthUserObject> {
-    // Find the user's information using the provided user ID
+    // Fetch the user's information using the provided userId and populate the user's email.
     const user = await this.usersRespository.findOne(
       {
         id: userId,
@@ -109,19 +133,28 @@ export class AuthAccountService {
       },
     );
 
-    // If user not found, throw an exception
+    // If the user doesn't exist in the database, throw a NotFoundException.
     if (!user) {
       throw new NotFoundException(
         'Your user account information could not be obtained.',
       );
     }
 
-    // Return the user's information
+    // Return the fetched user's information.
     return user;
   }
 
   /**
    * Refreshes the user's session by verifying the refresh token and generating a new access token.
+   *
+   * This method carries out the following steps:
+   * 1. Fetches the refresh token associated with the user's session from the database.
+   * 2. If the refresh token doesn't exist or has been revoked, throws a NotFoundException.
+   * 3. Verifies the validity of the fetched refresh token.
+   * 4. If the refresh token is invalid or expired, revokes it and throws an UnauthorizedException.
+   * 5. Generates a new access token with a validity of 8 hours.
+   * 6. Persists the new access token to the database.
+   * 7. Returns an object containing the new access token and the provided refresh token.
    *
    * @param token - The refresh token associated with the user's session.
    * @param userId - The ID of the user whose session is being refreshed.
@@ -133,31 +166,29 @@ export class AuthAccountService {
     token: string,
     userId: string,
   ): Promise<AuthSignInObject> {
-    // Find the refresh token associated with the user session
+    // Fetch the refresh token associated with the user's session.
     const refreshToken = await this.tokensRepository.findOne({
       token_type: TokenType.REFRESH,
       token_value: token,
       user: userId,
     });
 
-    // If refresh token not found, throw an exception
+    // If the refresh token doesn't exist or has been revoked, throw the appropriate exception.
     if (!refreshToken) {
       throw new NotFoundException(
         'No information found for that session refresh token.',
       );
     }
-
-    // If refresh token is revoked, throw an exception
     if (refreshToken.revoked) {
       throw new NotFoundException('The refresh token has been revoked.');
     }
 
-    // Verify the validity of the refresh token
+    // Verify the validity of the fetched refresh token.
     const refreshTokenValid = await this._jwtService.verifyAsync(
       refreshToken.token_value,
     );
 
-    // If refresh token is not valid, revoke it and throw an exception
+    // If the refresh token is invalid or expired, revoke it and throw an UnauthorizedException.
     if (!refreshTokenValid) {
       refreshToken.revoked = true;
       await this.em.persistAndFlush(refreshToken);
@@ -166,19 +197,19 @@ export class AuthAccountService {
       );
     }
 
-    // Calculate token expiration time (8 hours)
+    // Calculate the expiration time for the new access token.
     const tokenExp = Date.now() + 288e5;
 
-    // Create payload for new access token
+    // Create the payload for the new access token.
     const tokenPayload: Omit<JWTPayload, 'raw'> = {
       iat: Date.now(),
       sub: userId,
     };
 
-    // Sign the new access token
+    // Sign the new access token.
     const tokenAuth = await this._jwtService.signAsync(tokenPayload);
 
-    // Create and persist the new access token
+    // Persist the new access token to the database.
     const tokenAuthCreated = this.tokensRepository.create({
       device: DeviceTypes.NotFound,
       expiration: new Date(tokenExp),
@@ -189,7 +220,7 @@ export class AuthAccountService {
     });
     await this.em.persistAndFlush(tokenAuthCreated);
 
-    // Return the new access token and the provided refresh token
+    // Return the new access token and the provided refresh token.
     return {
       access_token: tokenAuthCreated.token_value,
       refresh_token: refreshToken.token_value,
@@ -199,6 +230,16 @@ export class AuthAccountService {
   /**
    * Signs in a user by verifying their credentials and generating access and refresh tokens.
    *
+   * This method carries out the following steps:
+   * 1. Fetches the user's information from the database using the provided username.
+   * 2. If the user doesn't exist, throws an UnauthorizedException.
+   * 3. Compares the provided password with the stored password hash.
+   * 4. If the passwords don't match, throws an UnauthorizedException.
+   * 5. Generates an access token with a validity of 8 hours.
+   * 6. Generates a refresh token with a validity of 14 days.
+   * 7. Persists the generated tokens to the database.
+   * 8. Returns an object containing both tokens.
+   *
    * @param signInInput - An object containing the user's username and password.
    * @returns An object containing the generated access and refresh tokens.
    * @throws UnauthorizedException if no account is found with the provided username or if the password is incorrect.
@@ -207,7 +248,7 @@ export class AuthAccountService {
     password,
     username,
   }: AuthSignInInput): Promise<AuthSignInObject> {
-    // Find the user by their username and populate the password relationship
+    // Fetch the user's information using the provided username.
     const user = await this.usersRespository.findOne(
       {
         username,
@@ -217,32 +258,34 @@ export class AuthAccountService {
       },
     );
 
+    // If the user doesn't exist in the database, throw an UnauthorizedException.
     if (!user) {
       throw new UnauthorizedException('No account found with that username.');
     }
 
-    // Compare the provided password with the stored password hash
+    // Compare the provided password with the stored password hash.
     const isMatchPassword = await bcrypt.compare(
       password,
       user.password!.password_hash,
     );
 
+    // If the passwords don't match, throw an UnauthorizedException.
     if (!isMatchPassword) {
       throw new UnauthorizedException(
         'An incorrect password has been entered.',
       );
     }
 
-    // Calculate token expiration time
+    // Calculate the expiration time for the access token.
     const tokenExp = Date.now() + 288e5;
 
-    // Create payload for access and refresh tokens
+    // Create the payload for the tokens.
     const tokenPayload: Omit<JWTPayload, 'raw'> = {
       iat: Date.now(),
       sub: user.id,
     };
 
-    // Generate access token
+    // Generate the access token.
     const tokenAuth = await this._jwtService.signAsync(tokenPayload);
     const tokenAuthCreated = this.tokensRepository.create({
       device: DeviceTypes.NotFound,
@@ -253,7 +296,7 @@ export class AuthAccountService {
       user,
     });
 
-    // Generate refresh token
+    // Generate the refresh token with a validity of 14 days.
     const tokenRefresh = await this._jwtService.signAsync(tokenPayload, {
       expiresIn: '14d',
     });
@@ -266,9 +309,10 @@ export class AuthAccountService {
       user,
     });
 
-    // Persist the generated tokens
+    // Persist the generated tokens to the database.
     await this.em.persistAndFlush([tokenAuthCreated, tokenRefreshCreated]);
 
+    // Return an object containing both tokens.
     return {
       access_token: tokenAuthCreated.token_value,
       refresh_token: tokenRefreshCreated.token_value,
@@ -277,6 +321,18 @@ export class AuthAccountService {
 
   /**
    * Creates a new user account with the provided information.
+   *
+   * This method carries out the following steps:
+   * 1. Checks if a user with the same username or email already exists in the database.
+   * 2. If such a user exists, throws a BadRequestException.
+   * 3. Checks if the provided email is already registered in the database.
+   * 4. If the email is registered, throws a BadRequestException.
+   * 5. Constructs a new user entity using the provided registration details.
+   * 6. Generates a password hash and salt using the provided password.
+   * 7. Creates a new user password entity and associates it with the user.
+   * 8. Creates a new user email entity and associates it with the user.
+   * 9. Persists the user, user password, and user email entities to the database.
+   * 10. Returns the created user account.
    *
    * @param signUpInput - An object containing user registration details.
    * @returns The created user account.
@@ -289,68 +345,80 @@ export class AuthAccountService {
     password,
     username,
   }: AuthSignUpInput): Promise<AuthUserObject> {
-    // Check if a user with the same username or email already exists
+    // Check if a user with the same username or email already exists in the database.
     const userExist = await this.usersRespository.findOne({
       $or: [{ username }, { email: { value: email } }],
     });
 
+    // If such a user exists, throw a BadRequestException.
     if (userExist) {
       throw new BadRequestException(
         'An account already exists with that email or username.',
       );
     }
 
-    // Check if the email is already registered
+    // Check if the provided email is already registered in the database.
     const isEmailRegistered = await this.authEmailsRepository.findOne({
       value: email,
     });
 
+    // If the email is registered, throw a BadRequestException.
     if (isEmailRegistered) {
       throw new BadRequestException(
         'There is already a registered user with that email.',
       );
     }
 
-    // Create a new user entity with the provided details
+    // Construct a new user entity using the provided registration details.
     const user = this.usersRespository.create({
       first_name,
       last_name,
       username,
     });
 
-    // Persist the new user entity
+    // Persist the new user entity to the database.
     await this.em.persistAndFlush(user);
 
-    // Generate a password hash and salt
+    // Generate a password hash and salt using the provided password.
     const passwordHashed = await this._passwordService.generate(password);
 
-    // Create a new user password entity
+    // Create a new user password entity.
     const userPassword = this.passwordRepository.create({
       password_hash: passwordHashed.hash,
       salt: passwordHashed.salt,
       user,
     });
 
-    // Associate the password entity with the user
+    // Associate the user password entity with the user.
     user.password = userPassword;
 
-    // Create a new user email entity
+    // Create a new user email entity.
     const userEmail = this.authEmailsRepository.create({
       user,
       value: email,
     });
 
-    // Associate the email entity with the user
+    // Associate the user email entity with the user.
     user.email = userEmail;
 
-    // Persist the password, email,and user entities
+    // Persist the user, user password, and user email entities to the database.
     await this.em.persistAndFlush([userEmail, userPassword, user]);
 
+    // Return the created user account.
     return user;
   }
 
   /**
    * Updates the account information of a user.
+   *
+   * This method carries out the following steps:
+   * 1. Fetches the user's information from the database using the provided userId.
+   * 2. If such a user doesn't exist, throws a NotFoundException.
+   * 3. Checks if the provided username is already associated with another account.
+   * 4. If the username is taken by another user, throws a BadRequestException.
+   * 5. Updates the user's account details with the provided input.
+   * 6. Persists the updated user information to the database.
+   * 7. Returns the updated user account.
    *
    * @param updateInput - An object containing the updated user information.
    * @param userId - The ID of the user whose account information will be updated.
@@ -362,7 +430,7 @@ export class AuthAccountService {
     { biography, first_name, last_name, username }: AuthUpdateAccountInput,
     userId: string,
   ): Promise<AuthUserObject> {
-    // Find the user by their userId and populate the email relationship
+    // Fetch the user's information from the database using the provided userId.
     const user = await this.usersRespository.findOne(
       {
         id: userId,
@@ -372,31 +440,35 @@ export class AuthAccountService {
       },
     );
 
+    // If the fetched user entity is null or undefined, it means the user does not exist. Hence, throw a NotFoundException.
     if (!user) {
       throw new NotFoundException(
         'Your account information could not be obtained.',
       );
     }
 
-    // Check if the selected username is already in use by another user
+    // Check if the provided username is already associated with another user account.
     const usernameExist = await this.usersRespository.findOne({
       username,
     });
 
+    // If the username is taken by another user and doesn't match the current userId, throw a BadRequestException.
     if (usernameExist && usernameExist.id !== userId) {
       throw new BadRequestException(
         "You can't select that username because another user already has it.",
       );
     }
 
-    // Update the user's account information
+    // Update the user's account details with the provided input.
     user.username = username;
     user.first_name = first_name;
     user.last_name = last_name;
     user.biography = biography;
 
-    // Persist the updated user account information
+    // Persist the updated user information to the database.
     await this.em.persistAndFlush(user);
+
+    // Return the updated user account.
     return user;
   }
 }
