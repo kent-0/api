@@ -4,10 +4,17 @@ import { PaginationInput } from '~/utils/graphql/inputs';
 
 import { IsUUID } from 'class-validator';
 
+/**
+ * Input type for paginating a list of project roles.
+ * Extends the PaginationInput class.
+ */
 @InputType({
   description: 'Get list of project roles and be able to paginate it.',
 })
 export class ProjectRolePaginationInput extends PaginationInput {
+  /**
+   * Project where the roles to page are.
+   */
   @Field(() => String, {
     description: 'Project where the roles to page are.',
   })

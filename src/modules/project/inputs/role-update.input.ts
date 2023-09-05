@@ -2,10 +2,16 @@ import { Field, InputType } from '@nestjs/graphql';
 
 import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 
+/**
+ * Input type to update roles for projects.
+ */
 @InputType({
   description: 'Input to update roles for projects.',
 })
 export class UpdateProjectRoleInput {
+  /**
+   * Role name.
+   */
   @Field(() => String, {
     description: 'Role name.',
     nullable: true,
@@ -16,6 +22,9 @@ export class UpdateProjectRoleInput {
   })
   public name?: string;
 
+  /**
+   * Role permissions bit.
+   */
   @Field(() => Number, {
     description: 'Role permissions bit.',
     nullable: true,
@@ -23,6 +32,9 @@ export class UpdateProjectRoleInput {
   @IsNumber({}, { message: 'Permissions must be in bit format.' })
   public permissions?: number;
 
+  /**
+   * ID of the role to update.
+   */
   @Field(() => String, {
     description: 'ID of the role to update.',
   })
