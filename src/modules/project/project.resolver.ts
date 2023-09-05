@@ -1,5 +1,5 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
 import { ProjectPermissions } from '~/permissions/enums';
@@ -84,7 +84,7 @@ export class ProjectResolver {
     return this._roleService.delete(roleId);
   }
 
-  @Mutation(() => ProjectObject, {
+  @Query(() => ProjectObject, {
     description: 'Get a project.',
   })
   @UseGuards(ProjectPermissionsGuard)
