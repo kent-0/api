@@ -1,40 +1,59 @@
 import { QueryOrder } from '@mikro-orm/core';
 
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
+/**
+ * `PaginationInput` serves as a standardized structure for paginating and sorting query results in GraphQL.
+ * This abstract class should be extended in other specific input types for queries that require pagination.
+ *
+ * @description Provides properties and validation for pagination and sorting.
+ */
 @InputType({
+  description:
+    'Base input for pagination parameters. Useful for standardizing pagination across queries.',
   isAbstract: true,
 })
 export abstract class PaginationInput {
-  @Field(() => Number, {
-    description: 'Page number to use in the pagination.',
-  })
-  @IsNumber({}, { message: 'Enter a valid page number.' })
-  @Min(1, { message: 'The minimum page number is 1.' })
+  /**
+   * @description Represents the specific page number to retrieve. Page numbering starts from 1.
+   * @example If you want to retrieve the third page of results, set this value to 3.
+   * @type {number}
+   */
+  @Field(() => Int)
+  @IsNumber({}, { message: 'The page number should be a valid number.' })
+  @Min(1, { message: 'The page number should be at least 1.' })
   public page!: number;
 
-  @Field(() => Number, { description: 'Total size of the page.' })
-  @IsNumber({}, { message: 'Enter a valid page size.' })
-  @Min(0, { message: 'The minimum page size number is 1.' })
+  /**
+   * @description Defines the number of items to retrieve per page.
+   * @example If you want 20 items per page, set this value to 20.
+   * @type {number}
+   */
+  @Field(() => Int)
+  @IsNumber({}, { message: 'The page size should be a valid number.' })
+  @Min(0, { message: 'The page size should be at least 1.' })
   public size!: number;
 
-  @Field(() => String, {
-    description:
-      'Sort the elements according to a field of the element. The element field must be at the first level of the object.',
-    nullable: true,
-  })
-  @IsString({ message: 'Please enter a valid order field.' })
+  /**
+   * @description Specifies the field by which the results should be sorted. Must be a top-level field name of the returned object.
+   * @example If you're querying a list of users and want to sort by 'lastName', set this value to 'lastName'.
+   * @type {string}
+   */
+  @Field(() => String, { nullable: true })
+  @IsString({ message: 'The sorting field should be a valid string.' })
   @IsOptional()
   public sortBy?: string;
 
-  @Field(() => QueryOrder, {
-    description: 'Direction of how to order the elements.',
-    nullable: true,
-  })
+  /**
+   * @description Dictates the direction in which results should be sorted. Can be either `ASC` (ascending) or `DESC` (descending).
+   * @example If you want the results in ascending order, set this value to `ASC`.
+   * @type {QueryOrder}
+   */
+  @Field(() => QueryOrder, { nullable: true })
   @IsEnum(QueryOrder, {
-    message: 'You can only select valid types of element ordering.',
+    message: 'The sorting order should either be ASC or DESC.',
   })
   @IsOptional()
   public sortOrder?: QueryOrder;

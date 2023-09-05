@@ -1,75 +1,72 @@
 import { Injectable } from '@nestjs/common';
 
 /**
- * Bit-based permission manager
- * It allows adding, removing, verifying and obtaining the permissions of the role and/or user.
+ * Bit-based permission manager.
+ * It allows adding, removing, verifying, and obtaining the permissions of the role and/or user.
  */
 @Injectable()
 export class PermissionManagerService {
+  // Internal state to manage the permissions.
   private _perms = 0;
 
   /**
-   * Add permissions to the base permissions passed in the admin constructor.
-   * @param permission Permission bit to add.
+   * Add a permission to the current set of managed permissions.
+   * @param permission - The permission bit to add.
+   * @returns This service instance, allowing for method chaining.
    */
   public add(permission: number) {
-    // Add the specified permission bit to the managed permissions.
     this._perms |= permission;
-
     return this;
   }
 
   /**
-   * Add multiple permissions to the base permissions passed in the admin constructor.
-   * @param permissions Array of permission bits to add.
+   * Add multiple permissions to the current set of managed permissions.
+   * @param permissions - An array of permission bits to add.
+   * @returns This service instance, allowing for method chaining.
    */
   public bulkAdd(permissions: number[]) {
-    // Loop through the array of permissions and add each one.
     for (const p of permissions) {
       this.add(p);
     }
-
     return this;
   }
 
   /**
-   * Remove permissions from the base permissions passed in the admin constructor.
-   * @param permissions Array of permission bits to remove.
+   * Remove multiple permissions from the current set of managed permissions.
+   * @param permissions - An array of permission bits to remove.
+   * @returns This service instance, allowing for method chaining.
    */
   public bulkRemove(permissions: number[]) {
-    // Loop through the array of permissions and remove each one.
     for (const p of permissions) {
       this.remove(p);
     }
-
     return this;
   }
 
   /**
-   * Check if the permission is valid for the permission bit passed in the manager construct.
-   * @param permission Permission bit to verify.
+   * Check if a given permission is present in the current set of managed permissions.
+   * @param permission - The permission bit to check.
+   * @returns True if the permission is present, false otherwise.
    */
-  public has(permission: number) {
-    // Check if the specified permission bit is present in the managed permissions.
+  public has(permission: number): boolean {
     return (this._perms & permission) === permission;
   }
 
   /**
-   * Gets the new, managed permissions bit.
+   * Getter to retrieve the current set of managed permissions.
+   * @returns The current set of managed permissions as a bit value.
    */
-  public get permissions() {
-    // Get the current managed permissions.
+  public get permissions(): number {
     return this._perms;
   }
 
   /**
-   * Remove permissions from the base permissions passed in the admin constructor.
-   * @param permission Permission bit to remove.
+   * Remove a permission from the current set of managed permissions.
+   * @param permission - The permission bit to remove.
+   * @returns This service instance, allowing for method chaining.
    */
   public remove(permission: number) {
-    // Remove the specified permission bit from the managed permissions.
     this._perms &= ~permission;
-
     return this;
   }
 }

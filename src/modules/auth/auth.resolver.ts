@@ -22,12 +22,21 @@ import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 
 /**
- * AuthResolver class defines GraphQL resolver methods for authentication related operations.
- * It uses various guards and pipes to handle authentication, validation, and authorization.
+ * The AuthResolver class manages the GraphQL API endpoints related to authentication.
+ * It acts as a bridge between the API and the services that handle authentication logic.
+ * By providing clear, concise, and descriptive resolver methods, it allows the clients
+ * to interact seamlessly with the application's authentication system.
  */
 @Resolver()
 @UsePipes(ValidationPipe)
 export class AuthResolver {
+  /**
+   * Constructor initializes the resolver with the necessary services.
+   *
+   * @param _accountService - Service responsible for account-based operations.
+   * @param _passwordService - Service responsible for password-related operations.
+   * @param _emailService - Service responsible for email-related operations.
+   */
   constructor(
     private _accountService: AuthAccountService,
     private _passwordService: AuthPasswordService,
@@ -35,16 +44,16 @@ export class AuthResolver {
   ) {}
 
   /**
-   * Change the current user's password.
-   * Requires authentication using JWTAuthGuard.
+   * This resolver method allows authenticated users to change their password.
    *
-   * @param input - An object containing the current and new passwords.
-   * @param token - Decoded JWT payload obtained from the token.
-   * @returns A success message indicating that the password was updated.
+   * @param input - Contains current and new password data.
+   * @param token - JWT payload for the authenticated user.
+   * @returns A string message indicating the status of the password change.
    */
   @UseGuards(JwtAuthGuard)
   @Mutation(() => String, {
-    description: 'Change the user current password.',
+    description:
+      'Allows the authenticated user to change their current password. Ensures security by requiring the user to provide the current password before updating.',
   })
   public changePassword(
     @Args('input') input: AuthChangePasswordInput,
@@ -54,59 +63,61 @@ export class AuthResolver {
   }
 
   /**
-   * Activate the email of the user account.
+   * This resolver method is for users to confirm their email address
+   * using the activation code they received during sign up.
    *
-   * @param input - An object containing the activation code and email.
-   * @returns The confirmed user email information.
+   * @param input - Contains activation code and email to be confirmed.
+   * @returns Email confirmation status and the email address.
    */
   @Mutation(() => AuthUserEmailObject, {
-    description: 'Activate the email of the user account.',
+    description:
+      'Allows users to confirm their email after registration. An essential step to ensure the authenticity of the user’s email.',
   })
   public confirmEmail(@Args('input') input: AuthConfirmEmailInput) {
     return this._emailService.confirm(input);
   }
 
   /**
-   * Log out the current user's token session.
-   * Requires authentication using JWTAuthGuard.
+   * Logs out the user by invalidating the current token session, ensuring the user needs to re-authenticate to get access again.
    *
-   * @param token - Decoded JWT payload obtained from the token.
-   * @returns A message indicating the status of the logout.
+   * @param token - JWT payload of the authenticated user.
+   * @returns A message indicating successful logout.
    */
   @UseGuards(JwtAuthGuard)
   @Mutation(() => String, {
-    description: 'Close current user token session.',
+    description:
+      'Ensures a user’s session is terminated and requires re-authentication for subsequent access.',
   })
   public logOut(@UserToken() token: JWTPayload) {
     return this._accountService.logOut(token.raw, token.sub);
   }
 
   /**
-   * Get the current information of the authenticated user.
-   * Requires authentication using JWTAuthGuard.
+   * Returns the user's account details.
    *
-   * @param token - Decoded JWT payload obtained from the token.
-   * @returns The user's information.
+   * @param token - JWT payload of the authenticated user.
+   * @returns User's detailed account information.
    */
   @UseGuards(JwtAuthGuard)
   @Query(() => AuthUserObject, {
-    description: 'Current information of the authenticated user.',
+    description:
+      'Provides detailed information of the authenticated user, allowing them to view their current account state.',
   })
   public me(@UserToken() token: JWTPayload) {
     return this._accountService.me(token.sub);
   }
 
   /**
-   * Refresh the access token using the refresh token.
-   * Requires authentication using JWTAuthGuard.
+   * Provides a new access token for authenticated users, prolonging their authenticated session.
    *
-   * @param refreshToken - Refresh token associated with the user's session.
-   * @param token - Decoded JWT payload obtained from the token.
-   * @returns An object containing the new access token and the provided refresh token.
+   * @param refreshToken - Token that allows users to get a new access token.
+   * @param token - JWT payload of the authenticated user.
+   * @returns New access token and refresh token.
    */
   @UseGuards(JwtAuthGuard)
   @Mutation(() => AuthSignInObject, {
-    description: 'Refresh access token with refresh token.',
+    description:
+      'Ensures that an authenticated user can prolong their session without needing to re-enter credentials.',
   })
   public refreshSession(
     @Args('refresh_token') refreshToken: string,
@@ -116,42 +127,44 @@ export class AuthResolver {
   }
 
   /**
-   * Log in to the user account.
+   * Authenticates users based on their credentials and provides JWT tokens for future requests.
    *
-   * @param input - An object containing the user's username and password.
-   * @returns An object containing the generated access and refresh tokens.
+   * @param input - Contains user's credentials.
+   * @returns Authenticated session details including access and refresh tokens.
    */
   @Mutation(() => AuthSignInObject, {
-    description: 'Log in to the user account.',
+    description:
+      'Facilitates user authentication and initiates a secure session by providing necessary tokens.',
   })
   public signIn(@Args('input') input: AuthSignInInput) {
     return this._accountService.signIn(input);
   }
 
   /**
-   * Create a user on the platform.
+   * Allows new users to register on the platform.
    *
-   * @param input - An object containing user registration details.
-   * @returns The created user account.
+   * @param input - Contains user's registration details.
+   * @returns The newly created user's account details.
    */
   @Mutation(() => AuthUserObject, {
-    description: 'Create a user on the platform.',
+    description:
+      'Handles new user registrations, ensuring a smooth onboarding process.',
   })
   public signUp(@Args('input') input: AuthSignUpInput) {
     return this._accountService.signUp(input);
   }
 
   /**
-   * Change the username of the current user.
-   * Requires authentication using JWTAuthGuard.
+   * Allows users to update their personal details.
    *
-   * @param input - An object containing the updated user information.
-   * @param token - Decoded JWT payload obtained from the token.
-   * @returns The updated user account information.
+   * @param input - Contains updated user information.
+   * @param token - JWT payload of the authenticated user.
+   * @returns The updated user's account details.
    */
   @UseGuards(JwtAuthGuard)
   @Mutation(() => AuthUserObject, {
-    description: 'Change username of the current user.',
+    description:
+      'Allows users to update personal details ensuring their profile remains current.',
   })
   public update(
     @Args('input') input: AuthUpdateAccountInput,

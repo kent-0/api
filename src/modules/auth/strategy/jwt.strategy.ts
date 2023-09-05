@@ -11,23 +11,39 @@ import { AuthTokensEntity } from '~/database/entities';
 import { TokenType } from '~/database/enums/token.enum';
 
 import { Request } from 'express';
-import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { JWTPayload } from '../interfaces/jwt.interface';
 
 /**
- * JWTStrategy class implements PassportStrategy for JWT authentication.
- * This strategy validates JWT tokens, checks their validity, expiration,
- * and revocation status before allowing access to protected resources.
+ * `JWTStrategy` class is an implementation of Passport's strategy for JWT authentication.
+ * It ensures that incoming requests to the application have a valid JWT token.
+ *
+ * This strategy performs the following checks:
+ * - Ensures that a JWT token is present in the `authorization` header of the request.
+ * - Verifies the validity of the provided JWT token.
+ * - Checks the token against the database to ensure it's not revoked and is still valid.
+ * - Marks the token as revoked if it's expired.
+ *
+ * If the token passes all checks, the request is authenticated successfully. Otherwise,
+ * appropriate exceptions are thrown to indicate the error.
+ *
+ * @example
+ * // Usage in a controller
+ * @UseGuards(JwtAuthGuard)
+ * myProtectedRoute(@UserToken() user) {...}
+ *
+ * @extends {PassportStrategy(Strategy)}
  */
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
   /**
-   * Constructs an instance of JWTStrategy.
-   * @param tokensRepository Injected repository for AuthTokensEntity.
-   * @param _jwtService Injected JwtService instance for JWT operations.
-   * @param em Injected EntityManager for database operations.
-   * @param _configService Injected ConfigService for accessing configuration values.
+   * Initializes the JWT strategy with necessary services and configuration.
+   *
+   * @param {EntityRepository<AuthTokensEntity>} tokensRepository - ORM repository for handling authentication tokens.
+   * @param {JwtService} _jwtService - Service for JWT-related operations.
+   * @param {EntityManager} em - Entity Manager for database operations.
+   * @param {ConfigService} _configService - Service to access configuration values.
    */
   constructor(
     @InjectRepository(AuthTokensEntity)
@@ -37,22 +53,24 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     public readonly _configService: ConfigService,
   ) {
     super({
-      // Configure JWT Strategy options using values from ConfigService
       audience: _configService.getOrThrow<string>('APP_JWT_AUDIENCE'),
       ignoreExpiration: false,
       issuer: _configService.getOrThrow<string>('APP_JWT_ISSUER'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       passReqToCallback: true,
       secretOrKey: _configService.getOrThrow<string>('APP_JWT_TOKEN'),
-    } as StrategyOptions);
+    });
   }
 
   /**
-   * Validates the JWT token and checks its validity, expiration, and revocation status.
-   * @param request The HTTP request object.
-   * @param payload The decoded JWT payload.
-   * @returns The validated JWT payload.
-   * @throws UnauthorizedException if the token is missing, invalid, revoked, or expired.
+   * Validates the JWT token. This method is automatically called by the Passport module.
+   *
+   * @param {Request} request - The incoming HTTP request.
+   * @param {JWTPayload} payload - The decoded JWT payload.
+   *
+   * @returns {JWTPayload} - Returns the JWT payload if the token is valid.
+   *
+   * @throws {UnauthorizedException} - Throws if the token is missing, invalid, revoked, or expired.
    */
   public async validate(request: Request, payload: JWTPayload) {
     const token = request.headers.authorization?.split(' ')?.[1];

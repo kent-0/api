@@ -19,12 +19,12 @@ import { AuthEmailService } from './services/email.service';
 import { JWTStrategy } from './strategy/jwt.strategy';
 
 /**
- * AuthModule class represents the authentication module of the application.
- * It defines the imports, providers, and configuration related to authentication.
+ * The AuthModule is responsible for organizing and orchestrating all authentication related components.
+ * It integrates various services, strategies, and entities to handle authentication functionalities.
  */
 @Module({
   imports: [
-    // Import MikroORM module with specified entities
+    // MikroORM module to enable interaction with specified entities.
     MikroOrmModule.forFeature({
       entities: [
         AuthTokensEntity,
@@ -33,15 +33,17 @@ import { JWTStrategy } from './strategy/jwt.strategy';
         AuthEmailsEntity,
       ],
     }),
-    // Configure Passport module with JWT strategy as default
+
+    // Passport module integration with JWT as the default strategy.
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    // Configure JWT module with asynchronous factory to create JWT options
+
+    // JWT module configuration. Asynchronous factory pattern is used to dynamically create JWT options.
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (_configService: ConfigService) => ({
         global: true,
-        // Configure JWT secret, audience, and issuer from ConfigService
+        // Retrieve JWT configurations from environment or other external configurations.
         secret: _configService.getOrThrow<string>('APP_JWT_TOKEN'),
         signOptions: {
           audience: _configService.getOrThrow<string>('APP_JWT_AUDIENCE'),
@@ -51,8 +53,9 @@ import { JWTStrategy } from './strategy/jwt.strategy';
       }),
     }),
   ],
+
+  // Define the providers for this module, which includes services and strategies.
   providers: [
-    // Register various services and strategies as providers
     AuthAccountService,
     AuthResolver,
     JWTStrategy,

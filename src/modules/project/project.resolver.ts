@@ -28,6 +28,16 @@ import { UserToken } from '../auth/decorators/user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { JWTPayload } from '../auth/interfaces/jwt.interface';
 
+/**
+ * The `ProjectResolver` class is a NestJS GraphQL resolver responsible for handling
+ * GraphQL queries and mutations related to projects. This resolver implements various
+ * methods to manage project functionalities such as creation, updates, role assignments,
+ * and more.
+ *
+ * It uses the `ValidationPipe` to ensure that incoming data adheres to the expected schema,
+ * and the `JwtAuthGuard` and `ProjectPermissionsGuard` to ensure that only authenticated
+ * users with the correct permissions can access certain functionalities.
+ */
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
@@ -37,15 +47,29 @@ export class ProjectResolver {
     private _roleService: ProjectRolesService,
   ) {}
 
+  /**
+   * Assigns a role to project members.
+   * Requires permission to assign roles.
+   *
+   * @param input - Data containing information on which role to assign and to whom.
+   * @returns The updated project member details with the assigned role.
+   */
   @Mutation(() => ProjectMembersObject, {
     description: 'Assign project role to members.',
   })
   @ProjectPermissions([Permissions.AssignRole])
   public assignRole(@Args('input') input: AssignProjectRoleInput) {
-    // Call the 'update' method of the RoleService to assign a role to member.
     return this._roleService.assign(input);
   }
 
+  /**
+   * Creates a new project.
+   * This mutation doesn't require the `ProjectPermissionsGuard`.
+   *
+   * @param input - Data containing information about the new project.
+   * @param token - Decoded JWT token containing user information.
+   * @returns The created project details.
+   */
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
   })
@@ -54,19 +78,31 @@ export class ProjectResolver {
     @Args('input') input: CreateProjectInput,
     @UserToken() token: JWTPayload,
   ) {
-    // Call the 'create' method of the ProjectService to create a new project.
     return this._projectService.create(input, token.sub);
   }
 
+  /**
+   * Creates a new role for a project.
+   * Requires permission to create roles.
+   *
+   * @param input - Data containing information about the new role.
+   * @returns The created role details.
+   */
   @Mutation(() => ProjectRolesObject, {
     description: 'Create a new project role.',
   })
   @ProjectPermissions([Permissions.CreateRole])
   public createRole(@Args('input') input: CreateProjectRoleInput) {
-    // Call the 'create' method of the RolesService to create a new role.
     return this._roleService.create(input);
   }
 
+  /**
+   * Deletes a specified project.
+   *
+   * @param projectId - The ID of the project to delete.
+   * @param token - Decoded JWT token containing user information.
+   * @returns A message confirming the deletion.
+   */
   @Mutation(() => String, {
     description: 'Delete a project.',
   })
@@ -74,59 +110,92 @@ export class ProjectResolver {
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
   ) {
-    // Call the 'delete' method of the ProjectService to delete a project.
     return this._projectService.delete(projectId, token.sub);
   }
 
+  /**
+   * Deletes a specified role from a project.
+   * Requires permission to delete roles.
+   *
+   * @param roleId - The ID of the role to delete.
+   * @returns A message confirming the deletion.
+   */
   @Mutation(() => String, {
     description: 'Delete a project role.',
   })
   @ProjectPermissions([Permissions.DeleteRole])
   public deleteRole(@Args('roleId') roleId: string) {
-    // Call the 'delete' method of the RoleService to delete a role.
     return this._roleService.delete(roleId);
   }
 
+  /**
+   * Retrieves details of a specified project.
+   *
+   * @param projectId - The ID of the project to retrieve.
+   * @returns The details of the specified project.
+   */
   @Query(() => ProjectObject, {
     description: 'Get a project.',
   })
   public getProject(@Args('projectId') projectId: string) {
-    // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);
   }
 
+  /**
+   * Paginates the roles associated with a project.
+   *
+   * @param input - Pagination input details.
+   * @returns A paginated list of project roles.
+   */
   @Query(() => ProjectPaginatedProjectRoles, {
-    description: 'Update role of a project.',
+    description: 'Paginate the roles of a project.',
   })
   public projectRoles(@Args('input') input: ProjectRolePaginationInput) {
-    // Call the 'paginate' method of the RoleService to paginate available roles in the project.
     return this._roleService.paginate(input);
   }
 
+  /**
+   * Removes an assigned role from a project member.
+   * Requires permission to unassign roles.
+   *
+   * @param input - Data containing details of the role assignment to remove.
+   * @returns The details of the unassigned role.
+   */
   @Mutation(() => ProjectMembersObject, {
-    description: 'Unassign project role to members.',
+    description: 'Unassign a role from a project member.',
   })
   @ProjectPermissions([Permissions.UnassignRole])
   public unassignRole(@Args('input') input: UnassignProjectRoleInput) {
-    // Call the 'update' method of the RoleService to unassign a role to member.
-    return this._roleService.unassing(input);
+    return this._roleService.unassign(input);
   }
 
+  /**
+   * Updates the details of a specified project.
+   * Requires permission to update projects.
+   *
+   * @param input - Data containing updated project details.
+   * @returns The updated project details.
+   */
   @Mutation(() => ProjectObject, {
-    description: 'Update current project.',
+    description: 'Update the details of a project.',
   })
   @ProjectPermissions([Permissions.UpdateProject])
   public updateProject(@Args('input') input: UpdateProjectInput) {
-    // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
   }
 
+  /**
+   * Updates the details of a specified project role.
+   * Requires permission to update roles.
+   *
+   * @param input - Data containing updated role details.
+   * @returns The updated role details.
+   */
   @Mutation(() => ProjectRolesObject, {
-    description: 'Update role of a project.',
+    description: 'Update the details of a project role.',
   })
   @ProjectPermissions([Permissions.UpdateRole])
   public updateRole(@Args('input') input: UpdateProjectRoleInput) {
-    // Call the 'update' method of the RoleService to update a role.
     return this._roleService.update(input);
   }
 }

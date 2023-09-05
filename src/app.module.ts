@@ -69,7 +69,6 @@ import './utils/graphql/registers/enum.register';
 
     // App modules
     AuthModule,
-
     ProjectModule,
   ],
 })

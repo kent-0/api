@@ -9,14 +9,23 @@ import {
 } from 'class-validator';
 
 /**
- * Input type to update roles for projects.
+ * The `UpdateProjectRoleInput` class provides a structured format for the
+ * input data required to update a role within a specific project. It allows
+ * for the updating of role name and permissions, while also specifying
+ * the project context and the specific role to be updated.
+ *
+ * This class is important to ensure that updates to roles are done with
+ * precision, maintaining data integrity and ensuring that users' permissions
+ * within projects are accurately represented.
  */
 @InputType({
   description: 'Input to update roles for projects.',
 })
 export class UpdateProjectRoleInput {
   /**
-   * Role name.
+   * Represents the name of the role that is to be updated.
+   * It's an optional field, meaning that if not provided, the role's name
+   * remains unchanged.
    */
   @Field(() => String, {
     description: 'Role name.',
@@ -30,7 +39,9 @@ export class UpdateProjectRoleInput {
   public name?: string;
 
   /**
-   * Role permissions bit.
+   * Contains the updated permissions for the role, represented in bit format.
+   * Permissions are used to define what actions a user can take within a project,
+   * making it crucial to manage and update them accurately.
    */
   @Field(() => Number, {
     description: 'Role permissions bit.',
@@ -41,7 +52,8 @@ export class UpdateProjectRoleInput {
   public permissions?: number;
 
   /**
-   * Project to which the role is unassigned.
+   * Specifies the unique identifier of the project in which the role exists.
+   * This ensures that the role update is executed in the correct project context.
    */
   @Field(() => String, {
     description: 'Project to which the role is unassigned.',
@@ -50,7 +62,9 @@ export class UpdateProjectRoleInput {
   public projectId!: string;
 
   /**
-   * ID of the role to update.
+   * This field captures the unique identifier of the role to be updated.
+   * By specifying the role ID, it ensures that the correct role is updated
+   * and prevents unintended changes to other roles.
    */
   @Field(() => String, {
     description: 'ID of the role to update.',

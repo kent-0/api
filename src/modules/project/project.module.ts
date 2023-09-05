@@ -13,9 +13,20 @@ import { ProjectResolver } from './project.resolver';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
 
+/**
+ * The `ProjectModule` class is a NestJS module responsible for grouping together
+ * all the components associated with the project functionality. It encompasses the
+ * database entities related to projects, the services that operate on these entities,
+ * and the GraphQL resolver which exposes the API endpoints for client interactions.
+ *
+ * Key responsibilities:
+ * - Import necessary database entities and modules to ensure Dependency Injection is correctly resolved.
+ * - Register services and resolvers to manage project-related functionalities.
+ */
 @Module({
   imports: [
-    // Importing MikroORM module for features related to ProjectEntity and ProjectMembersEntity.
+    // MikroORM module is imported to utilize database operations for entities associated with the project.
+    // This ensures that the ORM can correctly interact with these entities.
     MikroOrmModule.forFeature({
       entities: [ProjectEntity, ProjectMembersEntity, ProjectRolesEntity],
     }),

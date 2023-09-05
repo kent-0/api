@@ -266,7 +266,7 @@ export class ProjectRolesService {
    *                               2. If the specified member is not found.
    * @throws {ConflictException} - Throws this exception if the member doesn't have the specified role assigned.
    */
-  public async unassing({
+  public async unassign({
     memberId,
     projectId,
     roleId,
