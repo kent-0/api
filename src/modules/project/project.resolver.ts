@@ -90,7 +90,6 @@ export class ProjectResolver {
   @Query(() => ProjectObject, {
     description: 'Get a project.',
   })
-  @ProjectPermissions([Permissions.UpdateProject])
   public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);
@@ -105,7 +104,7 @@ export class ProjectResolver {
   }
 
   @Mutation(() => ProjectMembersObject, {
-    description: 'Assign project role to members.',
+    description: 'Unassign project role to members.',
   })
   @ProjectPermissions([Permissions.UnassignRole])
   public unassignRole(@Args('input') input: UnassignProjectRoleInput) {
