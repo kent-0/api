@@ -10,7 +10,7 @@
     "source.fixAll": true,
     "source.organizeImports": true
   },
-  "commentTranslate.targetLanguage": "es",
+  "commentTranslate.targetLanguage": "en",
   "editor.tabSize": 2,
   "editor.insertSpaces": true
 }

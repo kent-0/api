@@ -2,7 +2,7 @@ import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { ProjectPermissions } from '~/permissions/enums';
+import { Permissions } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import {
@@ -90,7 +90,7 @@ export class ProjectResolver {
     description: 'Get a project.',
   })
   @UseGuards(ProjectPermissionsGuard)
-  @RequestPermissions([ProjectPermissions.UpdateProject])
+  @RequestPermissions([Permissions.UpdateProject])
   public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);

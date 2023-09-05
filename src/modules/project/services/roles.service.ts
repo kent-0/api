@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { ProjectMembersEntity, ProjectRolesEntity } from '~/database/entities';
+import { checkValidPermissions } from '~/permissions/enums/project.enum';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -140,6 +141,13 @@ export class ProjectRolesService {
       permissions,
       project: projectId,
     });
+
+    // Check if the permissions are valid for the type of role.
+    if (!checkValidPermissions(permissions)) {
+      throw new ConflictException(
+        'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
+      );
+    }
 
     // Persist the new role to the database.
     await this.em.persistAndFlush(role);
