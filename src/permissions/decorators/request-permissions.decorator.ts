@@ -1,3 +1,10 @@
 import { Reflector } from '@nestjs/core';
 
-export const RequestPermissions = Reflector.createDecorator<number[]>();
+import { Permissions as ProjectPermissionsEnum } from '../enums/project.enum';
+import { Permissions as TaskPermissionsEnum } from '../enums/tasks.enum';
+
+export const ProjectPermissions =
+  Reflector.createDecorator<ProjectPermissionsEnum[]>();
+
+export const TaskPermissions =
+  Reflector.createDecorator<TaskPermissionsEnum[]>();

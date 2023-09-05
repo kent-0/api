@@ -1,8 +1,9 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
+import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
 import { Permissions } from '~/permissions/enums/project.enum';
+import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import {
@@ -29,7 +30,7 @@ import { JWTPayload } from '../auth/interfaces/jwt.interface';
 
 @Resolver()
 @UsePipes(ValidationPipe)
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
 export class ProjectResolver {
   constructor(
     private _projectService: ProjectService,
@@ -39,7 +40,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectMembersObject, {
     description: 'Assign project role to members.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.AssignRole])
   public assignRole(@Args('input') input: AssignProjectRoleInput) {
     // Call the 'update' method of the RoleService to assign a role to member.
     return this._roleService.assign(input);
@@ -48,6 +49,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectObject, {
     description: 'Create a new project.',
   })
+  @ExcludeGuards([ProjectPermissionsGuard])
   public createProject(
     @Args('input') input: CreateProjectInput,
     @UserToken() token: JWTPayload,
@@ -59,7 +61,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectRolesObject, {
     description: 'Create a new project role.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.CreateRole])
   public createRole(@Args('input') input: CreateProjectRoleInput) {
     // Call the 'create' method of the RolesService to create a new role.
     return this._roleService.create(input);
@@ -68,7 +70,6 @@ export class ProjectResolver {
   @Mutation(() => String, {
     description: 'Delete a project.',
   })
-  @UseGuards(ProjectPermissionsGuard)
   public deleteProject(
     @Args('projectId') projectId: string,
     @UserToken() token: JWTPayload,
@@ -80,7 +81,7 @@ export class ProjectResolver {
   @Mutation(() => String, {
     description: 'Delete a project role.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.DeleteRole])
   public deleteRole(@Args('roleId') roleId: string) {
     // Call the 'delete' method of the RoleService to delete a role.
     return this._roleService.delete(roleId);
@@ -89,8 +90,7 @@ export class ProjectResolver {
   @Query(() => ProjectObject, {
     description: 'Get a project.',
   })
-  @UseGuards(ProjectPermissionsGuard)
-  @RequestPermissions([Permissions.UpdateProject])
+  @ProjectPermissions([Permissions.UpdateProject])
   public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);
@@ -99,7 +99,6 @@ export class ProjectResolver {
   @Query(() => ProjectPaginatedProjectRoles, {
     description: 'Update role of a project.',
   })
-  @UseGuards(ProjectPermissionsGuard)
   public projectRoles(@Args('input') input: ProjectRolePaginationInput) {
     // Call the 'paginate' method of the RoleService to paginate available roles in the project.
     return this._roleService.paginate(input);
@@ -108,7 +107,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectMembersObject, {
     description: 'Assign project role to members.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.UnassignRole])
   public unassignRole(@Args('input') input: UnassignProjectRoleInput) {
     // Call the 'update' method of the RoleService to unassign a role to member.
     return this._roleService.unassing(input);
@@ -117,7 +116,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectObject, {
     description: 'Update current project.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.UpdateProject])
   public updateProject(@Args('input') input: UpdateProjectInput) {
     // Call the 'update' method of the ProjectService to update a project.
     return this._projectService.update(input);
@@ -126,7 +125,7 @@ export class ProjectResolver {
   @Mutation(() => ProjectRolesObject, {
     description: 'Update role of a project.',
   })
-  @UseGuards(ProjectPermissionsGuard)
+  @ProjectPermissions([Permissions.UpdateRole])
   public updateRole(@Args('input') input: UpdateProjectRoleInput) {
     // Call the 'update' method of the RoleService to update a role.
     return this._roleService.update(input);

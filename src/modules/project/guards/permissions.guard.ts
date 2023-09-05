@@ -12,8 +12,9 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 
 import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
-import { RequestPermissions } from '~/permissions/decorators/request-permissions.decorator';
+import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
+import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 import { deepFindKey } from '~/utils/functions/deep-find';
 
 /**
@@ -43,6 +44,18 @@ export class ProjectPermissionsGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
+
+    // Check if this guard is ignored
+    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
+    if (
+      isExcludeGuard &&
+      isExcludeGuard.some(
+        (guard) => guard.name === ProjectPermissionsGuard.name,
+      )
+    ) {
+      return true;
+    }
+
     const args: { projectId: string } = ctx.getArgs();
     const projectId = deepFindKey<string>(args, 'projectId');
 
@@ -51,7 +64,7 @@ export class ProjectPermissionsGuard implements CanActivate {
 
     // Get the required permissions from the decorator.
     const requestPermissions = this.reflector.get(
-      RequestPermissions,
+      ProjectPermissions,
       ctx.getHandler(),
     );
 
