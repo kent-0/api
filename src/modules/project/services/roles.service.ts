@@ -16,7 +16,12 @@ import {
   UnassignProjectRoleInput,
   UpdateProjectRoleInput,
 } from '../inputs';
-import { ProjectMembersObject, ProjectRolesObject } from '../objects';
+import { ProjectRolePaginationInput } from '../inputs/role-pagination';
+import {
+  ProjectMembersObject,
+  ProjectPaginatedProjectRoles,
+  ProjectRolesObject,
+} from '../objects';
 
 @Injectable()
 export class ProjectRolesService {
@@ -98,7 +103,39 @@ export class ProjectRolesService {
     return 'The role for project has been removed.';
   }
 
-  public getAll() {}
+  public async paginate({
+    page,
+    projectId,
+    size,
+    sortBy,
+    sortOrder,
+  }: ProjectRolePaginationInput): Promise<ProjectPaginatedProjectRoles> {
+    let orderBy = {};
+    if (sortBy && sortOrder) orderBy = { [sortBy]: sortOrder };
+
+    const [projectRolesPaginated, total] =
+      await this.rolesRepository.findAndCount(
+        {
+          project: projectId,
+        },
+        {
+          limit: size,
+          offset: (page - 1) * size,
+          orderBy,
+          populate: ['members', 'project'],
+        },
+      );
+
+    const totalPages = Math.ceil(total / size);
+
+    return {
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page !== 0,
+      items: projectRolesPaginated,
+      totalItems: total,
+      totalPages,
+    };
+  }
 
   public async unassing({
     memberId,

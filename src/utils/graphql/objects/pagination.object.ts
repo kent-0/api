@@ -1,42 +1,28 @@
-import { QueryOrder } from '@mikro-orm/core';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Field, ID, InputType } from '@nestjs/graphql';
-
-@InputType({
+@ObjectType({
+  description: 'Result of a pagination of elements.',
   isAbstract: true,
 })
-export abstract class Pagination {
-  @Field(() => ID, {
-    description: 'End cursor to show elements.',
-    nullable: true,
+export abstract class PaginationObject {
+  @Field(() => Boolean, {
+    description: 'Indicator if there are more pages following the current one.',
   })
-  public endCursor!: string;
+  hasNextPage!: boolean;
+
+  @Field(() => Boolean, {
+    description:
+      'Indicator of if there are previous pages to the current page.',
+  })
+  hasPreviousPage!: boolean;
 
   @Field(() => Number, {
-    description: 'Page number to use in the pagination.',
-    nullable: true,
+    description: 'Total number of items available to paginate.',
   })
-  public page!: number;
+  totalItems!: number;
 
-  @Field(() => Number, { description: 'Total size of the page.' })
-  public size!: number;
-
-  @Field(() => String, {
-    description:
-      'Sort the elements according to a field of the element. The element field must be at the first level of the object.',
-    nullable: true,
+  @Field(() => Number, {
+    description: 'Total number of pages available to paginate.',
   })
-  public sortBy?: string;
-
-  @Field(() => QueryOrder, {
-    description: 'Direction of how to order the elements.',
-    nullable: true,
-  })
-  public sortOrder?: QueryOrder;
-
-  @Field(() => ID, {
-    description: 'Start cursor to show elements.',
-    nullable: true,
-  })
-  public startCursor?: string;
+  totalPages!: number;
 }

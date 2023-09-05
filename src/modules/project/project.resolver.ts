@@ -13,9 +13,11 @@ import {
 } from './inputs';
 import { AssignProjectRoleInput } from './inputs/role-assign.input';
 import { CreateProjectRoleInput } from './inputs/role-create.input';
+import { ProjectRolePaginationInput } from './inputs/role-pagination';
 import {
   ProjectMembersObject,
   ProjectObject,
+  ProjectPaginatedProjectRoles,
   ProjectRolesObject,
 } from './objects';
 import { ProjectService } from './services/project.service';
@@ -92,6 +94,15 @@ export class ProjectResolver {
   public getProject(@Args('projectId') projectId: string) {
     // Call the 'get' method of the ProjectService to retrieve project details.
     return this._projectService.get(projectId);
+  }
+
+  @Query(() => ProjectPaginatedProjectRoles, {
+    description: 'Update role of a project.',
+  })
+  @UseGuards(ProjectPermissionsGuard)
+  public projectRoles(@Args('input') input: ProjectRolePaginationInput) {
+    // Call the 'paginate' method of the RoleService to paginate available roles in the project.
+    return this._roleService.paginate(input);
   }
 
   @Mutation(() => ProjectMembersObject, {
