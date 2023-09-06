@@ -13,7 +13,8 @@ import { TokenType } from '../../enums/token.enum';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing access and refresh tokens created in user sessions.
+ * Entity representing the authentication tokens. These tokens can be of various types,
+ * such as access or refresh tokens, and are created during user sessions for authentication and authorization purposes.
  */
 @Entity({
   comment: 'Access and refresh tokens created in user sessions.',
@@ -21,12 +22,14 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class AuthTokensEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, which includes
+   * any optional properties from the parent entity.
    */
   public [OptionalProps]?: OptionalParentProps;
 
   /**
-   * Name of the device used to generate the token.
+   * Denotes the device name from which the token request was initiated.
+   * This is useful for tracking and managing sessions across different devices.
    */
   @Property({
     columnType: 'varchar',
@@ -37,7 +40,8 @@ export class AuthTokensEntity extends ParentEntity {
   public device!: string;
 
   /**
-   * Token expiration date.
+   * The expiration date and time of the token. After this timestamp,
+   * the token will no longer be valid.
    */
   @Property({
     columnType: 'timestamp',
@@ -47,7 +51,8 @@ export class AuthTokensEntity extends ParentEntity {
   public expiration!: Date;
 
   /**
-   * Token revocation status.
+   * Indicates whether the token has been revoked manually or programmatically.
+   * A revoked token cannot be used for authentication.
    */
   @Property({
     columnType: 'bool',
@@ -57,7 +62,8 @@ export class AuthTokensEntity extends ParentEntity {
   public revoked = false;
 
   /**
-   * Type of token generated.
+   * Specifies the type of token, which can be an access token, refresh token, etc.
+   * The possible types are defined in the TokenType enum.
    */
   @Enum({
     comment: 'Type of token generated.',
@@ -67,10 +73,12 @@ export class AuthTokensEntity extends ParentEntity {
   public token_type!: TokenType;
 
   /**
-   * Value of the token.
+   * The actual value of the token, which is sent in requests for authentication and authorization.
    */
   @Property({
     columnType: 'varchar',
+    comment:
+      'The actual value of the token, which is sent in requests for authentication and authorization.',
     length: 100,
     type: 'string',
     unique: true,
@@ -78,7 +86,9 @@ export class AuthTokensEntity extends ParentEntity {
   public token_value!: string;
 
   /**
-   * Relationship to the user assigned to the generated token.
+   * Many-to-One relationship with the AuthUserEntity. Represents the user
+   * to whom this token was issued. Each user can have multiple tokens,
+   * but each token is associated with only one user.
    */
   @ManyToOne({
     comment: 'Relationship to the user assigned to the generated token.',

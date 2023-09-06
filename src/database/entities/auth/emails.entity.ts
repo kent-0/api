@@ -19,7 +19,9 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class AuthEmailsEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity. This includes
+   * the activation token, the confirmation status, and any optional properties
+   * from the parent entity.
    */
   public [OptionalProps]?:
     | 'activation_token'
@@ -27,7 +29,8 @@ export class AuthEmailsEntity extends ParentEntity {
     | OptionalParentProps;
 
   /**
-   * Token used for mail confirmation.
+   * Token generated and used to confirm the email address. This token is
+   * hidden by default and can be nullable.
    */
   @Property({
     comment: 'Mail confirmation token.',
@@ -38,7 +41,8 @@ export class AuthEmailsEntity extends ParentEntity {
   public activation_token!: string;
 
   /**
-   * Indicates whether the email is confirmed or not.
+   * Boolean property that indicates if the email has been confirmed.
+   * By default, an email is not confirmed.
    */
   @Property({
     comment: 'Mail status confirmed or not.',
@@ -47,7 +51,9 @@ export class AuthEmailsEntity extends ParentEntity {
   public is_confirmed = false;
 
   /**
-   * Relationship to the user assigned to the created email.
+   * One-to-One relationship with the AuthUserEntity. Represents the user
+   * to whom this email belongs. If the email is deleted, the related user
+   * will also be deleted (cascade delete).
    */
   @OneToOne({
     comment: 'Relationship to the user assigned to the created email.',
@@ -57,7 +63,8 @@ export class AuthEmailsEntity extends ParentEntity {
   public user!: Rel<AuthUserEntity>;
 
   /**
-   * Unique email per user.
+   * Represents the email address of the user. This email is unique across
+   * all users and must match a specified email pattern.
    */
   @Property({
     check: "value ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[A-Za-z]{2,}$'",

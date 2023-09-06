@@ -14,7 +14,9 @@ import { BoardMembersEntity } from './members.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing roles to manage the boards.
+ * Entity representing different roles within the board management system.
+ * Each role has specific permissions, and these permissions are represented using a bit-based system.
+ * Users are assigned roles, and these roles dictate what actions they can perform on a board.
  */
 @Entity({
   comment:
@@ -23,12 +25,14 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class BoardRolesEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, which includes
+   * any optional properties from the parent entity.
    */
   public [OptionalProps]?: OptionalParentProps;
 
   /**
-   * Board assigned to the role. Available roles are removed when the board is removed.
+   * Many-to-One relationship with the BoardEntity. Indicates the specific board
+   * to which this role applies. If a board is deleted, all associated roles are also removed.
    */
   @ManyToOne({
     comment:
@@ -39,7 +43,8 @@ export class BoardRolesEntity extends ParentEntity {
   public board!: Rel<BoardEntity>;
 
   /**
-   * Board members who have this role.
+   * Many-to-Many relationship with the BoardMembersEntity. Represents all the users
+   * who have been assigned this specific role on the associated board.
    */
   @ManyToMany(() => BoardMembersEntity, (m) => m.roles, {
     comment: 'Board members who have this role.',
@@ -48,7 +53,7 @@ export class BoardRolesEntity extends ParentEntity {
   public members = new Collection<BoardMembersEntity>(this);
 
   /**
-   * Name representing the role.
+   * The name of the role, which provides a human-readable identifier for the role's purpose or permissions.
    */
   @Property({
     columnType: 'varchar',
@@ -59,7 +64,8 @@ export class BoardRolesEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Role bit-based permissions.
+   * The bit-based permissions associated with this role. This numeric value is used
+   * to determine what actions a user with this role can perform on the board.
    */
   @Property({
     columnType: 'numeric',

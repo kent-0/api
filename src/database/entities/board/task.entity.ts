@@ -18,7 +18,9 @@ import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing tasks created for the board.
+ * Entity representing individual tasks that are created and managed within a board.
+ * Each task has various attributes, such as an assigned member, associated comments,
+ * a description, and more, which help in tracking and managing the progress of the task.
  */
 @Entity({
   comment: 'Tasks created for the board.',
@@ -26,7 +28,9 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class BoardTaskEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, including
+   * the member assigned to it, its expiration, start, and finish dates, as well as
+   * any optional properties from the parent entity.
    */
   public [OptionalProps]?:
     | 'assigned_to'
@@ -36,7 +40,8 @@ export class BoardTaskEntity extends ParentEntity {
     | OptionalParentProps;
 
   /**
-   * Member assigned to the task.
+   * Many-to-One relationship indicating the member or user who is currently
+   * assigned to work on this task.
    */
   @ManyToOne({
     comment: 'Member assigned to the task.',
@@ -46,7 +51,7 @@ export class BoardTaskEntity extends ParentEntity {
   public assigned_to!: Rel<AuthUserEntity>;
 
   /**
-   * Board on which tasks are assigned.
+   * Many-to-One relationship indicating the board in which this task resides.
    */
   @ManyToOne({
     comment: 'Board on which tasks are assigned.',
@@ -55,7 +60,8 @@ export class BoardTaskEntity extends ParentEntity {
   public board!: Rel<BoardEntity>;
 
   /**
-   * Member feedback on the task.
+   * One-to-Many relationship representing all comments or feedback from members
+   * related to this task.
    */
   @OneToMany(() => BoardTaskCommentEntity, (c) => c.task, {
     comment: 'Member feedback on the task.',
@@ -63,7 +69,7 @@ export class BoardTaskEntity extends ParentEntity {
   public comments!: Rel<BoardTaskCommentEntity>;
 
   /**
-   * Member who created the task.
+   * Many-to-One relationship indicating the member or user who created this task.
    */
   @ManyToOne({
     comment: 'Member who created the task.',
@@ -72,7 +78,8 @@ export class BoardTaskEntity extends ParentEntity {
   public created_by!: Rel<AuthUserEntity>;
 
   /**
-   * Description about the task, such as how the implementation should work, etc.
+   * A detailed description of the task, providing insights into its requirements,
+   * expected outcomes, and any other pertinent details.
    */
   @Property({
     columnType: 'varchar',
@@ -84,7 +91,7 @@ export class BoardTaskEntity extends ParentEntity {
   public description!: string;
 
   /**
-   * Date on which the task should be finished.
+   * The date by which this task is expected to be completed.
    */
   @Property({
     columnType: 'timestamp',
@@ -95,7 +102,7 @@ export class BoardTaskEntity extends ParentEntity {
   public expiration_date!: Date;
 
   /**
-   * Date on which the task ends.
+   * The actual date on which this task was completed or concluded.
    */
   @Property({
     columnType: 'timestamp',
@@ -106,7 +113,7 @@ export class BoardTaskEntity extends ParentEntity {
   public finish_date!: Date;
 
   /**
-   * Name of the task.
+   * The title or name of the task, providing a quick summary or identifier.
    */
   @Property({
     columnType: 'varchar',
@@ -116,7 +123,7 @@ export class BoardTaskEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Task position on the step.
+   * The position or order of this task within its assigned step on the board.
    */
   @Property({
     columnType: 'int',
@@ -126,7 +133,7 @@ export class BoardTaskEntity extends ParentEntity {
   public position!: number;
 
   /**
-   * Date on which the task began.
+   * The date on which work on this task was started.
    */
   @Property({
     columnType: 'timestamp',
@@ -137,7 +144,8 @@ export class BoardTaskEntity extends ParentEntity {
   public start_date!: Date;
 
   /**
-   * Step in which the task is assigned.
+   * Many-to-One relationship indicating the step or phase within the board
+   * where this task is currently positioned.
    */
   @ManyToOne({
     comment: 'Step in which the task is assigned.',
@@ -146,7 +154,8 @@ export class BoardTaskEntity extends ParentEntity {
   public step!: Rel<BoardStepEntity>;
 
   /**
-   * Tags associated with this task.
+   * Many-to-Many relationship representing all the tags or labels associated
+   * with this task, which help in categorizing or highlighting specific tasks.
    */
   @ManyToMany(() => BoardTagsEntity, (t) => t.tasks, {
     comment: 'Tags associated with this task',

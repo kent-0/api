@@ -17,7 +17,9 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 import { ProjectEntity } from '../project/project.entity';
 
 /**
- * Entity containing information about tasks and boards.
+ * Entity representing boards within a project management system.
+ * Each board can have multiple members, associated roles, and specific steps or stages
+ * that tasks go through. The board also has a creator and is associated with a specific project.
  */
 @Entity({
   comment: 'Task table information.',
@@ -25,12 +27,14 @@ import { ProjectEntity } from '../project/project.entity';
 })
 export class BoardEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, which includes
+   * any optional properties from the parent entity.
    */
   public [OptionalProps]?: OptionalParentProps;
 
   /**
-   * Creator of the board. Associated dashboard is also deleted when the user is deleted.
+   * Many-to-One relationship with the AuthUserEntity. Indicates the user who created
+   * the board. If this user is deleted, the board will also be removed.
    */
   @ManyToOne({
     comment:
@@ -41,7 +45,7 @@ export class BoardEntity extends ParentEntity {
   public created_by!: Rel<AuthUserEntity>;
 
   /**
-   * Brief description of the board.
+   * A textual description providing an overview or purpose of the board.
    */
   @Property({
     columnType: 'varchar',
@@ -51,7 +55,8 @@ export class BoardEntity extends ParentEntity {
   public description!: string;
 
   /**
-   * Users assigned to the board.
+   * One-to-Many relationship with the BoardMembersEntity. Represents all the users
+   * who have been assigned to this board, either as contributors or viewers.
    */
   @OneToMany(() => BoardMembersEntity, (m) => m.board, {
     comment: 'Users assigned to the board.',
@@ -59,7 +64,7 @@ export class BoardEntity extends ParentEntity {
   public members = new Collection<Rel<BoardMembersEntity>>(this);
 
   /**
-   * Name of the board.
+   * The name of the board, providing a quick identifier for users.
    */
   @Property({
     columnType: 'varchar',
@@ -69,7 +74,8 @@ export class BoardEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Project owner of the board.
+   * Many-to-One relationship with the ProjectEntity. Represents the project
+   * to which this board belongs.
    */
   @ManyToOne({
     comment: 'Project owner of the board.',
@@ -78,7 +84,9 @@ export class BoardEntity extends ParentEntity {
   public project!: Rel<ProjectEntity>;
 
   /**
-   * Roles to manage the board.
+   * One-to-Many relationship with the BoardRolesEntity. Represents the different roles
+   * or permissions that users can have within this board. For example, some users might
+   * be administrators, while others are regular members.
    */
   @OneToMany(() => BoardRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',
@@ -86,7 +94,9 @@ export class BoardEntity extends ParentEntity {
   public roles = new Collection<Rel<BoardMembersEntity>>(this);
 
   /**
-   * Steps that manage the board.
+   * One-to-Many relationship with the BoardStepEntity. Represents the different stages
+   * or steps that tasks on this board will go through. For example, a board might have steps
+   * like "To Do", "In Progress", and "Completed".
    */
   @OneToMany(() => BoardStepEntity, (s) => s.board, {
     comment: 'Steps that manage the board.',

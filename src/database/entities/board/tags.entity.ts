@@ -14,7 +14,8 @@ import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing tags to assign to tasks.
+ * Entity representing different tags or labels that can be assigned to tasks within a board.
+ * Tags are used to categorize or highlight specific tasks, making it easier to manage and identify them.
  */
 @Entity({
   comment: 'Tags to assign to tasks.',
@@ -22,12 +23,14 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class BoardTagsEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, including
+   * a custom color for the tag and any optional properties from the parent entity.
    */
   public [OptionalProps]?: 'color' | OptionalParentProps;
 
   /**
-   * Custom color to display in the tag view.
+   * An optional color associated with this tag, which provides a visual cue when displayed
+   * on tasks. The color is expected to be in a standard hex format.
    */
   @Property({
     check: "color ~* '#[A-Za-z0-9]{1,6}'",
@@ -39,7 +42,8 @@ export class BoardTagsEntity extends ParentEntity {
   public color!: string;
 
   /**
-   * Member who created the tag.
+   * Many-to-One relationship with the AuthUserEntity. Indicates the user or member
+   * who created or introduced this specific tag.
    */
   @ManyToOne({
     comment: 'Member who created the tag.',
@@ -48,7 +52,7 @@ export class BoardTagsEntity extends ParentEntity {
   public created_by!: Rel<AuthUserEntity>;
 
   /**
-   * Brief description of what the tag is about.
+   * A textual description providing more details or context about this specific tag.
    */
   @Property({
     columnType: 'varchar',
@@ -60,7 +64,7 @@ export class BoardTagsEntity extends ParentEntity {
   public description!: string;
 
   /**
-   * Name of the tag.
+   * The name of the tag, which provides a quick identifier for users.
    */
   @Property({
     columnType: 'varchar',
@@ -71,7 +75,8 @@ export class BoardTagsEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Tasks with the assigned tag.
+   * Many-to-Many relationship with the BoardTaskEntity. Represents all the tasks
+   * that have been assigned this specific tag.
    */
   @ManyToMany(() => BoardTaskEntity, (t) => t.tags, {
     comment: 'Tasks with the assigned tag.',

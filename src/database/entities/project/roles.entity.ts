@@ -14,7 +14,8 @@ import { ProjectEntity } from './project.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing roles to manage the projects. Role permissions use the bit-based permission system.
+ * Represents a role within a project. Roles define the permissions and responsibilities of project members.
+ * The permissions associated with roles utilize a bit-based permission system.
  */
 @Entity({
   comment:
@@ -23,12 +24,14 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class ProjectRolesEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * List of optional properties that can be set for this entity.
+   * These can include members and any properties inherited from the parent entity.
    */
   public [OptionalProps]?: 'members' | OptionalParentProps;
 
   /**
-   * Project members who have this role.
+   * Collection of project members associated with this particular role.
+   * A member can have multiple roles and a role can be associated with multiple members.
    */
   @ManyToMany(() => ProjectMembersEntity, (m) => m.roles, {
     comment: 'Project members who have this role.',
@@ -36,7 +39,7 @@ export class ProjectRolesEntity extends ParentEntity {
   public members = new Collection<ProjectMembersEntity>(this);
 
   /**
-   * Name representing the role.
+   * Descriptive name for the role, which indicates its purpose or function within the project.
    */
   @Property({
     columnType: 'varchar',
@@ -47,7 +50,8 @@ export class ProjectRolesEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Role bit-based permissions.
+   * Bit-based permissions associated with this role.
+   * Each bit in this numeric value represents a specific permission, allowing for efficient representation and checking of multiple permissions.
    */
   @Property({
     columnType: 'numeric',
@@ -57,7 +61,8 @@ export class ProjectRolesEntity extends ParentEntity {
   public permissions!: number;
 
   /**
-   * Project assigned to the role. When the project is removed, its available roles are also removed.
+   * The specific project that this role is associated with.
+   * If the project is deleted, all roles associated with that project will also be removed due to the cascade delete.
    */
   @ManyToOne({
     comment:

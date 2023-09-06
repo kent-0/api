@@ -1,16 +1,17 @@
 /**
- * Enum representing different types of comments and replies.
+ * Enum defining the various kinds of comments within a commenting system.
+ * This distinction helps in organizing and structuring the flow of conversation.
  */
 export enum CommentsTypes {
   /**
-   * Represents a top-level comment within the commenting system.
-   * These are typically standalone comments that are not in reply to any existing comment.
+   * Refers to an independent, primary comment. This type of comment initiates a conversation
+   * or introduces a new topic or perspective. It is not a response to another comment.
    */
   Comment,
 
   /**
-   * Represents a reply to an existing comment within the commenting system.
-   * Replies are used to respond to specific comments and are usually nested under the comment they are replying to.
+   * Denotes a comment that is directly responding to another comment.
+   * Replies contribute to a sub-conversation branching off the main comment.
    */
   Reply,
 }

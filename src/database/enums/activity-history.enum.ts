@@ -1,82 +1,85 @@
 /**
- * Enum representing the different types of activities in the history.
+ * Represents the various types of activities that can be recorded in the history.
+ * Each entry corresponds to a specific action or change made within the system.
+ * By tracking these activities, the system provides an audit trail that can be used
+ * to understand changes, actions, and events that have occurred over time.
  */
 export enum ActivityHistoryTypes {
-  /** Activity type when a task is created. */
+  /** Indicates that a task has been created. */
   TaskCreation,
 
-  /** Activity type when a task is deleted. */
+  /** Indicates that a task has been deleted. */
   TaskDelete,
 
-  /** Activity type when a task is moved. */
+  /** Indicates that a task has been moved from one location or status to another. */
   TaskMove,
 
-  /** Activity type when a step is created. */
+  /** Indicates that a new step has been created. */
   StepCreation,
 
-  /** Activity type when a step is deleted. */
+  /** Indicates that a step has been deleted. */
   StepDelete,
 
-  /** Activity type when a step is removed. */
+  /** Indicates that a step has been removed, typically from a larger process or sequence. */
   StepRemove,
 
-  /** Activity type when a step is updated. */
+  /** Indicates that details or status of a step have been modified. */
   StepUpdate,
 
-  /** Activity type when a goal is created. */
+  /** Indicates that a new goal has been established. */
   GoalCreation,
 
-  /** Activity type when a goal is deleted. */
+  /** Indicates that a goal has been deleted. */
   GoalDelete,
 
-  /** Activity type when a goal is removed. */
+  /** Indicates that a goal has been removed, possibly from a project or objective list. */
   GoalRemove,
 
-  /** Activity type when a goal is updated. */
+  /** Indicates that details or status of a goal have been updated. */
   GoalUpdate,
 
-  /** Activity type when a note is created. */
+  /** Indicates that a new note has been added to an item or record. */
   NoteCreation,
 
-  /** Activity type when a note is deleted. */
+  /** Indicates that a note has been deleted. */
   NoteDelete,
 
-  /** Activity type when a note is updated. */
+  /** Indicates that the content or details of a note have been modified. */
   NoteUpdate,
 
-  /** Activity type when a comment is created. */
+  /** Indicates that a new comment has been made on an item or discussion thread. */
   CommentCreation,
 
-  /** Activity type when a comment is deleted. */
+  /** Indicates that a comment has been deleted. */
   CommentDelete,
 
-  /** Activity type when a role is created. */
+  /** Indicates that a new role, defining permissions and access, has been created. */
   RoleCreation,
 
-  /** Activity type when a role is deleted. */
+  /** Indicates that a role has been deleted. */
   RoleDelete,
 
-  /** Activity type when a role is updated. */
+  /** Indicates that the properties or permissions of a role have been modified. */
   RoleUpdate,
 
-  /** Activity type when permissions of a role are updated. */
+  /** Indicates that the permissions associated with a role have been updated. */
   RolePermissionsUpdate,
 
-  /** Activity type when a member is added. */
+  /** Indicates that a new member has been added to a project or team. */
   MemberAdd,
 
-  /** Activity type when a member is removed. */
+  /** Indicates that a member has been removed from a project or team. */
   MemberRemove,
 
-  /** Activity type when a role is added to a member at the board level. */
+  /** Indicates that a new role has been added to a member, specifically at the board level. */
   MemberRolesBoardAdd,
 
-  /** Activity type when a role is removed from a member at the board level. */
+  /** Indicates that a role has been removed from a member, specifically at the board level. */
   MemberRolesBoardRemove,
 
-  /** Activity type when a role is added to a member at the project level. */
+  /** Indicates that a new role has been added to a member, specifically at the project level. */
   MemberRolesProjectAdd,
 
-  /** Activity type when a role is removed from a member at the project level. */
+  /** Indicates that a role has been removed from a member, specifically at the project level. */
   MemberRolesProjectRemove,
 }

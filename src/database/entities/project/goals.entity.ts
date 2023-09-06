@@ -14,7 +14,10 @@ import { ProjectEntity } from './project.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing goals to be achieved in the project.
+ * This entity captures the goals set for a specific project. Each goal
+ * is defined by its name and description. Additionally, the current status
+ * of the goal (e.g., Planned, In Progress, Completed) is tracked to provide
+ * insights into the progress towards achieving that goal.
  */
 @Entity({
   comment: 'Goals to be achieved in the project.',
@@ -22,12 +25,15 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class ProjectGoalsEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines optional properties that might be set for this entity.
+   * This inherits any optional properties from the parent entity.
    */
   public [OptionalProps]?: OptionalParentProps;
 
   /**
-   * Brief description of the goal to achieve.
+   * Provides a brief description of the goal, giving more details
+   * about what the goal aims to achieve or how it aligns with the
+   * project's objectives.
    */
   @Property({
     columnType: 'varchar',
@@ -37,7 +43,8 @@ export class ProjectGoalsEntity extends ParentEntity {
   public description!: string;
 
   /**
-   * Name of the goal to achieve.
+   * Defines the name or title of the goal, which succinctly describes
+   * the aim or objective.
    */
   @Property({
     columnType: 'varchar',
@@ -47,7 +54,9 @@ export class ProjectGoalsEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Project assigned to the goal.
+   * Many-to-One relationship representing the project to which
+   * this specific goal is associated. When the project is deleted,
+   * all its associated goals are also deleted.
    */
   @ManyToOne({
     comment: 'Project assigned to the goal.',
@@ -57,7 +66,10 @@ export class ProjectGoalsEntity extends ParentEntity {
   public project!: Rel<ProjectEntity>;
 
   /**
-   * Current status of the goal.
+   * Tracks the current status of the goal, allowing team members
+   * and stakeholders to understand the progress being made towards
+   * achieving this goal. This status can be 'Planned', 'In Progress',
+   * 'Completed', etc.
    */
   @Enum({
     comment: 'Current status of the goal.',

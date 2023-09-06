@@ -1,56 +1,64 @@
 /**
- * States in which a project listed in numbers can be.
+ * Enumeration describing the possible states of a project.
+ * Each state represents a specific phase in the project's lifecycle.
  */
 export enum ProjectStatus {
   /**
-   * The project has been completed, achieving all or most of its goals and completing its boards.
-   * From this point the project remains read-only.
+   * Indicates that the project has successfully reached its end.
+   * All or most of its objectives have been met, and all related boards are finalized.
+   * The project is now in a read-only mode for future reference.
    */
   Completed,
 
   /**
-   * The project has been started and its execution is in progress. At this point a start date has already been indicated.
+   * Signifies that the project is actively being worked on.
+   * At this phase, a start date for the project is already set, and tasks are being executed.
    */
   InProgress,
 
   /**
-   * The project has been paused, so read-only mode is enabled until it goes back to the in-progress state.
+   * Represents a temporary halt in the project's execution.
+   * During this state, changes to the project are restricted until it's resumed.
    */
   Paused,
 
   /**
-   * Initial state of the project. At this point the project has just been created or has not been fully managed.
+   * This is the preliminary state of the project.
+   * It indicates that the project has been defined, but active management or execution hasn't begun.
    */
   Planned,
 
   /**
-   * The project has been cancelled. Read-only mode is enabled.
+   * Indicates that the project has been terminated before its completion.
+   * The project is in read-only mode, preserving its state for reference.
    */
   Cancelled,
 }
 
 /**
- * The types of status that a goal can have listed by numbers.
+ * Enumeration detailing the potential statuses a project's goal can be in.
+ * These statuses provide insights into the progression or completion of individual goals within a project.
  */
 export enum ProjectGoalsStatus {
   /**
-   * The goal could not be completed so it has been cancelled.
-   * Default goals cannot be deleted and are only marked as canceled for history.
+   * Denotes that the goal was deemed unachievable or irrelevant and has therefore been terminated.
+   * Important goals that are integral to the project's history cannot be removed entirely but are marked as cancelled.
    */
   Cancelled,
 
   /**
-   * The goal has been completed.
+   * Indicates that the goal has been fully achieved.
    */
   Completed,
 
   /**
-   * The goal is in the process of execution.
+   * Represents that active efforts are being made towards achieving this goal.
    */
   InProgress,
 
   /**
-   * The goal has been created but there is still no estimated date to try to achieve it.
+   * This status signifies that the goal has been set and acknowledged,
+   * but there hasn't been a decision on when to start working towards it.
    */
   Planned,
 }

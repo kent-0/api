@@ -16,7 +16,9 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 import { BoardEntity } from '../board/board.entity';
 
 /**
- * Entity representing activity log to audit changes to dashboards and projects.
+ * Entity that captures and logs the various activities or actions taken by members
+ * on boards and projects. This provides an audit trail, offering insights into
+ * who did what and when.
  */
 @Entity({
   comment: 'Activity log to audit changes to dashboards and projects.',
@@ -24,12 +26,16 @@ import { BoardEntity } from '../board/board.entity';
 })
 export class ActivityHistory extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines optional properties that might be set for this entity. This includes
+   * the reference ID of the managed element and any other optional properties
+   * from the parent entity.
    */
   public [OptionalProps]?: 'reference_id' | OptionalParentProps;
 
   /**
-   * Board where the activity originated.
+   * Many-to-One relationship representing the board where the specific activity
+   * or action took place. This is nullable as not all activities might be associated
+   * with a board.
    */
   @ManyToOne({
     comment: 'Board where the activity originated.',
@@ -39,7 +45,8 @@ export class ActivityHistory extends ParentEntity {
   public board!: Rel<BoardEntity>;
 
   /**
-   * Member who performed the action.
+   * Many-to-One relationship representing the member or user who performed or
+   * initiated the specific action or activity.
    */
   @ManyToOne({
     comment: 'Member who performed the action.',
@@ -48,7 +55,8 @@ export class ActivityHistory extends ParentEntity {
   public member!: Rel<AuthUserEntity>;
 
   /**
-   * Project where the activity originated.
+   * Many-to-One relationship representing the project in which the activity
+   * or action originated.
    */
   @ManyToOne({
     comment: 'Project where the activity originated.',
@@ -57,7 +65,8 @@ export class ActivityHistory extends ParentEntity {
   public project!: Rel<ProjectEntity>;
 
   /**
-   * Reference ID of the managed element.
+   * The unique reference ID of the element or item that was managed or affected
+   * by the activity. This could be the ID of a task, comment, tag, etc.
    */
   @Property({
     columnType: 'uuid',
@@ -68,7 +77,9 @@ export class ActivityHistory extends ParentEntity {
   public reference_id!: string;
 
   /**
-   * Type of action performed in the activity.
+   * Enum indicating the type of action or activity that was performed. This
+   * provides a clear categorization of activities, such as 'CREATE', 'UPDATE',
+   * 'DELETE', etc.
    */
   @Enum({
     comment: 'Type of action performed in the activity.',

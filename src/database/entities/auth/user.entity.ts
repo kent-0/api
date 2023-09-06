@@ -12,7 +12,8 @@ import { AuthPasswordEntity } from './passwords.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity containing information about all users on the platform.
+ * Entity representing individual user profiles within the platform.
+ * This encompasses the user's personal details, associated email, password, and other relevant data.
  */
 @Entity({
   comment: 'Information about all users on the platform.',
@@ -20,7 +21,8 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class AuthUserEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity. These include
+   * the user's biography, email, full name, password, and any optional properties from the parent entity.
    */
   public [OptionalProps]?:
     | 'biography'
@@ -30,7 +32,8 @@ export class AuthUserEntity extends ParentEntity {
     | OptionalParentProps;
 
   /**
-   * Biography of the user account.
+   * Brief description or biography about the user. This can provide other users
+   * or systems an overview of this particular user's background or interests.
    */
   @Property({
     columnType: 'varchar',
@@ -42,7 +45,8 @@ export class AuthUserEntity extends ParentEntity {
   public biography!: string;
 
   /**
-   * Relationship to the email assigned to the user.
+   * One-to-One relationship with the AuthEmailsEntity. Represents the primary
+   * email address associated with this user account.
    */
   @OneToOne({
     comment: 'Relationship to the email assigned to the user.',
@@ -53,7 +57,7 @@ export class AuthUserEntity extends ParentEntity {
   public email!: Rel<AuthEmailsEntity>;
 
   /**
-   * First name of the user.
+   * The user's first name, which is a part of their full identity.
    */
   @Property({
     columnType: 'varchar',
@@ -65,7 +69,7 @@ export class AuthUserEntity extends ParentEntity {
   public first_name!: string;
 
   /**
-   * Last name of the user.
+   * The user's last name, completing their full identity alongside the first name.
    */
   @Property({
     columnType: 'varchar',
@@ -77,7 +81,8 @@ export class AuthUserEntity extends ParentEntity {
   public last_name!: string;
 
   /**
-   * Relationship to the password assigned to the user.
+   * One-to-One relationship with the AuthPasswordEntity. Represents the hashed password
+   * associated with this user account, ensuring secure authentication.
    */
   @OneToOne({
     comment: 'Relationship to the password assigned to the user.',
@@ -88,7 +93,8 @@ export class AuthUserEntity extends ParentEntity {
   public password?: Rel<AuthPasswordEntity>;
 
   /**
-   * Unique username per user.
+   * A unique identifier chosen by the user. This is typically used for logging in, mentioning
+   * the user on the platform, or other platform-specific interactions.
    */
   @Property({
     check: "username ~* '^[A-Za-z0-9_-]+$'",
@@ -101,7 +107,9 @@ export class AuthUserEntity extends ParentEntity {
   public username!: string;
 
   /**
-   * Virtual property to get the full name of the user.
+   * A computed property that combines the user's first and last name.
+   * This provides a convenient way to retrieve the user's full name without
+   * having to concatenate the two individual properties every time.
    */
   @Property({ persist: false })
   public get fullName(): string {

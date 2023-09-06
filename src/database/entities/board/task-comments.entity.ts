@@ -15,7 +15,9 @@ import { AuthUserEntity } from '../auth/user.entity';
 import { ParentEntity } from '../base.entity';
 
 /**
- * Entity representing comments made by members on tasks.
+ * Entity representing different comments that members can make on tasks.
+ * Comments can be standalone or replies to other comments, and each comment is associated
+ * with a specific task and author.
  */
 @Entity({
   comment: 'Comments made by members on tasks.',
@@ -23,7 +25,8 @@ import { ParentEntity } from '../base.entity';
 })
 export class BoardTaskCommentEntity extends ParentEntity {
   /**
-   * Author of the comment.
+   * Many-to-One relationship with the AuthUserEntity. Indicates the user or member
+   * who authored or wrote this specific comment.
    */
   @ManyToOne({
     comment: 'Author of the comment.',
@@ -32,7 +35,8 @@ export class BoardTaskCommentEntity extends ParentEntity {
   public author!: Rel<AuthUserEntity>;
 
   /**
-   * Replies to this comment.
+   * One-to-Many relationship with the same entity, BoardTaskCommentEntity. Represents
+   * all the comments that are direct replies to this specific comment.
    */
   @OneToMany({
     comment: 'Replies to this comment.',
@@ -42,7 +46,8 @@ export class BoardTaskCommentEntity extends ParentEntity {
   public replies = new Collection<BoardTaskCommentEntity>(this);
 
   /**
-   * Comment to which this comment is replying.
+   * Many-to-One relationship with the same entity, BoardTaskCommentEntity. If this comment
+   * is a reply, this property points to the original comment to which this comment is responding.
    */
   @ManyToOne({
     comment: 'Comment to which this comment is replying.',
@@ -52,7 +57,8 @@ export class BoardTaskCommentEntity extends ParentEntity {
   public reply_to!: BoardTaskCommentEntity;
 
   /**
-   * Task originating from the comment.
+   * Many-to-One relationship with the BoardTaskEntity. Indicates the specific task
+   * that this comment is associated with.
    */
   @ManyToOne({
     comment: 'Task originating from the comment.',
@@ -61,7 +67,8 @@ export class BoardTaskCommentEntity extends ParentEntity {
   public task!: Rel<BoardTaskEntity>;
 
   /**
-   * Whether the comment is a general comment or a reply to a comment.
+   * Enum property indicating the type of comment. It can be a general comment
+   * or a reply to another comment.
    */
   @Enum({
     comment:

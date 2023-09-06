@@ -13,7 +13,9 @@ import { BoardTaskEntity } from './task.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing steps to complete per task.
+ * Entity representing various steps or stages that tasks must go through on a board.
+ * Each step can have a set of tasks, and these tasks progress through these steps,
+ * representing their lifecycle within the project management system.
  */
 @Entity({
   comment: 'Steps to complete per task.',
@@ -21,12 +23,14 @@ import { OptionalParentProps, ParentEntity } from '../base.entity';
 })
 export class BoardStepEntity extends ParentEntity {
   /**
-   * Optional properties that can be set on the entity.
+   * Defines the optional properties that can be set on this entity, including
+   * a description of the step and any optional properties from the parent entity.
    */
   public [OptionalProps]?: 'description' | OptionalParentProps;
 
   /**
-   * Board assigned to the task step.
+   * Many-to-One relationship with the BoardEntity. Indicates the specific board
+   * to which this step belongs. If the board is deleted, all associated steps are also removed.
    */
   @ManyToOne({
     comment: 'Board assigned to the task step.',
@@ -36,7 +40,7 @@ export class BoardStepEntity extends ParentEntity {
   public board!: Rel<BoardEntity>;
 
   /**
-   * Brief description of what the step is about.
+   * A textual description providing more details or context about this specific step.
    */
   @Property({
     columnType: 'varchar',
@@ -48,7 +52,8 @@ export class BoardStepEntity extends ParentEntity {
   public description!: string;
 
   /**
-   * Maximum number of tasks assigned to the step.
+   * The maximum number of tasks that can be assigned to this step at any given time.
+   * This can be used to enforce limits or manage workloads.
    */
   @Property({
     columnType: 'int',
@@ -58,7 +63,7 @@ export class BoardStepEntity extends ParentEntity {
   public max!: number;
 
   /**
-   * Name of the step.
+   * The name of the step, which provides a quick identifier for users.
    */
   @Property({
     columnType: 'varchar',
@@ -69,7 +74,8 @@ export class BoardStepEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * Step position on the board.
+   * The position or order of this step on the board. Lower numbers typically represent
+   * earlier stages, while higher numbers represent later stages in a task's lifecycle.
    */
   @Property({
     columnType: 'int',
@@ -79,7 +85,8 @@ export class BoardStepEntity extends ParentEntity {
   public position!: number;
 
   /**
-   * Tasks assigned to the project step.
+   * One-to-Many relationship with the BoardTaskEntity. Represents all the tasks
+   * that are currently in this step or stage on the board.
    */
   @OneToMany(() => BoardTaskEntity, (t) => t.step, {
     comment: 'Tasks assigned to the project step.',
