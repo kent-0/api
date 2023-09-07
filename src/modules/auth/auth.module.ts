@@ -13,7 +13,7 @@ import {
 } from '~/database/entities';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
-import { AuthResolver } from './auth.resolver';
+import { AuthResolver } from './resolvers/auth.resolver';
 import { AuthAccountService } from './services/account.service';
 import { AuthEmailService } from './services/email.service';
 import { JWTStrategy } from './strategy/jwt.strategy';

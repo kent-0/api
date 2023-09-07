@@ -1,25 +1,24 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
-import { UserToken } from './decorators/user.decorator';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import { UserToken } from '../decorators/user.decorator';
+import { JwtAuthGuard } from '../guards/jwt.guard';
 import {
   AuthChangePasswordInput,
   AuthConfirmEmailInput,
   AuthSignInInput,
   AuthSignUpInput,
-} from './inputs';
-import { AuthUpdateAccountInput } from './inputs/account/update.input';
-import { JWTPayload } from './interfaces/jwt.interface';
+} from '../inputs';
+import { JWTPayload } from '../interfaces/jwt.interface';
 import {
   AuthSignInObject,
   AuthUserEmailObject,
   AuthUserObject,
-} from './objects';
-import { AuthAccountService } from './services/account.service';
-import { AuthEmailService } from './services/email.service';
+} from '../objects';
+import { AuthAccountService } from '../services/account.service';
+import { AuthEmailService } from '../services/email.service';
 
 /**
  * The AuthResolver class manages the GraphQL API endpoints related to authentication.
@@ -93,21 +92,6 @@ export class AuthResolver {
   }
 
   /**
-   * Returns the user's account details.
-   *
-   * @param token - JWT payload of the authenticated user.
-   * @returns User's detailed account information.
-   */
-  @UseGuards(JwtAuthGuard)
-  @Query(() => AuthUserObject, {
-    description:
-      'Provides detailed information of the authenticated user, allowing them to view their current account state.',
-  })
-  public me(@UserToken() token: JWTPayload) {
-    return this._accountService.me(token.sub);
-  }
-
-  /**
    * Provides a new access token for authenticated users, prolonging their authenticated session.
    *
    * @param refreshToken - Token that allows users to get a new access token.
@@ -152,24 +136,5 @@ export class AuthResolver {
   })
   public signUp(@Args('input') input: AuthSignUpInput) {
     return this._accountService.signUp(input);
-  }
-
-  /**
-   * Allows users to update their personal details.
-   *
-   * @param input - Contains updated user information.
-   * @param token - JWT payload of the authenticated user.
-   * @returns The updated user's account details.
-   */
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => AuthUserObject, {
-    description:
-      'Allows users to update personal details ensuring their profile remains current.',
-  })
-  public update(
-    @Args('input') input: AuthUpdateAccountInput,
-    @UserToken() token: JWTPayload,
-  ) {
-    return this._accountService.update(input, token.sub);
   }
 }
