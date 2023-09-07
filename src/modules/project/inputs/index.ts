@@ -1,3 +1,7 @@
+export * from './goal-change-status.input';
+export * from './goal-create.input';
+export * from './goal-remove.input';
+export * from './goal-update.input';
 export * from './member-add-remove.input';
 export * from './project-create.input';
 export * from './project-update.input';

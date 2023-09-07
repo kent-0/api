@@ -28,7 +28,7 @@ export class ProjectGoalsEntity extends ParentEntity {
    * Defines optional properties that might be set for this entity.
    * This inherits any optional properties from the parent entity.
    */
-  public [OptionalProps]?: OptionalParentProps;
+  public [OptionalProps]?: 'status' | OptionalParentProps;
 
   /**
    * Provides a brief description of the goal, giving more details
