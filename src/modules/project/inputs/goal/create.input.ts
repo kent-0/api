@@ -9,7 +9,8 @@ import { IsUUID } from 'class-validator';
  * using GraphQL mutations.
  */
 @InputType({
-  description: 'Create a new goal in the project.',
+  description:
+    'Input details required to add a new goal to a specific project.',
 })
 export class ProjectGoalCreateInput {
   /**
@@ -19,7 +20,8 @@ export class ProjectGoalCreateInput {
    * objective of the goal, its importance, and the outcomes expected upon its completion.
    */
   @Field(() => String, {
-    description: 'Content of the goal to be achieved in the project.',
+    description:
+      "Comprehensive textual content that outlines the goal's objective, importance, and anticipated outcomes.",
   })
   public description!: string;
 
@@ -29,7 +31,8 @@ export class ProjectGoalCreateInput {
    * that it gives a quick insight into the goal's purpose.
    */
   @Field(() => String, {
-    description: 'Special name to differentiate this goal.',
+    description:
+      'Unique identifier for the goal, offering a quick overview of its intent.',
   })
   public name!: string;
 
@@ -41,7 +44,7 @@ export class ProjectGoalCreateInput {
    */
   @Field(() => String, {
     description:
-      'The unique identifier of the project to which the goal will be added.',
+      'ID of the project to which this goal pertains. Must be in valid UUID format.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
   public projectId!: string;

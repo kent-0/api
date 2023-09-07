@@ -23,8 +23,7 @@ export class AuthUserEmailObject {
    * @required
    */
   @Field({
-    description:
-      'Flag indicating whether the email address is confirmed or not.',
+    description: 'Indicates if the associated email address is confirmed.',
   })
   public is_confirmed!: boolean;
 
@@ -37,7 +36,7 @@ export class AuthUserEmailObject {
    * @required
    */
   @Field({
-    description: 'The email address associated with the user account.',
+    description: 'The actual email address linked to the user account.',
   })
   public value!: string;
 }
@@ -64,7 +63,7 @@ export class AuthUserObject {
    */
   @Field({
     description:
-      'The email address and its confirmation status linked to the user account.',
+      'Email details, including the address and its confirmation status, associated with the user account.',
   })
   public email!: AuthUserEmailObject;
 
@@ -76,7 +75,7 @@ export class AuthUserObject {
    * @required
    */
   @Field({
-    description: 'The first or given name of the user.',
+    description: "User's first or given name.",
   })
   public first_name!: string;
 
@@ -89,7 +88,7 @@ export class AuthUserObject {
    * @required
    */
   @Field(() => ID, {
-    description: 'A unique identifier (often UUID) for the user.',
+    description: 'Unique identifier for the user, typically in UUID format.',
   })
   public id!: string;
 
@@ -101,7 +100,7 @@ export class AuthUserObject {
    * @required
    */
   @Field({
-    description: 'The last or family name of the user.',
+    description: "User's last or family name.",
   })
   public last_name!: string;
 
@@ -116,7 +115,7 @@ export class AuthUserObject {
    */
   @Field({
     description:
-      'A unique username chosen by the user for platform interactions.',
+      'Unique username chosen by the user for platform-specific interactions.',
   })
   public username!: string;
 }

@@ -7,7 +7,7 @@ import { IsString } from 'class-validator';
  * This class integrates GraphQL type definitions and class-validator decorators.
  */
 @InputType({
-  description: 'Data to log in to the user account.',
+  description: 'Data required for user account authentication.',
 })
 export class AuthSignInInput {
   /**
@@ -18,7 +18,9 @@ export class AuthSignInInput {
    * @required
    * @validations Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description: 'Account password required for authentication.',
+  })
   @IsString({ message: 'This field can only be of text type.' })
   public password!: string;
 
@@ -30,7 +32,9 @@ export class AuthSignInInput {
    * @required
    * @validations Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description: 'Unique identifier used for user authentication.',
+  })
   @IsString({ message: 'This field can only be of text type.' })
   public username!: string;
 }

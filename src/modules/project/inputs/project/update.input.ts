@@ -12,7 +12,8 @@ import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
  * Moreover, the project ID is mandatory and should be a valid UUID.
  */
 @InputType({
-  description: 'Update project of boards.',
+  description:
+    'Details required to modify an existing project that manages boards.',
 })
 export class UpdateProjectInput {
   /**
@@ -25,7 +26,8 @@ export class UpdateProjectInput {
    * length should not exceed 300 characters.
    */
   @Field({
-    description: 'Brief description of what the project will be about.',
+    description:
+      'An updated summary of the project, offering insight into its goals or purpose. If given, it must be a text string and not surpass 300 characters.',
     nullable: true,
   })
   @IsOptional()
@@ -44,7 +46,8 @@ export class UpdateProjectInput {
    * should not exceed 50 characters.
    */
   @Field({
-    description: 'Name for the new project.',
+    description:
+      "The revised name of the project. Should be succinct and mirror the project's nature or objective. If supplied, it must be a text string and not exceed 50 characters.",
     nullable: true,
   })
   @IsOptional()
@@ -62,7 +65,8 @@ export class UpdateProjectInput {
    * The ID must be a valid UUID.
    */
   @Field({
-    description: 'ID of the project.',
+    description:
+      'The unique identifier of the project that is set to be updated. This ID is essential for identifying the specific project in the database. It must be a valid UUID format.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
   public projectId!: string;

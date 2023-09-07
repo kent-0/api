@@ -7,7 +7,8 @@ import { IsString, Matches, MaxLength } from 'class-validator';
  * This class integrates GraphQL type definitions and class-validator decorators for input validation.
  */
 @InputType({
-  description: 'Update the personal information of the user account.',
+  description:
+    "Required structure to update a user's personal account information in the system.",
 })
 export class AuthUpdateAccountInput {
   /**
@@ -20,7 +21,10 @@ export class AuthUpdateAccountInput {
    *  - Maximum length of 300 characters.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      "A brief description or biography of the user detailing their history or interests. It's a text with a maximum of 300 characters.",
+  })
   @MaxLength(300, { message: 'The biography cannot exceed 300 characters.' })
   @IsString({ message: 'This field can only be of text type.' })
   public biography!: string;
@@ -36,7 +40,10 @@ export class AuthUpdateAccountInput {
    *  - Must only contain alphabet characters.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      "The user's first name, used for personalized communications. It should be a text containing only alphabetical characters and must not exceed 30 characters.",
+  })
   @MaxLength(30, { message: 'The first name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The first name can only contain text characters.',
@@ -55,7 +62,10 @@ export class AuthUpdateAccountInput {
    *  - Must only contain alphabet characters.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      "The user's last name, used in conjunction with the first name for full identification. It should be a text containing only alphabetical characters and must not exceed 30 characters.",
+  })
   @MaxLength(30, { message: 'The last name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The last name can only contain text characters.',
@@ -74,7 +84,10 @@ export class AuthUpdateAccountInput {
    *  - Only allows numbers, letters, and the symbols -_.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      'A unique identifier chosen by the user to represent themselves within the application. It can contain numbers, letters, and the symbols -_. It must not exceed 30 characters.',
+  })
   @MaxLength(30, { message: 'The username cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z0-9_-]+$/, {
     message:

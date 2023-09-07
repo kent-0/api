@@ -7,7 +7,7 @@ import { IsEmail, IsString, Matches, MaxLength } from 'class-validator';
  * This class integrates GraphQL type definitions and class-validator decorators for input validation.
  */
 @InputType({
-  description: 'Information needed to create a user account.',
+  description: 'Details required to set up a new user account.',
 })
 export class AuthSignUpInput {
   /**
@@ -20,7 +20,10 @@ export class AuthSignUpInput {
    *  - Ensures the provided value is a valid email format.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      'A valid email address used for account-related communications and resets.',
+  })
   @IsEmail(
     { allow_ip_domain: false, require_tld: true },
     { message: 'Enter a valid email. For example: acme@example.com' },
@@ -39,7 +42,10 @@ export class AuthSignUpInput {
    *  - Must only contain alphabet characters.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      "User's first name for personalized interactions. Must be alphabetical and not exceed 30 characters.",
+  })
   @MaxLength(30, { message: 'The first name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The first name can only contain text characters.',
@@ -58,7 +64,10 @@ export class AuthSignUpInput {
    *  - Must only contain alphabet characters.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      "User's last name for complete identification. Must be alphabetical and not exceed 30 characters.",
+  })
   @MaxLength(30, { message: 'The last name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The last name can only contain text characters.',
@@ -73,7 +82,9 @@ export class AuthSignUpInput {
    * @description Account login password.
    * @required
    */
-  @Field()
+  @Field({
+    description: "Password to secure the user's account.",
+  })
   public password!: string;
 
   /**
@@ -87,7 +98,10 @@ export class AuthSignUpInput {
    *  - Only allows numbers, letters, and the symbols -_.
    *  - Ensures the provided value is of string type.
    */
-  @Field()
+  @Field({
+    description:
+      'Unique identifier for user interactions within the application. Can contain numbers, letters, and symbols (-_). Must not exceed 30 characters.',
+  })
   @MaxLength(30, { message: 'The username cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z0-9_-]+$/, {
     message:

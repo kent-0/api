@@ -9,7 +9,8 @@ import { IsUUID } from 'class-validator';
  * Each field within this input type provides critical data to ensure that the goal update process is precise and accurate.
  */
 @InputType({
-  description: 'Update the project goal.',
+  description:
+    'Input specifics needed to modify details of a designated project goal.',
 })
 export class ProjectGoalUpdateInput {
   /**
@@ -18,7 +19,8 @@ export class ProjectGoalUpdateInput {
    * and to align their efforts accordingly.
    */
   @Field(() => String, {
-    description: 'Content of the goal to be achieved in the project.',
+    description:
+      "Detailed objectives or context of the goal. Enables team alignment towards the goal's fulfillment.",
   })
   public description!: string;
 
@@ -27,7 +29,8 @@ export class ProjectGoalUpdateInput {
    * the exact goal that needs modification, ensuring that other goals remain untouched.
    */
   @Field(() => String, {
-    description: 'ID of the goal to update.',
+    description:
+      'Unique identifier targeting the specific goal intended for update.',
   })
   public goalId!: string;
 
@@ -37,7 +40,8 @@ export class ProjectGoalUpdateInput {
    * and when navigating through multiple goals.
    */
   @Field(() => String, {
-    description: 'Special name to differentiate this goal.',
+    description:
+      'Label or title encapsulating the essence of the goal, serving as a quick reference.',
   })
   public name!: string;
 
@@ -47,7 +51,8 @@ export class ProjectGoalUpdateInput {
    * updating the goal. It adds an extra layer of verification.
    */
   @Field(() => String, {
-    description: 'ID of the project to which the goal belongs.',
+    description:
+      'ID of the project housing the goal. Acts as a verification layer to ensure updates are made in the right context. Must be in valid UUID format.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
   public projectId!: string;
@@ -58,7 +63,8 @@ export class ProjectGoalUpdateInput {
    * Tracking this status is vital for project management and understanding the flow of tasks.
    */
   @Field(() => ProjectGoalsStatus, {
-    description: 'Status that will have the goal.',
+    description:
+      'Current progression or state of the goal, vital for tracking and project management.',
   })
   public status!: ProjectGoalsStatus;
 }

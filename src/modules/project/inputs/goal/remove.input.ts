@@ -8,7 +8,8 @@ import { IsUUID } from 'class-validator';
  * or system process initiates a request to delete a goal using GraphQL mutations.
  */
 @InputType({
-  description: 'Delete a current project goal.',
+  description:
+    'Input specifics needed to delete a goal from a designated project.',
 })
 export class ProjectGoalRemoveInput {
   /**
@@ -18,7 +19,8 @@ export class ProjectGoalRemoveInput {
    * to provide the correct ID to prevent unintended deletions.
    */
   @Field(() => String, {
-    description: 'ID of the goal to delete.',
+    description:
+      "Unique identifier for the goal that is intended for deletion. It's essential to ensure the correct goal is targeted.",
   })
   public goalId!: string;
 
@@ -30,7 +32,8 @@ export class ProjectGoalRemoveInput {
    * maintaining data integrity and ensures that goals from other projects are not mistakenly deleted.
    */
   @Field(() => String, {
-    description: 'ID of the project to which the goal belongs.',
+    description:
+      "ID of the project associated with the goal. This helps in cross-verifying the goal's association to maintain data integrity. Must be in valid UUID format.",
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
   public projectId!: string;

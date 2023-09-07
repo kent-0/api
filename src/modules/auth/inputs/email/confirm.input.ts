@@ -7,7 +7,7 @@ import { IsEmail, IsString } from 'class-validator';
  * This class integrates GraphQL type definitions and class-validator decorators.
  */
 @InputType({
-  description: 'Confirm user email.',
+  description: "Details required to confirm a user's email address.",
 })
 export class AuthConfirmEmailInput {
   /**
@@ -17,7 +17,10 @@ export class AuthConfirmEmailInput {
    * @description Activation code for email.
    * @required
    */
-  @Field()
+  @Field({
+    description:
+      "Activation code sent to the user's email for verification. Must be of text type.",
+  })
   @IsString({ message: 'This field can only be of text type.' })
   public code!: string;
 
@@ -29,7 +32,10 @@ export class AuthConfirmEmailInput {
    * @required
    * @validations Ensures valid email format.
    */
-  @Field()
+  @Field({
+    description:
+      'Email address the user wishes to confirm. Should be in a valid email format.',
+  })
   @IsEmail(
     { allow_ip_domain: false, require_tld: true },
     { message: 'Enter a valid email. For example: acme@example.com' },

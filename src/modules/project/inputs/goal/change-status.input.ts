@@ -12,14 +12,15 @@ import { IsUUID } from 'class-validator';
  * status for the goal.
  */
 @InputType({
-  description: 'Change current state of the project goal.',
+  description: 'Input details to modify the status of a specific project goal.',
 })
 export class ProjectGoalChangeStatusInput {
   /**
    * The unique identifier of the goal whose status needs to be changed.
    */
   @Field(() => String, {
-    description: 'ID of the goal to change the status.',
+    description:
+      'Unique ID of the goal for which the status needs modification.',
   })
   public goalId!: string;
 
@@ -29,7 +30,8 @@ export class ProjectGoalChangeStatusInput {
    * Ensures that the provided ID is a valid UUID format.
    */
   @Field(() => String, {
-    description: 'ID of the project where the goal belongs.',
+    description:
+      'Unique ID of the project associated with the goal. Should be in valid UUID format.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
   public projectId!: string;
@@ -40,7 +42,8 @@ export class ProjectGoalChangeStatusInput {
    * Utilizes the ProjectGoalsStatus enum to ensure a valid status is chosen.
    */
   @Field(() => ProjectGoalsStatus, {
-    description: 'Status that will have the goal.',
+    description:
+      'The desired new status for the goal, chosen from the ProjectGoalsStatus enum.',
   })
   public status!: ProjectGoalsStatus;
 }

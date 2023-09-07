@@ -11,7 +11,7 @@ import { IsString, MinLength } from 'class-validator';
  * `currentPassword` and `newPassword`.
  */
 @InputType({
-  description: 'Change password.',
+  description: "Details needed to modify a user's password.",
 })
 export class AuthChangePasswordInput {
   /**
@@ -25,7 +25,8 @@ export class AuthChangePasswordInput {
    * @description Current password of the user account.
    */
   @Field({
-    description: 'Current password of the user account.',
+    description:
+      "Existing password of the user's account. Must be of text type.",
   })
   @IsString({
     message: 'This field can only be of text type.',
@@ -43,7 +44,8 @@ export class AuthChangePasswordInput {
    * @description New password to use for the user account.
    */
   @Field({
-    description: 'New password to use for the user account.',
+    description:
+      "Desired new password for the user's account. Must be of text type and at least 6 characters long.",
   })
   @IsString({
     message: 'This field can only be of text type.',

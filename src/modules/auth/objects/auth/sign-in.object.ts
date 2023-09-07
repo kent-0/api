@@ -28,7 +28,7 @@ export class AuthSignInObject {
    */
   @Field({
     description:
-      'The JWT (JSON Web Token) used for authenticating the user in subsequent requests.',
+      'JWT (JSON Web Token) for user authentication in subsequent requests. Grants access to specific user resources.',
   })
   public access_token!: string;
 
@@ -44,7 +44,7 @@ export class AuthSignInObject {
    */
   @Field({
     description:
-      'A token, which when provided, can be used to renew the access token without needing the user to sign in again.',
+      'Optional token to obtain a new access token once the current one expires, avoiding the need for user re-authentication.',
     nullable: true,
   })
   public refresh_token?: string;

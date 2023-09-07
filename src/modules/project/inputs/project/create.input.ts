@@ -11,7 +11,8 @@ import { IsString, MaxLength } from 'class-validator';
  * and that they don't exceed their respective maximum lengths.
  */
 @InputType({
-  description: 'Create project to manage boards.',
+  description:
+    'Input details necessary for creating a new project that will manage boards.',
 })
 export class CreateProjectInput {
   /**
@@ -23,7 +24,8 @@ export class CreateProjectInput {
    * 300 characters.
    */
   @Field({
-    description: 'Brief description of what the project will be about.',
+    description:
+      'A concise summary of the project, providing context on its goals or purpose. Must be a text string and not exceed 300 characters.',
   })
   @IsString({ message: 'The project description must be a text string.' })
   @MaxLength(300, {
@@ -39,7 +41,8 @@ export class CreateProjectInput {
    * The name must be a text string and its length should not exceed 50 characters.
    */
   @Field({
-    description: 'Name for the new project.',
+    description:
+      'Unique name for the project, reflecting its nature or purpose within an organization or team. Must be a text string and not exceed 50 characters.',
   })
   @IsString({ message: 'The project name must be a text string.' })
   @MaxLength(50, {
