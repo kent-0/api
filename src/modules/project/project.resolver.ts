@@ -13,7 +13,7 @@ import {
   UpdateProjectInput,
   UpdateProjectRoleInput,
 } from './inputs';
-import { AssignProjectRoleInput } from './inputs/role-assign.input';
+import { AssignProjectRoleInput } from './inputs/role/assign.input';
 import { CreateProjectRoleInput } from './inputs/role-create.input';
 import { ProjectRolePaginationInput } from './inputs/role-pagination';
 import {

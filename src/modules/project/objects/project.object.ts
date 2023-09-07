@@ -8,7 +8,7 @@ import {
   ProjectNotesObject,
   ProjectRolesObject,
 } from '.';
-import { ProjectMemberObject } from './project-member.object';
+import { ProjectMemberObject } from './member.object';
 
 /* import { BoardObject } from './board.object'; */
 

@@ -23,7 +23,7 @@ import { AuthPasswordService } from '~/modules/auth/services/password.service';
 import * as bcrypt from 'bcrypt';
 
 import { AuthSignInInput, AuthSignUpInput } from '../inputs';
-import { AuthUpdateAccountInput } from '../inputs/update-account.input';
+import { AuthUpdateAccountInput } from '../inputs/account/update.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
 import { AuthSignInObject, AuthUserObject } from '../objects';
 

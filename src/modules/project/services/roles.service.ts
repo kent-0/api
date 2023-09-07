@@ -14,10 +14,10 @@ import { ToCollections } from '~/utils/types/to-collection';
 import {
   AssignProjectRoleInput,
   CreateProjectRoleInput,
+  ProjectRolePaginationInput,
   UnassignProjectRoleInput,
   UpdateProjectRoleInput,
 } from '../inputs';
-import { ProjectRolePaginationInput } from '../inputs/role-pagination';
 import {
   ProjectMembersObject,
   ProjectPaginatedProjectRoles,

@@ -11,7 +11,7 @@ import {
   ProjectGoalRemoveInput,
   ProjectGoalUpdateInput,
 } from '../inputs';
-import { ProjectGoalChangeStatusInput } from '../inputs/goal-change-status.input';
+import { ProjectGoalChangeStatusInput } from '../inputs/goal/change-status.input';
 import { ProjectGoalsObject } from '../objects';
 
 /**

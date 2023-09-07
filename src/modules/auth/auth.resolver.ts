@@ -11,7 +11,7 @@ import {
   AuthSignInInput,
   AuthSignUpInput,
 } from './inputs';
-import { AuthUpdateAccountInput } from './inputs/update-account.input';
+import { AuthUpdateAccountInput } from './inputs/account/update.input';
 import { JWTPayload } from './interfaces/jwt.interface';
 import {
   AuthSignInObject,

@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { PaginationObject } from '~/utils/graphql/objects';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { ProjectRolesObject } from './project-roles.object';
+import { ProjectRolesObject } from './roles.object';
 
 /**
  * The `ProjectPaginatedProjectRoles` class provides a structure for paginated
