@@ -8,14 +8,14 @@ import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 import { ProjectPermissionsGuard } from './guards/permissions.guard';
 import {
   AddRemoveProjectMemberInput,
+  AssignProjectRoleInput,
   CreateProjectInput,
+  CreateProjectRoleInput,
+  ProjectRolePaginationInput,
   UnassignProjectRoleInput,
   UpdateProjectInput,
   UpdateProjectRoleInput,
 } from './inputs';
-import { AssignProjectRoleInput } from './inputs/role/assign.input';
-import { CreateProjectRoleInput } from './inputs/role-create.input';
-import { ProjectRolePaginationInput } from './inputs/role-pagination';
 import {
   ProjectMembersObject,
   ProjectObject,
