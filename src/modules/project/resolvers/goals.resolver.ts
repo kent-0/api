@@ -26,7 +26,7 @@ import { ProjectGoalsService } from '../services/goals.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectResolver {
+export class ProjectGoalsResolver {
   /**
    * Initializes the resolver with the necessary services.
    *

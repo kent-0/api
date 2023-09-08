@@ -4,12 +4,17 @@ import { Module } from '@nestjs/common';
 
 import {
   ProjectEntity,
+  ProjectGoalsEntity,
   ProjectMembersEntity,
   ProjectRolesEntity,
 } from '~/database/entities';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
-import { ProjectResolver } from './project.resolver';
+import { ProjectGoalsResolver } from './resolvers/goals.resolver';
+import { ProjectMembersResolver } from './resolvers/members.resolver';
+import { ProjectResolver } from './resolvers/project.resolver';
+import { ProjectRolesResolver } from './resolvers/roles.resolver';
+import { ProjectGoalsService } from './services/goals.service';
 import { ProjectMembersService } from './services/members.service';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
@@ -29,15 +34,26 @@ import { ProjectRolesService } from './services/roles.service';
     // MikroORM module is imported to utilize database operations for entities associated with the project.
     // This ensures that the ORM can correctly interact with these entities.
     MikroOrmModule.forFeature({
-      entities: [ProjectEntity, ProjectMembersEntity, ProjectRolesEntity],
+      entities: [
+        ProjectEntity,
+        ProjectMembersEntity,
+        ProjectRolesEntity,
+        ProjectGoalsEntity,
+      ],
     }),
   ],
   providers: [
     ProjectService,
     ProjectResolver,
+    ProjectGoalsResolver,
+    ProjectRolesResolver,
+    ProjectMembersResolver,
     PermissionManagerService,
     ProjectRolesService,
     ProjectMembersService,
+    ProjectGoalsService,
+    ProjectMembersService,
+    ProjectRolesService,
   ],
 })
 export class ProjectModule {}

@@ -28,7 +28,7 @@ import { ProjectRolesService } from '../services/roles.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectResolver {
+export class ProjectRolesResolver {
   /**
    * Initializes the resolver with the necessary service.
    *
