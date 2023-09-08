@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserObject } from '~/modules/auth/objects/user/user.object';
+import { AuthUserObject } from '~/modules/auth/objects';
 
 import { ProjectObject } from '.';
 

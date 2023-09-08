@@ -19,6 +19,7 @@ import {
 import { DeviceTypes } from '~/database/enums/devices.enum';
 import { TokenType } from '~/database/enums/token.enum';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
+import { ToCollections } from '~/utils/types/to-collection';
 
 import * as bcrypt from 'bcrypt';
 
@@ -122,14 +123,14 @@ export class AuthAccountService {
    * @returns The user's information.
    * @throws NotFoundException if the user with the provided ID is not found.
    */
-  public async me(userId: string): Promise<AuthUserObject> {
+  public async me(userId: string): Promise<ToCollections<AuthUserObject>> {
     // Fetch the user's information using the provided userId and populate the user's email.
     const user = await this.usersRespository.findOne(
       {
         id: userId,
       },
       {
-        populate: ['email'],
+        populate: ['email', 'projects', 'projects.project', 'projects.roles'],
       },
     );
 
@@ -344,7 +345,7 @@ export class AuthAccountService {
     last_name,
     password,
     username,
-  }: AuthSignUpInput): Promise<AuthUserObject> {
+  }: AuthSignUpInput): Promise<ToCollections<AuthUserObject>> {
     // Check if a user with the same username or email already exists in the database.
     const userExist = await this.usersRespository.findOne({
       $or: [{ username }, { email: { value: email } }],
@@ -429,7 +430,7 @@ export class AuthAccountService {
   public async update(
     { biography, first_name, last_name, username }: AuthUpdateAccountInput,
     userId: string,
-  ): Promise<AuthUserObject> {
+  ): Promise<ToCollections<AuthUserObject>> {
     // Fetch the user's information from the database using the provided userId.
     const user = await this.usersRespository.findOne(
       {

@@ -1,5 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { ProjectMembersObject } from '~/modules/project/objects';
+
 /**
  * Represents an email associated with a user account. This object typically contains
  * the email address itself and a flag indicating whether the email has been confirmed
@@ -103,6 +105,21 @@ export class AuthUserObject {
     description: "User's last or family name.",
   })
   public last_name!: string;
+
+  /**
+   * Represents the projects in which the user is a member. This property provides an overview
+   * of all the projects associated with the user, allowing them to quickly access and manage
+   * their project memberships. Each project entry will contain essential details such as the
+   * project name, role of the user in that project, and other relevant metadata.
+   *
+   * @type {ProjectMembersObject[]}
+   * @description A list of projects where the user has membership.
+   */
+  @Field(() => [ProjectMembersObject], {
+    description: 'Projects in which the user is a member.',
+    nullable: true,
+  })
+  public projects!: ProjectMembersObject[];
 
   /**
    * Represents a unique username associated with the user. This is often a

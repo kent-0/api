@@ -1,5 +1,7 @@
 import {
+  Collection,
   Entity,
+  OneToMany,
   OneToOne,
   OptionalProps,
   Property,
@@ -10,6 +12,7 @@ import { AuthEmailsEntity } from './emails.entity';
 import { AuthPasswordEntity } from './passwords.entity';
 
 import { OptionalParentProps, ParentEntity } from '../base.entity';
+import { ProjectMembersEntity } from '../project/members.entity';
 
 /**
  * Entity representing individual user profiles within the platform.
@@ -91,6 +94,17 @@ export class AuthUserEntity extends ParentEntity {
     nullable: true,
   })
   public password?: Rel<AuthPasswordEntity>;
+
+  /**
+   * Represents a one-to-many relationship between the user and the projects they are a member of.
+   *
+   * This relationship indicates that a single user can be a member of multiple projects, but each project member entity
+   * represents a single membership of a user in a particular project.
+   */
+  @OneToMany(() => ProjectMembersEntity, (m) => m.user, {
+    comment: 'Projects in which the user is a member.',
+  })
+  public projects = new Collection<ProjectMembersEntity>(this);
 
   /**
    * A unique identifier chosen by the user. This is typically used for logging in, mentioning

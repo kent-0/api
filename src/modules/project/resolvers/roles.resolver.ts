@@ -97,7 +97,7 @@ export class ProjectResolver {
    */
   @Query(() => ProjectPaginatedProjectRoles, {
     description: 'Paginate the roles of a project.',
-    name: '',
+    name: 'paginateProjectRoles',
   })
   public paginate(@Args('input') input: ProjectRolePaginationInput) {
     return this._roleService.paginate(input);
@@ -113,6 +113,7 @@ export class ProjectResolver {
    */
   @Mutation(() => ProjectMembersObject, {
     description: 'Unassign a role from a project member.',
+    name: 'unassignProjectRole',
   })
   @ProjectPermissions([Permissions.UnassignRole])
   public unassign(@Args('input') input: UnassignProjectRoleInput) {
@@ -129,6 +130,7 @@ export class ProjectResolver {
    */
   @Mutation(() => ProjectRolesObject, {
     description: 'Update the details of a project role.',
+    name: 'updateProjectRole',
   })
   @ProjectPermissions([Permissions.UpdateRole])
   public update(@Args('input') input: UpdateProjectRoleInput) {
