@@ -1,6 +1,8 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ProjectMembersObject } from '~/modules/project/objects';
+
+import { AuthUserMinimalObject } from './user-minimal.object';
 
 /**
  * Represents an email associated with a user account. This object typically contains
@@ -52,9 +54,9 @@ export class AuthUserEmailObject {
  */
 @ObjectType({
   description:
-    'Contains the core profile information of a user on the platform.',
+    'It contains the minimum information about the user and their relationships.',
 })
-export class AuthUserObject {
+export class AuthUserObject extends AuthUserMinimalObject {
   /**
    * Represents the email associated with the user's account. The email object
    * also contains information about whether the email is confirmed.
@@ -70,43 +72,6 @@ export class AuthUserObject {
   public email!: AuthUserEmailObject;
 
   /**
-   * The first name of the user. This is typically the given name of the user.
-   *
-   * @type {string}
-   * @description The user's first name.
-   * @required
-   */
-  @Field({
-    description: "User's first or given name.",
-  })
-  public first_name!: string;
-
-  /**
-   * Represents a unique identifier for the user. This is typically a string
-   * (often a UUID) that uniquely identifies a user in the system.
-   *
-   * @type {string}
-   * @description A unique string identifier for the user.
-   * @required
-   */
-  @Field(() => ID, {
-    description: 'Unique identifier for the user, typically in UUID format.',
-  })
-  public id!: string;
-
-  /**
-   * The last name or surname of the user.
-   *
-   * @type {string}
-   * @description The user's last or family name.
-   * @required
-   */
-  @Field({
-    description: "User's last or family name.",
-  })
-  public last_name!: string;
-
-  /**
    * Represents the projects in which the user is a member. This property provides an overview
    * of all the projects associated with the user, allowing them to quickly access and manage
    * their project memberships. Each project entry will contain essential details such as the
@@ -120,19 +85,4 @@ export class AuthUserObject {
     nullable: true,
   })
   public projects!: ProjectMembersObject[];
-
-  /**
-   * Represents a unique username associated with the user. This is often a
-   * name chosen by the user and is used for logging in, mentioning the user,
-   * or other platform-specific interactions.
-   *
-   * @type {string}
-   * @description A unique username for the user.
-   * @required
-   */
-  @Field({
-    description:
-      'Unique username chosen by the user for platform-specific interactions.',
-  })
-  public username!: string;
 }

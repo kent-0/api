@@ -142,6 +142,7 @@ export class ProjectService {
    * @throws {NotFoundException} If the project is not found.
    */
   public async get(projectId: string): Promise<ToCollections<ProjectObject>> {
+    // TODO: refactor this
     // Fetch the project entity with its associated entities from the database using the provided projectId.
     const project = await this.projectRepository.findOne(
       {

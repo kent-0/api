@@ -1,6 +1,7 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ProjectMembersObject, ProjectObject } from '.';
+import { ProjectRolesMinimalObject } from './roles-minimal.object';
 
 /**
  * The `ProjectRolesObject` class serves as a blueprint for defining roles within a project management system.
@@ -13,17 +14,9 @@ import { ProjectMembersObject, ProjectObject } from '.';
  */
 @ObjectType({
   description:
-    'Entity representing roles to manage the projects using bit-based permission system.',
+    'Object that represents the roles of a board with their relationships.',
 })
-export class ProjectRolesObject {
-  /**
-   * The `id` field represents a unique identifier for each role within the system.
-   * This ensures that each role can be distinctively identified, especially during operations
-   * like assignment, modification, or deletion.
-   */
-  @Field(() => ID, { description: 'Unique identifier for the project role.' })
-  public id!: string;
-
+export class ProjectRolesObject extends ProjectRolesMinimalObject {
   /**
    * The `members` field provides a list of all project members that are assigned this role.
    * This is crucial for understanding the distribution of roles within a project and identifying
@@ -33,21 +26,6 @@ export class ProjectRolesObject {
     description: 'Project members who have this role.',
   })
   public members!: ProjectMembersObject[];
-
-  /**
-   * The `name` field provides a human-readable representation of the role. This is typically
-   * used for display purposes and for users to understand the purpose of a given role.
-   */
-  @Field(() => String, { description: 'Name representing the role.' })
-  public name!: string;
-
-  /**
-   * The `permissions` field represents the bit-based permission value for the role. Using bits,
-   * a role can have a combination of permissions represented as a single integer. This makes it
-   * easier and more efficient to manage and verify permissions.
-   */
-  @Field(() => Number, { description: 'Role bit-based permissions.' })
-  public permissions!: number;
 
   /**
    * The `project` field denotes the specific project to which the role is assigned. Roles in
