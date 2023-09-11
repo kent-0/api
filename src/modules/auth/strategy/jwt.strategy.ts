@@ -1,6 +1,5 @@
 // Import necessary modules and dependencies
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { EntityManager } from '@mikro-orm/postgresql';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -46,8 +45,6 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
    * @param {ConfigService} _configService - Service to access configuration values.
    */
   constructor(
-    @InjectRepository(AuthTokensEntity)
-    private readonly tokensRepository: EntityRepository<AuthTokensEntity>,
     private readonly _jwtService: JwtService,
     private readonly em: EntityManager,
     public readonly _configService: ConfigService,
@@ -93,7 +90,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     }
 
     // Find the token session information in the repository
-    const tokenSession = await this.tokensRepository.findOne({
+    const tokenSession = await this.em.fork().findOne(AuthTokensEntity, {
       revoked: false,
       token_type: TokenType.AUTH,
       token_value: token,
