@@ -68,11 +68,14 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
    * @param {Request} request - The incoming HTTP request.
    * @param {JWTPayload} payload - The decoded JWT payload.
    *
-   * @returns {JWTPayload} - Returns the JWT payload if the token is valid.
+   * @returns {Promise<JWTPayload>} - Returns the JWT payload if the token is valid.
    *
    * @throws {UnauthorizedException} - Throws if the token is missing, invalid, revoked, or expired.
    */
-  public async validate(request: Request, payload: JWTPayload) {
+  public async validate(
+    request: Request,
+    payload: JWTPayload,
+  ): Promise<JWTPayload> {
     const token = request.headers.authorization?.split(' ')?.[1];
     const currentDate = new Date();
 
