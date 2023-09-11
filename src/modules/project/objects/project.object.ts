@@ -6,7 +6,7 @@ import {
   ProjectGoalsObject,
   ProjectMembersObject,
   ProjectNotesObject,
-  ProjectRolesObject,
+  ProjectRolesMinimalObject,
 } from '.';
 import { ProjectMinimalObject } from './project-minimal.object';
 
@@ -52,10 +52,10 @@ export class ProjectObject extends ProjectMinimalObject {
    * The `roles` field lists all the roles available within the project. These roles define what actions members
    * can perform within the project and what permissions they have.
    */
-  @Field(() => [ProjectRolesObject], {
+  @Field(() => [ProjectRolesMinimalObject], {
     description: 'Roles to manage the project and boards.',
   })
-  public roles!: ProjectRolesObject[];
+  public roles!: ProjectRolesMinimalObject[];
 
   /**
    * The `status` field provides the current state of the project. This could be values like 'In Progress',

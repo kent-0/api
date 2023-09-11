@@ -152,13 +152,6 @@ export class AuthAccountService {
           'email.value',
           'email.is_confirmed',
         ],
-        populate: [
-          'email',
-          'projects',
-          'projects.project',
-          'projects.project.roles',
-          'projects.project.owner',
-        ],
       },
     );
 

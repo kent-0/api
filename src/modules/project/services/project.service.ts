@@ -142,19 +142,26 @@ export class ProjectService {
    * @throws {NotFoundException} If the project is not found.
    */
   public async get(projectId: string): Promise<ToCollections<ProjectObject>> {
-    // TODO: refactor this
     // Fetch the project entity with its associated entities from the database using the provided projectId.
     const project = await this.projectRepository.findOne(
       {
         id: projectId,
       },
       {
-        populate: [
-          'owner',
-          'members',
-          'roles',
-          'members.roles',
-          'members.user',
+        fields: [
+          'id',
+          'name',
+          'description',
+          'owner.id',
+          'owner.username',
+          'owner.first_name',
+          'owner.last_name',
+          'members.user.id',
+          'members.user.username',
+          'members.user.first_name',
+          'members.user.last_name',
+          'roles.name',
+          'roles.permissions',
         ],
       },
     );
