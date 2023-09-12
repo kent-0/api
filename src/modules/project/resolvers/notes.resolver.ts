@@ -57,7 +57,7 @@ export class ProjectNotesResolver {
    * @param input - Data containing details of the project note to delete.
    * @returns A message confirming successful deletion or details of the deleted note.
    */
-  @Mutation(() => ProjectNotesObject, {
+  @Mutation(() => String, {
     description: 'Delete a project note.',
     name: 'projectNoteDelete',
   })

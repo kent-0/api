@@ -55,7 +55,7 @@ export class ProjectGoalsResolver {
    * @param input - Data containing details of the project goal to delete.
    * @returns A message confirming successful deletion or details of the deleted goal.
    */
-  @Mutation(() => ProjectGoalsObject, {
+  @Mutation(() => String, {
     description: 'Delete a project goal.',
     name: 'projectGoalDelete',
   })

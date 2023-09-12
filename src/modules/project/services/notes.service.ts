@@ -142,8 +142,8 @@ export class ProjectNotesService {
     }
 
     // Update the properties of the project note with the new values.
-    projectNote.content = content;
-    projectNote.title = title;
+    projectNote.content = content ?? projectNote.content;
+    projectNote.title = title ?? projectNote.title;
 
     // Save the updated project note back to the database.
     await this.em.persistAndFlush(projectNote);

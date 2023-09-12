@@ -143,9 +143,9 @@ export class ProjectGoalsService {
     }
 
     // Update the properties of the project goal with the new values.
-    projectGoal.name = name;
-    projectGoal.description = description;
-    projectGoal.status = status;
+    projectGoal.name = name ?? projectGoal.name;
+    projectGoal.description = description ?? projectGoal.description;
+    projectGoal.status = status ?? projectGoal.status;
 
     // Save the updated project goal back to the database.
     await this.em.persistAndFlush(projectGoal);
