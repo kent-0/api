@@ -11,7 +11,6 @@ import {
   ProjectGoalRemoveInput,
   ProjectGoalUpdateInput,
 } from '../inputs';
-import { ProjectGoalChangeStatusInput } from '../inputs/goal/change-status.input';
 import { ProjectGoalsObject } from '../objects';
 
 /**
@@ -33,45 +32,6 @@ export class ProjectGoalsService {
     private readonly goalsRepository: EntityRepository<ProjectGoalsEntity>,
     private readonly em: EntityManager,
   ) {}
-
-  /**
-   * Changes the status of a specific project goal.
-   *
-   * Steps:
-   * 1. Retrieve the project goal based on the provided goalId and projectId.
-   * 2. If the project goal is not found, throw a NotFoundException.
-   * 3. Update the status of the project goal.
-   * 4. Persist and flush the changes to the database.
-   * 5. Return the updated project goal.
-   *
-   * @param goalId - The unique identifier of the project goal.
-   * @param projectId - The unique identifier of the project to which the goal belongs.
-   * @param status - The new status to be set for the project goal.
-   *
-   * @returns The updated project goal with the new status.
-   *
-   * @throws {NotFoundException} Throws an exception if the project goal is not found.
-   */
-  public async changeStatus({
-    goalId,
-    projectId,
-    status,
-  }: ProjectGoalChangeStatusInput): Promise<ToCollections<ProjectGoalsObject>> {
-    const projectGoal = await this.goalsRepository.findOne({
-      id: goalId,
-      project: projectId,
-    });
-
-    if (!projectGoal) {
-      throw new NotFoundException(
-        'The project goal you want to change its status has not been found.',
-      );
-    }
-
-    projectGoal.status = status;
-    await this.em.persistAndFlush(projectGoal);
-    return projectGoal;
-  }
 
   /**
    * Creates a new project goal.
