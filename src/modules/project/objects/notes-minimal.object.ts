@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserObject } from '~/modules/auth/objects';
+import { AuthUserMinimalObject } from '~/modules/auth/objects';
 
 /**
  * The `ProjectNotesObject` class encapsulates the structure and metadata
@@ -33,8 +33,10 @@ export class ProjectMinimalNotesObject {
    * the user who created the note, the system can maintain accountability
    * and provide context about the source of the information.
    */
-  @Field(() => AuthUserObject, { description: 'Author of the note.' })
-  public created_by!: AuthUserObject;
+  @Field(() => AuthUserMinimalObject, {
+    description: 'Author of the note.',
+  })
+  public created_by!: AuthUserMinimalObject;
 
   /**
    * The `id` field serves as a unique identifier for the note within the

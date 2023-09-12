@@ -170,6 +170,10 @@ export class ProjectService {
           'notes.id',
           'notes.title',
           'notes.content',
+          'notes.created_by.id',
+          'notes.created_by.username',
+          'notes.created_by.first_name',
+          'notes.created_by.last_name',
         ],
       },
     );
