@@ -4,8 +4,10 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
+import { ToCollections } from '~/utils/types/to-collection';
 
 import { BoardCreateInput } from '../inputs';
+import { BoardObject } from '../objects';
 
 /**
  * Provides essential services related to board management within the application.
@@ -43,12 +45,12 @@ export class BoardService {
    *
    * @param {BoardCreateInput} description, name, projectId - Input data to create a new board.
    * @param {string} userId - ID of the user creating the board.
-   * @returns {Promise<BoardEntity>} The created board entity.
+   * @returns {Promise<ToCollections<BoardObject>>} The created board entity.
    */
   public async create(
     { description, name, projectId }: BoardCreateInput,
     userId: string,
-  ): Promise<BoardEntity> {
+  ): Promise<ToCollections<BoardObject>> {
     // Step 1: Create a new board entity instance.
     const newBoard = this.boardRepository.create({
       created_by: userId,
