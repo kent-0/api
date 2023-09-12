@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# pnpm exec pretty-quick --staged --ignore-path .gitignore --pattern "**/*.{ts,tsx,vue}" && pnpm exec lint-staged --allow-empty
-# disable pretty-quick, bug with prettier v3
 pnpm exec lint-staged --allow-empty
