@@ -18,6 +18,7 @@ import { ProjectResolver } from './resolvers/project.resolver';
 import { ProjectRolesResolver } from './resolvers/roles.resolver';
 import { ProjectGoalsService } from './services/goals.service';
 import { ProjectMembersService } from './services/members.service';
+import { ProjectNotesService } from './services/notes.service';
 import { ProjectService } from './services/project.service';
 import { ProjectRolesService } from './services/roles.service';
 
@@ -58,6 +59,7 @@ import { ProjectRolesService } from './services/roles.service';
     ProjectGoalsService,
     ProjectMembersService,
     ProjectRolesService,
+    ProjectNotesService,
   ],
 })
 export class ProjectModule {}
