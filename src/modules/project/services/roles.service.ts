@@ -13,7 +13,7 @@ import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   AssignProjectRoleInput,
-  CreateProjectRoleInput,
+  ProjectCreateRole,
   ProjectRolePaginationInput,
   UnassignProjectRoleInput,
   UpdateProjectRoleInput,
@@ -134,7 +134,7 @@ export class ProjectRolesService {
     name,
     permissions,
     projectId,
-  }: CreateProjectRoleInput): Promise<ToCollections<ProjectRolesObject>> {
+  }: ProjectCreateRole): Promise<ToCollections<ProjectRolesObject>> {
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       name,

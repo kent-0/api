@@ -14,7 +14,7 @@ import { IsString, MaxLength } from 'class-validator';
   description:
     'Input details necessary for creating a new project that will manage boards.',
 })
-export class CreateProjectInput {
+export class ProjectCreateInput {
   /**
    * This field captures a brief description of the project. It provides
    * context about the project's purpose or goals. This description helps

@@ -11,7 +11,7 @@ import { ProjectMembersEntity } from '~/database/entities';
 import { ProjectEntity } from '~/database/entities/project/project.entity';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { CreateProjectInput, UpdateProjectInput } from '../inputs';
+import { ProjectCreateInput, UpdateProjectInput } from '../inputs';
 import { ProjectObject } from '../objects/project.object';
 
 /**
@@ -56,7 +56,7 @@ export class ProjectService {
    * @returns {Promise<ToCollections<ProjectObject>>} - Returns the newly created project object.
    */
   public async create(
-    { description, name }: CreateProjectInput,
+    { description, name }: ProjectCreateInput,
     userId: string,
   ): Promise<ToCollections<ProjectObject>> {
     // Create a new project entity with the provided details.

@@ -9,7 +9,7 @@ import { Permissions } from '~/permissions/enums/project.enum';
 import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
-import { CreateProjectInput, UpdateProjectInput } from '../inputs';
+import { ProjectCreateInput, UpdateProjectInput } from '../inputs';
 import { ProjectObject } from '../objects';
 import { ProjectService } from '../services/project.service';
 
@@ -17,7 +17,7 @@ import { ProjectService } from '../services/project.service';
  * Resolver class for managing project-related GraphQL operations.
  *
  * This resolver handles GraphQL mutations and queries related to creating, deleting, updating, and fetching projects.
- * It's generally protected by JWT authentication and specific project permissions, except for the `createProject` mutation.
+ * It's generally protected by JWT authentication and specific project permissions, except for the `ProjectCreate` mutation.
  *
  * @UsePipes(ValidationPipe) - Ensures that the incoming data is validated against the defined DTOs.
  * @UseGuards(JwtAuthGuard, ProjectPermissionsGuard) - Protects most resolver methods using JWT authentication and project-specific permissions.
@@ -47,7 +47,7 @@ export class ProjectResolver {
   })
   @ExcludeGuards([ProjectPermissionsGuard])
   public create(
-    @Args('input') input: CreateProjectInput,
+    @Args('input') input: ProjectCreateInput,
     @UserToken() token: JWTPayload,
   ) {
     return this._projectService.create(input, token.sub);

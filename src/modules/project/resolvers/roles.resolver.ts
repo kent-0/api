@@ -8,7 +8,7 @@ import { Permissions } from '~/permissions/enums/project.enum';
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import {
   AssignProjectRoleInput,
-  CreateProjectRoleInput,
+  ProjectCreateRole,
   ProjectRolePaginationInput,
   UnassignProjectRoleInput,
   UpdateProjectRoleInput,
@@ -63,10 +63,10 @@ export class ProjectRolesResolver {
    */
   @Mutation(() => ProjectRolesObject, {
     description: 'Create a new project role.',
-    name: 'createProjectRole',
+    name: 'projectCreateRole',
   })
   @ProjectPermissions([Permissions.CreateRole])
-  public create(@Args('input') input: CreateProjectRoleInput) {
+  public create(@Args('input') input: ProjectCreateRole) {
     return this._roleService.create(input);
   }
 

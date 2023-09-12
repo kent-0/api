@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 
 /**
- * The CreateProjectRoleInput class provides a structure and validation for the
+ * The ProjectCreateRole class provides a structure and validation for the
  * input data when creating a new role for a project. In a role-based access control
  * system, roles are assigned to users and these roles have specific permissions
  * associated with them. This input type aids in the creation of such roles with
@@ -16,7 +16,7 @@ import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 @InputType({
   description: 'Input to create roles for projects.',
 })
-export class CreateProjectRoleInput {
+export class ProjectCreateRole {
   /**
    * This field represents the name given to the role. The name serves as an
    * identifier and may be used for display purposes in user interfaces. It
