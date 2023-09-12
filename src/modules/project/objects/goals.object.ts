@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 
-import { ProjectObject } from '.';
+import { ProjectMinimalObject } from '.';
 
 /**
  * The `ProjectGoalsObject` class represents a structured format for goals
@@ -46,8 +46,10 @@ export class ProjectGoalsObject {
    * Linking the goal to a specific project ensures context. This relationship
    * indicates which project the goal belongs to.
    */
-  @Field(() => ProjectObject, { description: 'Project assigned to the goal.' })
-  public project!: ProjectObject;
+  @Field(() => ProjectMinimalObject, {
+    description: 'Project assigned to the goal.',
+  })
+  public project!: ProjectMinimalObject;
 
   /**
    * The status of a goal provides information about its current state. For

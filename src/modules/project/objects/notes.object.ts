@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserObject } from '~/modules/auth/objects';
 
-import { ProjectObject } from '.';
+import { ProjectMinimalObject } from '.';
 
 /**
  * The `ProjectNotesObject` class encapsulates the structure and metadata
@@ -50,8 +50,10 @@ export class ProjectNotesObject {
    * a note with a project ensures that the note's context is clear and that
    * it can be easily found or referenced within the scope of that project.
    */
-  @Field(() => ProjectObject, { description: 'Project assigned to the note.' })
-  public project!: ProjectObject;
+  @Field(() => ProjectMinimalObject, {
+    description: 'Project assigned to the note.',
+  })
+  public project!: ProjectMinimalObject;
 
   /**
    * The `title` field gives a concise name or headline to the note. It

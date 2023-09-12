@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMembersObject, ProjectObject } from '.';
+import { ProjectMembersObject, ProjectMinimalObject } from '.';
 import { ProjectRolesMinimalObject } from './roles-minimal.object';
 
 /**
@@ -32,6 +32,8 @@ export class ProjectRolesObject extends ProjectRolesMinimalObject {
    * project management systems are often project-specific, meaning that the same role might
    * have different permissions in different projects.
    */
-  @Field(() => ProjectObject, { description: 'Project assigned to the role.' })
-  public project!: ProjectObject;
+  @Field(() => ProjectMinimalObject, {
+    description: 'Project assigned to the role.',
+  })
+  public project!: ProjectMinimalObject;
 }
