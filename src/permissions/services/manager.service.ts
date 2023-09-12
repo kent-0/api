@@ -53,14 +53,6 @@ export class PermissionManagerService {
   }
 
   /**
-   * Getter to retrieve the current set of managed permissions.
-   * @returns The current set of managed permissions as a bit value.
-   */
-  public get permissions(): number {
-    return this._perms;
-  }
-
-  /**
    * Remove a permission from the current set of managed permissions.
    * @param permission - The permission bit to remove.
    * @returns This service instance, allowing for method chaining.
@@ -68,5 +60,13 @@ export class PermissionManagerService {
   public remove(permission: number) {
     this._perms &= ~permission;
     return this;
+  }
+
+  /**
+   * Getter to retrieve the current set of managed permissions.
+   * @returns The current set of managed permissions as a bit value.
+   */
+  public get permissions(): number {
+    return this._perms;
   }
 }
