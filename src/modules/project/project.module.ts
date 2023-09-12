@@ -12,6 +12,7 @@ import { PermissionManagerService } from '~/permissions/services/manager.service
 
 import { ProjectGoalsResolver } from './resolvers/goals.resolver';
 import { ProjectMembersResolver } from './resolvers/members.resolver';
+import { ProjectNotesResolver } from './resolvers/notes.resolver';
 import { ProjectResolver } from './resolvers/project.resolver';
 import { ProjectRolesResolver } from './resolvers/roles.resolver';
 import { ProjectGoalsService } from './services/goals.service';
@@ -46,6 +47,7 @@ import { ProjectRolesService } from './services/roles.service';
     ProjectService,
     ProjectResolver,
     ProjectGoalsResolver,
+    ProjectNotesResolver,
     ProjectRolesResolver,
     ProjectMembersResolver,
     PermissionManagerService,
