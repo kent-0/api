@@ -6,7 +6,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { BoardCreateInput, BoardUpdateInput } from '../inputs';
+import {
+  BoardCreateInput,
+  BoardDeleteInput,
+  BoardUpdateInput,
+} from '../inputs';
+import { BoardGetInput } from '../inputs/board/get.input';
 import { BoardObject } from '../objects';
 
 /**
@@ -83,17 +88,23 @@ export class BoardService {
    * 3. If the board is found, proceed to delete it from the database.
    * 4. Return a confirmation message indicating successful deletion.
    *
-   * @param {string} boardId - The unique identifier of the board to be deleted.
+   * @param {BoardDeleteInput} input - Contains the unique identifiers for the board and the associated project.
+   * @property {string} boardId - The unique identifier of the board to be deleted.
+   * @property {string} projectId - The unique identifier of the project associated with the board.
    *
    * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
    *
    * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
    */
-  public async delete(boardId: string): Promise<string> {
+  public async delete({
+    boardId,
+    projectId,
+  }: BoardDeleteInput): Promise<string> {
     // Attempt to find the board based on the provided boardId and projectId.
     const board = await this.boardRepository.findOne(
       {
         id: boardId,
+        project: projectId,
       },
       {
         fields: ['created_by.id'],
@@ -110,7 +121,7 @@ export class BoardService {
     // If the board is found, remove it from the database and flush the changes.
     await this.em.removeAndFlush(board);
 
-    // Reasync turn a confirmation message indicating successful deletion.
+    // Return a confirmation message indicating successful deletion.
     return `Board ${board.name} successfully deleted.`;
   }
 
@@ -131,11 +142,15 @@ export class BoardService {
    *
    * @throws NotFoundException - If the board with the specified ID does not exist in the database.
    */
-  public async get(boardId: string): Promise<ToCollections<BoardObject>> {
+  public async get({
+    boardId,
+    projectId,
+  }: BoardGetInput): Promise<ToCollections<BoardObject>> {
     // Step 1: Query the board repository to find the specified board.
     const board = await this.boardRepository.findOne(
       {
         id: boardId,
+        project: projectId,
       },
       {
         fields: [

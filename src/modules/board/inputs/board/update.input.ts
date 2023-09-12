@@ -51,4 +51,17 @@ export class BoardUpdateInput {
     nullable: true,
   })
   public name?: string;
+
+  /**
+   * The unique identifier of the project to which the board belongs.
+   * This ensures that the board is associated with the correct project.
+   *
+   * @type {string}
+   * @description The unique identifier for the associated project.
+   * @required
+   */
+  @Field(() => ID, {
+    description: 'ID of the project to which the board belongs.',
+  })
+  public projectId!: string;
 }
