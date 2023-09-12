@@ -1,12 +1,12 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { BoardCreateInput } from '../inputs';
+import { BoardCreateInput, BoardUpdateInput } from '../inputs';
 import { BoardObject } from '../objects';
 
 /**
@@ -72,5 +72,161 @@ export class BoardService {
     await this.em.persistAndFlush(newMember);
 
     return newBoard;
+  }
+
+  /**
+   * Asynchronously deletes a specific board from the database.
+   *
+   * Steps:
+   * 1. Attempt to find the board in the database using the provided boardId and projectId.
+   * 2. If the board is not found, throw a NotFoundException.
+   * 3. If the board is found, proceed to delete it from the database.
+   * 4. Return a confirmation message indicating successful deletion.
+   *
+   * @param {string} boardId - The unique identifier of the board to be deleted.
+   *
+   * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
+   *
+   * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
+   */
+  public async delete(boardId: string): Promise<string> {
+    // Attempt to find the board based on the provided boardId and projectId.
+    const board = await this.boardRepository.findOne(
+      {
+        id: boardId,
+      },
+      {
+        fields: ['created_by.id'],
+      },
+    );
+
+    // If the board is not found, throw a NotFoundException.
+    if (!board) {
+      throw new NotFoundException(
+        'The board you are trying to delete could not be found.',
+      );
+    }
+
+    // If the board is found, remove it from the database and flush the changes.
+    await this.em.removeAndFlush(board);
+
+    // Reasync turn a confirmation message indicating successful deletion.
+    return `Board ${board.name} successfully deleted.`;
+  }
+
+  /**
+   * Retrieves a specific board from the system based on the provided board ID.
+   * This function performs a detailed query, not only fetching the board's basic details but also
+   * associated information about the creator of the board and the project to which the board belongs.
+   *
+   * Steps:
+   * 1. Execute a repository query to find a board matching the provided board ID.
+   * 2. If the board is not found, throw a NotFoundException.
+   * 3. If found, return the board details.
+   *
+   * @param boardId - The unique identifier (typically a UUID) of the board to be retrieved.
+   *
+   * @returns Promise<ToCollections<BoardObject>> - Returns the board's details wrapped in a promise.
+   * This includes board properties, creator's details, and associated project's details.
+   *
+   * @throws NotFoundException - If the board with the specified ID does not exist in the database.
+   */
+  public async get(boardId: string): Promise<ToCollections<BoardObject>> {
+    // Step 1: Query the board repository to find the specified board.
+    const board = await this.boardRepository.findOne(
+      {
+        id: boardId,
+      },
+      {
+        fields: [
+          'created_by.id',
+          'created_by.username',
+          'created_by.first_name',
+          'created_by.last_name',
+          'project.description',
+          'project.end_date',
+          'project.owner.id',
+          'project.owner.username',
+          'project.owner.first_name',
+          'project.owner.last_name',
+          'project.start_date',
+          'project.id',
+          'project.name',
+        ],
+      },
+    );
+
+    // Step 2: Check if the board was found. If not, throw an exception.
+    if (!board) {
+      throw new NotFoundException(
+        'The board you are trying to get could not be found.',
+      );
+    }
+
+    // Step 3: Return the board details.
+    return board;
+  }
+
+  /**
+   * Updates the details of an existing board in the system.
+   *
+   * This function is responsible for modifying the details of a board based on the user's input.
+   * It ensures that the board belongs to the specified project and then proceeds to update the fields.
+   * Only the board's name and description can be updated. If the board cannot be found, an exception
+   * is thrown to alert the user.
+   *
+   * Steps:
+   * 1. Query the database to retrieve the board with the specified `boardId` and `projectId`,
+   *    along with specific fields related to its creator and associated project.
+   * 2. Check if the board exists. If not, throw a `NotFoundException`.
+   * 3. Update the board's name and description based on the provided input.
+   *    If no new value is provided for a particular field, retain its current value.
+   * 4. Persist the updated board to the database.
+   * 5. Return the updated board.
+   *
+   * @param boardId - The unique identifier of the board to be updated.
+   * @param description - The new description for the board.
+   * @param name - The new name for the board.
+   *
+   * @returns The updated board entity.
+   *
+   * @throws NotFoundException if the board cannot be found.
+   */
+  public async update({ boardId, description, name }: BoardUpdateInput) {
+    const board = await this.boardRepository.findOne(
+      {
+        id: boardId,
+      },
+      {
+        fields: [
+          'created_by.id',
+          'created_by.username',
+          'created_by.first_name',
+          'created_by.last_name',
+          'project.description',
+          'project.end_date',
+          'project.owner.id',
+          'project.owner.username',
+          'project.owner.first_name',
+          'project.owner.last_name',
+          'project.start_date',
+          'project.id',
+          'project.name',
+        ],
+      },
+    );
+
+    if (!board) {
+      throw new NotFoundException(
+        'The board you are trying to update could not be found.',
+      );
+    }
+
+    board.name = name ?? board.name;
+    board.description = description ?? board.description;
+
+    await this.em.persistAndFlush(board);
+
+    return board;
   }
 }
