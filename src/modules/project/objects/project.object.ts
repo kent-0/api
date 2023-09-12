@@ -3,11 +3,11 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { ProjectStatus } from '~/database/enums/status.enum';
 
 import {
-  ProjectGoalsObject,
-  ProjectMembersObject,
-  ProjectNotesObject,
+  ProjectGoalsMinimalObject,
+  ProjectMembersMinimalObject,
   ProjectRolesMinimalObject,
 } from '.';
+import { ProjectMinimalNotesObject } from './notes-minimal.object';
 import { ProjectMinimalObject } from './project-minimal.object';
 
 /**
@@ -25,28 +25,28 @@ export class ProjectObject extends ProjectMinimalObject {
    * The `goals` field represents the objectives or targets that the project aims to achieve. These goals
    * can be milestones, deliverables, or any other significant achievements.
    */
-  @Field(() => [ProjectGoalsObject], {
+  @Field(() => [ProjectGoalsMinimalObject], {
     description: 'Goals assigned to the project.',
   })
-  public goals!: ProjectGoalsObject[];
+  public goals!: ProjectGoalsMinimalObject[];
 
   /**
    * The `members` field lists all the users who are part of the project. This includes everyone from
    * team members to stakeholders, each potentially having different roles and permissions.
    */
-  @Field(() => [ProjectMembersObject], {
+  @Field(() => [ProjectMembersMinimalObject], {
     description: 'Users invited to the project.',
   })
-  public members!: ProjectMembersObject[];
+  public members!: ProjectMembersMinimalObject[];
 
   /**
    * The `notes` field represents any additional information, thoughts, or remarks associated with the project.
    * This is especially useful for capturing insights, decisions, or any other significant data points.
    */
-  @Field(() => [ProjectNotesObject], {
+  @Field(() => [ProjectMinimalNotesObject], {
     description: 'Notes assigned to the project.',
   })
-  public notes!: ProjectNotesObject[];
+  public notes!: ProjectMinimalNotesObject[];
 
   /**
    * The `roles` field lists all the roles available within the project. These roles define what actions members

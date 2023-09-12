@@ -1,8 +1,7 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-
-import { AuthUserObject } from '~/modules/auth/objects';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ProjectMinimalObject } from '.';
+import { ProjectMinimalNotesObject } from './notes-minimal.object';
 
 /**
  * The `ProjectNotesObject` class encapsulates the structure and metadata
@@ -18,33 +17,7 @@ import { ProjectMinimalObject } from '.';
 @ObjectType({
   description: 'Object representing notes associated with a project.',
 })
-export class ProjectNotesObject {
-  /**
-   * The `content` field captures the main body of the note. It provides
-   * comprehensive details or explanations regarding the topic or subject
-   * mentioned in the note's title.
-   */
-  @Field(() => String, {
-    description: 'Content that describes the title of the note.',
-  })
-  public content!: string;
-
-  /**
-   * The `created_by` field denotes the author of the note. By referencing
-   * the user who created the note, the system can maintain accountability
-   * and provide context about the source of the information.
-   */
-  @Field(() => AuthUserObject, { description: 'Author of the note.' })
-  public created_by!: AuthUserObject;
-
-  /**
-   * The `id` field serves as a unique identifier for the note within the
-   * system. This ID facilitates operations like updating, referencing, or
-   * deleting the note.
-   */
-  @Field(() => ID, { description: 'Unique identifier for the project note.' })
-  public id!: string;
-
+export class ProjectNotesObject extends ProjectMinimalNotesObject {
   /**
    * The `project` field links the note to a specific project. Associating
    * a note with a project ensures that the note's context is clear and that
@@ -54,11 +27,4 @@ export class ProjectNotesObject {
     description: 'Project assigned to the note.',
   })
   public project!: ProjectMinimalObject;
-
-  /**
-   * The `title` field gives a concise name or headline to the note. It
-   * serves as a quick reference to the topic or subject the note discusses.
-   */
-  @Field(() => String, { description: 'Title of the note.' })
-  public title!: string;
 }

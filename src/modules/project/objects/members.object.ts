@@ -1,8 +1,6 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
-
-import { ProjectRolesMinimalObject } from '.';
+import { ProjectMembersMinimalObject } from './members-minimal.object';
 import { ProjectMinimalObject } from './project-minimal.object';
 
 /**
@@ -19,18 +17,7 @@ import { ProjectMinimalObject } from './project-minimal.object';
 @ObjectType({
   description: 'Object representing users invited to projects.',
 })
-export class ProjectMembersObject {
-  /**
-   * The unique identifier for a member within a specific project. This
-   * ID is crucial for operations like updating membership details,
-   * assigning roles, or referencing them in relational data structures
-   * within the project context.
-   */
-  @Field(() => ID, {
-    description: 'Member ID inside the project',
-  })
-  public id!: string;
-
+export class ProjectMembersObject extends ProjectMembersMinimalObject {
   /**
    * The `project` field provides a reference to the project in which the
    * user is a member. This link is essential for understanding the context
@@ -41,24 +28,4 @@ export class ProjectMembersObject {
     description: 'Project to which the user is a member.',
   })
   public project!: ProjectMinimalObject;
-
-  /**
-   * A member can have multiple roles within a project. The `roles` field
-   * captures all the roles assigned to the member, providing a comprehensive
-   * view of their responsibilities and permissions within the project.
-   */
-  @Field(() => [ProjectRolesMinimalObject], {
-    description: 'User member roles in the project.',
-  })
-  public roles!: ProjectRolesMinimalObject[];
-
-  /**
-   * The `user` field provides detailed information about the member in the
-   * context of the project. This includes their personal details and
-   * identifiers, facilitating user-specific operations or UI representations.
-   */
-  @Field(() => AuthUserMinimalObject, {
-    description: 'User member of the project.',
-  })
-  public user!: AuthUserMinimalObject;
 }

@@ -19,8 +19,9 @@ export class ProjectNoteUpdateInput {
   @Field(() => String, {
     description:
       "Detailed objectives or context of the note. Enables team alignment towards the note's fulfillment.",
+    nullable: true,
   })
-  public content!: string;
+  public content?: string;
 
   /**
    * The unique identifier for the note. This ID is instrumental in pinpointing
@@ -52,6 +53,7 @@ export class ProjectNoteUpdateInput {
   @Field(() => String, {
     description:
       'Label or title encapsulating the essence of the note, serving as a quick reference.',
+    nullable: true,
   })
-  public title!: string;
+  public title?: string;
 }

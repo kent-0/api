@@ -1,4 +1,6 @@
+export * from './goals-minimal.object';
 export * from './goals.object';
+export * from './members-minimal.object';
 export * from './members.object';
 export * from './notes.object';
 export * from './project-minimal.object';

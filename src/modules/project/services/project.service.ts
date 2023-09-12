@@ -162,6 +162,11 @@ export class ProjectService {
           'members.user.last_name',
           'roles.name',
           'roles.permissions',
+          'goals.name',
+          'goals.id',
+          'goals.name',
+          'goals.description',
+          'goals.status',
         ],
       },
     );

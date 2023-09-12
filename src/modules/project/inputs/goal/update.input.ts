@@ -21,8 +21,9 @@ export class ProjectGoalUpdateInput {
   @Field(() => String, {
     description:
       "Detailed objectives or context of the goal. Enables team alignment towards the goal's fulfillment.",
+    nullable: true,
   })
-  public description!: string;
+  public description?: string;
 
   /**
    * The unique identifier for the goal. This ID is instrumental in pinpointing
@@ -42,8 +43,9 @@ export class ProjectGoalUpdateInput {
   @Field(() => String, {
     description:
       'Label or title encapsulating the essence of the goal, serving as a quick reference.',
+    nullable: true,
   })
-  public name!: string;
+  public name?: string;
 
   /**
    * Denotes the unique identifier of the project in which the goal resides.
@@ -65,6 +67,7 @@ export class ProjectGoalUpdateInput {
   @Field(() => ProjectGoalsStatus, {
     description:
       'Current progression or state of the goal, vital for tracking and project management.',
+    nullable: true,
   })
-  public status!: ProjectGoalsStatus;
+  public status?: ProjectGoalsStatus;
 }
