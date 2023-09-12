@@ -6,6 +6,7 @@ import {
   ProjectEntity,
   ProjectGoalsEntity,
   ProjectMembersEntity,
+  ProjectNotesEntity,
   ProjectRolesEntity,
 } from '~/database/entities';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
@@ -40,6 +41,7 @@ import { ProjectRolesService } from './services/roles.service';
         ProjectMembersEntity,
         ProjectRolesEntity,
         ProjectGoalsEntity,
+        ProjectNotesEntity,
       ],
     }),
   ],
