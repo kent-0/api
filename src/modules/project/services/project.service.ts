@@ -167,6 +167,9 @@ export class ProjectService {
           'goals.name',
           'goals.description',
           'goals.status',
+          'notes.id',
+          'notes.title',
+          'notes.content',
         ],
       },
     );
