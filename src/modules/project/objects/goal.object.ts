@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ProjectMinimalObject } from '.';
-import { ProjectGoalsMinimalObject } from './goals-minimal.object';
+import { ProjectGoalMinimalObject } from './minimal/goal.object';
 
 /**
  * The `ProjectGoalsObject` class represents a structured format for goals
@@ -16,7 +16,7 @@ import { ProjectGoalsMinimalObject } from './goals-minimal.object';
 @ObjectType({
   description: 'Object representing goals to be achieved in the project.',
 })
-export class ProjectGoalsObject extends ProjectGoalsMinimalObject {
+export class ProjectGoalObject extends ProjectGoalMinimalObject {
   /**
    * Linking the goal to a specific project ensures context. This relationship
    * indicates which project the goal belongs to.

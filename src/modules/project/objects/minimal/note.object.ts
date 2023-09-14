@@ -17,7 +17,7 @@ import { AuthUserMinimalObject } from '~/modules/auth/objects';
   description:
     'Object representing minimal notes data associated with a project.',
 })
-export class ProjectMinimalNotesObject {
+export class ProjectNoteMinimalObject {
   /**
    * The `content` field captures the main body of the note. It provides
    * comprehensive details or explanations regarding the topic or subject

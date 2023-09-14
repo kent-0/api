@@ -7,7 +7,7 @@ import { Permissions } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import { ProjectMemberAddRemoveInput } from '../inputs';
-import { ProjectMembersObject } from '../objects';
+import { ProjectMemberObject } from '../objects';
 import { ProjectMemberService } from '../services/member.service';
 
 /**
@@ -38,7 +38,7 @@ export class ProjectMemberResolver {
    * @param input - Data containing information about the user and project.
    * @returns The added project member's details.
    */
-  @Mutation(() => ProjectMembersObject, {
+  @Mutation(() => ProjectMemberObject, {
     description: 'Add a user as a member of a project.',
     name: 'projectMemberAdd',
   })
@@ -55,7 +55,7 @@ export class ProjectMemberResolver {
    * @param input - Data containing information about the user and project.
    * @returns The removed project member's details.
    */
-  @Mutation(() => ProjectMembersObject, {
+  @Mutation(() => ProjectMemberObject, {
     description: 'Remove a user from a project.',
     name: 'projectMemberRemove',
   })

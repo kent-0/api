@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserMinimalObject } from '~/modules/auth/objects';
 
-import { BoardRolesMinimalObject } from './roles-minimal.object';
+import { BoardRolesMinimalObject } from './role.object';
 
 /**
  * Represents a minimalistic view of members associated with a board.

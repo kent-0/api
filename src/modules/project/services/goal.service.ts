@@ -11,7 +11,7 @@ import {
   ProjectGoalRemoveInput,
   ProjectGoalUpdateInput,
 } from '../inputs';
-import { ProjectGoalsObject } from '../objects';
+import { ProjectGoalObject } from '../objects';
 
 /**
  * Service class responsible for handling operations related to project goals.
@@ -51,7 +51,7 @@ export class ProjectGoalService {
     description,
     name,
     projectId,
-  }: ProjectGoalCreateInput): Promise<ToCollections<ProjectGoalsObject>> {
+  }: ProjectGoalCreateInput): Promise<ToCollections<ProjectGoalObject>> {
     const projectGoal = this.goalsRepository.create({
       description,
       name,
@@ -128,7 +128,7 @@ export class ProjectGoalService {
     name,
     projectId,
     status,
-  }: ProjectGoalUpdateInput): Promise<ToCollections<ProjectGoalsObject>> {
+  }: ProjectGoalUpdateInput): Promise<ToCollections<ProjectGoalObject>> {
     // Fetch the project goal using provided goal and project IDs.
     const projectGoal = await this.goalsRepository.findOne({
       id: goalId,

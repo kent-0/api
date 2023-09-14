@@ -11,7 +11,7 @@ import {
   ProjectNoteRemoveInput,
   ProjectNoteUpdateInput,
 } from '../inputs';
-import { ProjectNotesObject } from '../objects';
+import { ProjectNoteObject } from '../objects';
 
 /**
  * Service class responsible for handling operations related to project notes.
@@ -50,7 +50,7 @@ export class ProjectNoteService {
   public async create(
     { content, projectId, title }: ProjectNoteCreateInput,
     userId: string,
-  ): Promise<ToCollections<ProjectNotesObject>> {
+  ): Promise<ToCollections<ProjectNoteObject>> {
     const projectNote = this.notesRepository.create({
       content,
       created_by: userId,
@@ -126,7 +126,7 @@ export class ProjectNoteService {
   public async update(
     { content, noteId, projectId, title }: ProjectNoteUpdateInput,
     userId: string,
-  ): Promise<ToCollections<ProjectNotesObject>> {
+  ): Promise<ToCollections<ProjectNoteObject>> {
     // Fetch the project note using provided note and project IDs.
     const projectNote = await this.notesRepository.findOne({
       created_by: userId,

@@ -11,7 +11,7 @@ import {
   ProjectNoteRemoveInput,
   ProjectNoteUpdateInput,
 } from '../inputs';
-import { ProjectNotesObject } from '../objects';
+import { ProjectNoteObject } from '../objects';
 import { ProjectNoteService } from '../services/note.service';
 
 /**
@@ -40,7 +40,7 @@ export class ProjectNoteResolver {
    * @param input - Data containing details about the new project note.
    * @returns Details of the newly created project note.
    */
-  @Mutation(() => ProjectNotesObject, {
+  @Mutation(() => ProjectNoteObject, {
     description: 'Create a new project note.',
     name: 'projectNoteCreate',
   })
@@ -74,7 +74,7 @@ export class ProjectNoteResolver {
    * @param input - Data containing updated project note details.
    * @returns Updated details of the project note.
    */
-  @Mutation(() => ProjectNotesObject, {
+  @Mutation(() => ProjectNoteObject, {
     description: 'Update a project note.',
     name: 'projectNoteUpdate',
   })

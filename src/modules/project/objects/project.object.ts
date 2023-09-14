@@ -3,12 +3,11 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { ProjectStatus } from '~/database/enums/status.enum';
 
 import {
-  ProjectGoalsMinimalObject,
-  ProjectMembersMinimalObject,
-  ProjectRolesMinimalObject,
+  ProjectGoalMinimalObject,
+  ProjectMemberMinimalObject,
+  ProjectMinimalObject,
+  ProjectRoleMinimalObject,
 } from '.';
-import { ProjectMinimalNotesObject } from './notes-minimal.object';
-import { ProjectMinimalObject } from './project-minimal.object';
 
 /**
  * The `ProjectObject` class serves as a foundational blueprint for representing projects within the application.
@@ -25,37 +24,37 @@ export class ProjectObject extends ProjectMinimalObject {
    * The `goals` field represents the objectives or targets that the project aims to achieve. These goals
    * can be milestones, deliverables, or any other significant achievements.
    */
-  @Field(() => [ProjectGoalsMinimalObject], {
+  @Field(() => [ProjectGoalMinimalObject], {
     description: 'Goals assigned to the project.',
   })
-  public goals!: ProjectGoalsMinimalObject[];
+  public goals!: ProjectGoalMinimalObject[];
 
   /**
    * The `members` field lists all the users who are part of the project. This includes everyone from
    * team members to stakeholders, each potentially having different roles and permissions.
    */
-  @Field(() => [ProjectMembersMinimalObject], {
+  @Field(() => [ProjectMemberMinimalObject], {
     description: 'Users invited to the project.',
   })
-  public members!: ProjectMembersMinimalObject[];
+  public members!: ProjectMemberMinimalObject[];
 
   /**
    * The `notes` field represents any additional information, thoughts, or remarks associated with the project.
    * This is especially useful for capturing insights, decisions, or any other significant data points.
    */
-  @Field(() => [ProjectMinimalNotesObject], {
+  @Field(() => [ProjectMinimalObject], {
     description: 'Notes assigned to the project.',
   })
-  public notes!: ProjectMinimalNotesObject[];
+  public notes!: ProjectMinimalObject[];
 
   /**
    * The `roles` field lists all the roles available within the project. These roles define what actions members
    * can perform within the project and what permissions they have.
    */
-  @Field(() => [ProjectRolesMinimalObject], {
+  @Field(() => [ProjectRoleMinimalObject], {
     description: 'Roles to manage the project and boards.',
   })
-  public roles!: ProjectRolesMinimalObject[];
+  public roles!: ProjectRoleMinimalObject[];
 
   /**
    * The `status` field provides the current state of the project. This could be values like 'In Progress',

@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMembersObject } from '~/modules/project/objects';
+import { ProjectMemberObject } from '~/modules/project/objects';
 
-import { AuthUserMinimalObject } from './user-minimal.object';
+import { AuthUserMinimalObject } from './minimal/user.object';
 
 /**
  * Represents an email associated with a user account. This object typically contains
@@ -77,12 +77,12 @@ export class AuthUserObject extends AuthUserMinimalObject {
    * their project memberships. Each project entry will contain essential details such as the
    * project name, role of the user in that project, and other relevant metadata.
    *
-   * @type {ProjectMembersObject[]}
+   * @type {ProjectMemberObject[]}
    * @description A list of projects where the user has membership.
    */
-  @Field(() => [ProjectMembersObject], {
+  @Field(() => [ProjectMemberObject], {
     description: 'Projects in which the user is a member.',
     nullable: true,
   })
-  public projects!: ProjectMembersObject[];
+  public projects!: ProjectMemberObject[];
 }

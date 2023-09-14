@@ -11,7 +11,7 @@ import {
   ProjectGoalRemoveInput,
   ProjectGoalUpdateInput,
 } from '../inputs';
-import { ProjectGoalsObject } from '../objects';
+import { ProjectGoalObject } from '../objects';
 import { ProjectGoalService } from '../services/goal.service';
 
 /**
@@ -40,7 +40,7 @@ export class ProjectGoalResolver {
    * @param input - Data containing details about the new project goal.
    * @returns Details of the newly created project goal.
    */
-  @Mutation(() => ProjectGoalsObject, {
+  @Mutation(() => ProjectGoalObject, {
     description: 'Create a new project goal.',
     name: 'projectGoalCreate',
   })
@@ -70,7 +70,7 @@ export class ProjectGoalResolver {
    * @param input - Data containing updated project goal details.
    * @returns Updated details of the project goal.
    */
-  @Mutation(() => ProjectGoalsObject, {
+  @Mutation(() => ProjectGoalObject, {
     description: 'Update a project goal.',
     name: 'projectGoalUpdate',
   })

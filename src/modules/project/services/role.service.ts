@@ -19,9 +19,9 @@ import {
   ProjectRoleUpdateInput,
 } from '../inputs';
 import {
-  ProjectMembersObject,
-  ProjectPaginatedProjectRoles,
-  ProjectRolesObject,
+  ProjectMemberObject,
+  ProjectRoleObject,
+  ProjectRolesPaginated,
 } from '../objects';
 
 /**
@@ -55,7 +55,7 @@ export class ProjectRoleService {
    * @param {string} params.projectId - The ID of the project.
    * @param {string} params.roleId - The ID of the role to be assigned.
    *
-   * @returns {Promise<ToCollections<ProjectMembersObject>>} - Returns the updated member object.
+   * @returns {Promise<ToCollections<ProjectMemberObject>>} - Returns the updated member object.
    *
    * @throws {NotFoundException} - Throws an exception if the role or member is not found.
    * @throws {ConflictException} - Throws an exception if the member already has the role assigned.
@@ -64,7 +64,7 @@ export class ProjectRoleService {
     memberId,
     projectId,
     roleId,
-  }: ProjectRoleAssignInput): Promise<ToCollections<ProjectMembersObject>> {
+  }: ProjectRoleAssignInput): Promise<ToCollections<ProjectMemberObject>> {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -128,13 +128,13 @@ export class ProjectRoleService {
    * @param {Array<string>} params.permissions - A list of permissions associated with the role.
    * @param {string} params.projectId - The ID of the project the role belongs to.
    *
-   * @returns {Promise<ToCollections<ProjectRolesObject>>} - Returns the newly created role object.
+   * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the newly created role object.
    */
   public async create({
     name,
     permissions,
     projectId,
-  }: ProjectCreateRole): Promise<ToCollections<ProjectRolesObject>> {
+  }: ProjectCreateRole): Promise<ToCollections<ProjectRoleObject>> {
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       name,
@@ -203,7 +203,7 @@ export class ProjectRoleService {
    * @param {string} [params.sortBy] - The field to sort by (optional).
    * @param {'ASC' | 'DESC'} [params.sortOrder] - The sort order (optional).
    *
-   * @returns {Promise<ProjectPaginatedProjectRoles>} - Returns the paginated roles and associated metadata.
+   * @returns {Promise<ProjectRolesPaginated>} - Returns the paginated roles and associated metadata.
    */
   public async paginate({
     page,
@@ -211,7 +211,7 @@ export class ProjectRoleService {
     size,
     sortBy,
     sortOrder,
-  }: ProjectRolePaginationInput): Promise<ProjectPaginatedProjectRoles> {
+  }: ProjectRolePaginationInput): Promise<ProjectRolesPaginated> {
     // Constructs the order by criteria if both `sortBy` and `sortOrder` are provided.
     let orderBy = {};
     if (sortBy && sortOrder) orderBy = { [sortBy]: sortOrder };
@@ -259,7 +259,7 @@ export class ProjectRoleService {
    * @param {string} params.projectId - The ID of the project the role belongs to.
    * @param {string} params.roleId - The ID of the role to be removed.
    *
-   * @returns {Promise<ToCollections<ProjectMembersObject>>} - Returns the updated member object after role removal.
+   * @returns {Promise<ToCollections<ProjectMemberObject>>} - Returns the updated member object after role removal.
    *
    * @throws {NotFoundException} - Throws this exception in two scenarios:
    *                               1. If the specified role is not found for the project.
@@ -270,7 +270,7 @@ export class ProjectRoleService {
     memberId,
     projectId,
     roleId,
-  }: ProjectRoleUnassignInput): Promise<ToCollections<ProjectMembersObject>> {
+  }: ProjectRoleUnassignInput): Promise<ToCollections<ProjectMemberObject>> {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -336,7 +336,7 @@ export class ProjectRoleService {
    * @param {Array<string>} params.permissions - The new list of permissions for the role (optional).
    * @param {string} params.roleId - The ID of the role to be updated.
    *
-   * @returns {Promise<ToCollections<ProjectRolesObject>>} - Returns the updated role object.
+   * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the updated role object.
    *
    * @throws {NotFoundException} - Throws this exception if the specified role is not found.
    */
@@ -344,7 +344,7 @@ export class ProjectRoleService {
     name,
     permissions,
     roleId,
-  }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRolesObject>> {
+  }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRoleObject>> {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne({
       id: roleId,

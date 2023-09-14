@@ -1,7 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMembersObject, ProjectMinimalObject } from '.';
-import { ProjectRolesMinimalObject } from './roles-minimal.object';
+import {
+  ProjectMemberObject,
+  ProjectMinimalObject,
+  ProjectRoleMinimalObject,
+} from '.';
 
 /**
  * The `ProjectRolesObject` class serves as a blueprint for defining roles within a project management system.
@@ -16,16 +19,16 @@ import { ProjectRolesMinimalObject } from './roles-minimal.object';
   description:
     'Object that represents the roles of a board with their relationships.',
 })
-export class ProjectRolesObject extends ProjectRolesMinimalObject {
+export class ProjectRoleObject extends ProjectRoleMinimalObject {
   /**
    * The `members` field provides a list of all project members that are assigned this role.
    * This is crucial for understanding the distribution of roles within a project and identifying
    * which members have been granted specific permissions.
    */
-  @Field(() => [ProjectMembersObject], {
+  @Field(() => [ProjectMemberObject], {
     description: 'Project members who have this role.',
   })
-  public members!: ProjectMembersObject[];
+  public members!: ProjectMemberObject[];
 
   /**
    * The `project` field denotes the specific project to which the role is assigned. Roles in

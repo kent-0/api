@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMembersMinimalObject } from './members-minimal.object';
-import { ProjectMinimalObject } from './project-minimal.object';
+import { ProjectMemberMinimalObject, ProjectMinimalObject } from '.';
 
 /**
  * The `ProjectMembersObject` class defines a structured representation of
@@ -17,7 +16,7 @@ import { ProjectMinimalObject } from './project-minimal.object';
 @ObjectType({
   description: 'Object representing users invited to projects.',
 })
-export class ProjectMembersObject extends ProjectMembersMinimalObject {
+export class ProjectMemberObject extends ProjectMemberMinimalObject {
   /**
    * The `project` field provides a reference to the project in which the
    * user is a member. This link is essential for understanding the context

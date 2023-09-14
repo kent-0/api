@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { BoardMinimalObject } from './board-minimal.object';
-import { BoardMembersMinimalObject } from './members-minimal.object';
+import { BoardMinimalObject } from './minimal/board.object';
+import { BoardMembersMinimalObject } from './minimal/member.object';
 
 /**
  * The `BoardsMembersObject` class provides a comprehensive representation of a board member

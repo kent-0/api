@@ -16,7 +16,7 @@ import { ProjectGoalsStatus } from '~/database/enums/status.enum';
   description:
     'Object representing the minimal goals data to be achieved in the project.',
 })
-export class ProjectGoalsMinimalObject {
+export class ProjectGoalMinimalObject {
   /**
    * A textual representation of the goal, providing more details or context
    * about what the goal entails.

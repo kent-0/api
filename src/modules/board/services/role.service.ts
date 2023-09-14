@@ -20,8 +20,8 @@ import {
 } from '../inputs';
 import {
   BoardMembersObject,
-  BoardPaginatedBoardRoles,
   BoardRolesObject,
+  BoardRolesPaginated,
 } from '../objects';
 
 /**
@@ -203,7 +203,7 @@ export class BoardRoleService {
    * @param {string} [params.sortBy] - The field to sort by (optional).
    * @param {'ASC' | 'DESC'} [params.sortOrder] - The sort order (optional).
    *
-   * @returns {Promise<BoardPaginatedBoardRoles>} - Returns the paginated roles and associated metadata.
+   * @returns {Promise<BoardRolesPaginated>} - Returns the paginated roles and associated metadata.
    */
   public async paginate({
     boardId,
@@ -211,7 +211,7 @@ export class BoardRoleService {
     size,
     sortBy,
     sortOrder,
-  }: BoardRolePaginationInput): Promise<BoardPaginatedBoardRoles> {
+  }: BoardRolePaginationInput): Promise<BoardRolesPaginated> {
     // Constructs the order by criteria if both `sortBy` and `sortOrder` are provided.
     let orderBy = {};
     if (sortBy && sortOrder) orderBy = { [sortBy]: sortOrder };

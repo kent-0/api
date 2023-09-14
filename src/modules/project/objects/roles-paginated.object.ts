@@ -3,7 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { PaginationObject } from '~/utils/graphql/objects';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { ProjectRolesObject } from './roles.object';
+import { ProjectRoleObject } from './role.object';
 
 /**
  * The `ProjectPaginatedProjectRoles` class provides a structure for paginated
@@ -20,7 +20,7 @@ import { ProjectRolesObject } from './roles.object';
 @ObjectType({
   description: 'Result of the pagination of roles of a project.',
 })
-export class ProjectPaginatedProjectRoles extends PaginationObject {
+export class ProjectRolesPaginated extends PaginationObject {
   /**
    * The `items` field represents the actual list of roles within the current
    * page of the paginated result. Each item in this list corresponds to a
@@ -33,8 +33,8 @@ export class ProjectPaginatedProjectRoles extends PaginationObject {
    * might transform or wrap each `ProjectRolesObject` into another structure
    * or collection, possibly for additional metadata or context.
    */
-  @Field(() => [ProjectRolesObject], {
+  @Field(() => [ProjectRoleObject], {
     description: 'Roles available in the project.',
   })
-  public items!: ToCollections<ProjectRolesObject>[];
+  public items!: ToCollections<ProjectRoleObject>[];
 }

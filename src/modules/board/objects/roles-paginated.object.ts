@@ -20,7 +20,7 @@ import { BoardRolesObject } from './roles.object';
 @ObjectType({
   description: 'Result of the pagination of roles of a board.',
 })
-export class BoardPaginatedBoardRoles extends PaginationObject {
+export class BoardRolesPaginated extends PaginationObject {
   /**
    * Represents a list of board roles as a result of the pagination query.
    * This is an array of `BoardRolesObject` items, each detailing a specific

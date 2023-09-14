@@ -15,8 +15,8 @@ import {
 } from '../inputs';
 import {
   BoardMembersObject,
-  BoardPaginatedBoardRoles,
   BoardRolesObject,
+  BoardRolesPaginated,
 } from '../objects';
 import { BoardRoleService } from '../services/role.service';
 
@@ -95,7 +95,7 @@ export class BoardRolesResolver {
    * @param input - Pagination input details.
    * @returns A paginated list of board roles.
    */
-  @Query(() => BoardPaginatedBoardRoles, {
+  @Query(() => BoardRolesPaginated, {
     description: 'Paginate the roles of a board.',
     name: 'paginateBoardRoles',
   })

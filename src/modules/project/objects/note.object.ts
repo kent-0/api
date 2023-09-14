@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMinimalObject } from '.';
-import { ProjectMinimalNotesObject } from './notes-minimal.object';
+import { ProjectMinimalObject, ProjectNoteMinimalObject } from '.';
 
 /**
  * The `ProjectNotesObject` class encapsulates the structure and metadata
@@ -17,7 +16,7 @@ import { ProjectMinimalNotesObject } from './notes-minimal.object';
 @ObjectType({
   description: 'Object representing notes associated with a project.',
 })
-export class ProjectNotesObject extends ProjectMinimalNotesObject {
+export class ProjectNoteObject extends ProjectNoteMinimalObject {
   /**
    * The `project` field links the note to a specific project. Associating
    * a note with a project ensures that the note's context is clear and that

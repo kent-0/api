@@ -7,7 +7,7 @@ import { ProjectMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectMemberAddRemoveInput } from '../inputs';
-import { ProjectMembersObject } from '../objects';
+import { ProjectMemberObject } from '../objects';
 
 /**
  * Provides methods to manage project members, including adding and removing members from projects.
@@ -35,9 +35,7 @@ export class ProjectMemberService {
   public async add({
     projectId,
     userId,
-  }: ProjectMemberAddRemoveInput): Promise<
-    ToCollections<ProjectMembersObject>
-  > {
+  }: ProjectMemberAddRemoveInput): Promise<ToCollections<ProjectMemberObject>> {
     // Check if the user is already a member of the project.
     const currentMember = await this.membersRepository.findOne({
       project: projectId,

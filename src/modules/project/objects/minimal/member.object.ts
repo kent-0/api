@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserMinimalObject } from '~/modules/auth/objects';
 
-import { ProjectRolesMinimalObject } from '.';
+import { ProjectRoleMinimalObject } from './role.object';
 
 /**
  * The `ProjectMembersObject` class defines a structured representation of
@@ -19,7 +19,7 @@ import { ProjectRolesMinimalObject } from '.';
   description:
     'Object representing the minimal users invited data to projects.',
 })
-export class ProjectMembersMinimalObject {
+export class ProjectMemberMinimalObject {
   /**
    * The unique identifier for a member within a specific project. This
    * ID is crucial for operations like updating membership details,
@@ -36,10 +36,10 @@ export class ProjectMembersMinimalObject {
    * captures all the roles assigned to the member, providing a comprehensive
    * view of their responsibilities and permissions within the project.
    */
-  @Field(() => [ProjectRolesMinimalObject], {
+  @Field(() => [ProjectRoleMinimalObject], {
     description: 'User member roles in the project.',
   })
-  public roles!: ProjectRolesMinimalObject[];
+  public roles!: ProjectRoleMinimalObject[];
 
   /**
    * The `user` field provides detailed information about the member in the

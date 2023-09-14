@@ -13,7 +13,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
   description:
     'Object that represents the minimum information about board roles.',
 })
-export class ProjectRolesMinimalObject {
+export class ProjectRoleMinimalObject {
   /**
    * The `id` field represents a unique identifier for each role within the system.
    * This ensures that each role can be distinctively identified, especially during operations

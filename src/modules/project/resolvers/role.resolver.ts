@@ -14,9 +14,9 @@ import {
   ProjectRoleUpdateInput,
 } from '../inputs';
 import {
-  ProjectMembersObject,
-  ProjectPaginatedProjectRoles,
-  ProjectRolesObject,
+  ProjectMemberObject,
+  ProjectRoleObject,
+  ProjectRolesPaginated,
 } from '../objects';
 import { ProjectRoleService } from '../services/role.service';
 
@@ -44,7 +44,7 @@ export class ProjectRoleResolver {
    * @param input - Data containing information on which role to assign and to whom.
    * @returns The updated project member details with the assigned role.
    */
-  @Mutation(() => ProjectMembersObject, {
+  @Mutation(() => ProjectMemberObject, {
     description: 'Assign project role to members.',
     name: 'projectRoleAssign',
   })
@@ -61,7 +61,7 @@ export class ProjectRoleResolver {
    * @param input - Data containing information about the new role.
    * @returns The created role details.
    */
-  @Mutation(() => ProjectRolesObject, {
+  @Mutation(() => ProjectRoleObject, {
     description: 'Create a new project role.',
     name: 'projectCreateRole',
   })
@@ -95,7 +95,7 @@ export class ProjectRoleResolver {
    * @param input - Pagination input details.
    * @returns A paginated list of project roles.
    */
-  @Query(() => ProjectPaginatedProjectRoles, {
+  @Query(() => ProjectRolesPaginated, {
     description: 'Paginate the roles of a project.',
     name: 'paginateProjectRoles',
   })
@@ -111,7 +111,7 @@ export class ProjectRoleResolver {
    * @param input - Data containing details of the role assignment to remove.
    * @returns The details of the unassigned role.
    */
-  @Mutation(() => ProjectMembersObject, {
+  @Mutation(() => ProjectMemberObject, {
     description: 'Unassign a role from a project member.',
     name: 'unassignProjectRole',
   })
@@ -128,7 +128,7 @@ export class ProjectRoleResolver {
    * @param input - Data containing updated role details.
    * @returns The updated role details.
    */
-  @Mutation(() => ProjectRolesObject, {
+  @Mutation(() => ProjectRoleObject, {
     description: 'Update the details of a project role.',
     name: 'updateProjectRole',
   })
