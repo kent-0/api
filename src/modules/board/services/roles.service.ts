@@ -13,7 +13,7 @@ import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   BoardRoleAssignInput,
-  BoardRoleCreate,
+  BoardRoleCreateInput,
   BoardRolePaginationInput,
   BoardRoleUnassignInput,
   BoardRoleUpdateInput,
@@ -134,7 +134,7 @@ export class BoardRolesService {
     boardId,
     name,
     permissions,
-  }: BoardRoleCreate): Promise<ToCollections<BoardRolesObject>> {
+  }: BoardRoleCreateInput): Promise<ToCollections<BoardRolesObject>> {
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       board: boardId,

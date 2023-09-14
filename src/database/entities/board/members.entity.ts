@@ -7,6 +7,8 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
+import { PermissionManagerService } from '~/permissions/services/manager.service';
+
 import { BoardEntity } from './board.entity';
 import { BoardRolesEntity } from './roles.entity';
 
@@ -14,7 +16,7 @@ import { AuthUserEntity } from '../auth/user.entity';
 import { OptionalParentProps, ParentEntity } from '../base.entity';
 
 /**
- * Entity representing the association between users and boards within a project management system.
+ * Entity representing the association between users and boards within a board management system.
  * Each association indicates that a user is a member of a specific board and can have one or more
  * roles within that board.
  */
@@ -60,4 +62,27 @@ export class BoardMembersEntity extends ParentEntity {
     entity: () => AuthUserEntity,
   })
   public user!: Rel<AuthUserEntity>;
+
+  /**
+   * This method allows retrieving and managing the permissions associated with the
+   * user's roles in the board. It first loads the roles, extracts the permissions,
+   * and then uses the `PermissionManagerService` to manage and query these permissions.
+   *
+   * @returns PermissionManagerService instance loaded with the user's permissions.
+   */
+  public async permissions() {
+    // Load roles associated with the user member.
+    const roles = await this.roles.loadItems();
+
+    // Extract permissions from roles.
+    const permissions = roles.flatMap(({ permissions }) => permissions);
+
+    // Create a new PermissionManagerService instance.
+    const manager = new PermissionManagerService();
+
+    // Bulk add permissions to the manager.
+    manager.bulkAdd(permissions);
+
+    return manager;
+  }
 }

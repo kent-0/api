@@ -12,6 +12,14 @@ export const ProjectPermissions =
   Reflector.createDecorator<ProjectPermissionsEnum[]>();
 
 /**
+ * Create a custom decorator for board permissions using Reflector.
+ * This decorator will be used to annotate methods or routes that require specific board-related permissions.
+ * Example usage: @BoardPermissions(ProjectPermissionsEnum.UpdateBoard)
+ */
+export const BoardPermissions =
+  Reflector.createDecorator<ProjectPermissionsEnum[]>();
+
+/**
  * Create a custom decorator for task permissions using Reflector.
  * This decorator will be used to annotate methods or routes that require specific task-related permissions.
  * Example usage: @TaskPermissions(TaskPermissionsEnum.EditTask)

@@ -10,23 +10,23 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
+import { BoardEntity, BoardMembersEntity } from '~/database/entities';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
-import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
+import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 import { deepFindKey } from '~/utils/functions/deep-find';
 
 @Injectable()
-export class ProjectPermissionsGuard implements CanActivate {
+export class BoardPermissionsGuard implements CanActivate {
   /**
    * Constructs the guard with necessary dependencies.
    */
   constructor(
-    @InjectRepository(ProjectEntity)
-    private readonly projectRepository: EntityRepository<ProjectEntity>,
-    @InjectRepository(ProjectMembersEntity)
-    private readonly membersRepository: EntityRepository<ProjectMembersEntity>,
+    @InjectRepository(BoardEntity)
+    private readonly boardRepository: EntityRepository<BoardEntity>,
+    @InjectRepository(BoardMembersEntity)
+    private readonly membersRepository: EntityRepository<BoardMembersEntity>,
     private reflector: Reflector,
     private _permissionsManager: PermissionManagerService,
   ) {}
@@ -39,15 +39,15 @@ export class ProjectPermissionsGuard implements CanActivate {
    */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const args: { projectId: string } = ctx.getArgs();
-    const projectId = deepFindKey<string>(args, 'projectId');
+    const args: { boardId: string } = ctx.getArgs();
+    const boardId = deepFindKey<string>(args, 'boardId');
 
     // Extract the user payload from the incoming request.
     const userReq: JWTPayload = ctx.getContext().req.user;
 
     // Retrieve the permissions that are required for the current route or resolver.
     const requestPermissions = this.reflector.get(
-      ProjectPermissions,
+      BoardPermissions,
       ctx.getHandler(),
     );
 
@@ -55,30 +55,28 @@ export class ProjectPermissionsGuard implements CanActivate {
     const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
     if (
       isExcludeGuard &&
-      isExcludeGuard.some(
-        (guard) => guard.name === ProjectPermissionsGuard.name,
-      )
+      isExcludeGuard.some((guard) => guard.name === BoardPermissionsGuard.name)
     ) {
       return true;
     }
 
-    // Retrieve the project based on the provided projectId.
-    const project = await this.projectRepository.findOne(
+    // Retrieve the board based on the provided boardId.
+    const board = await this.boardRepository.findOne(
       {
-        id: projectId,
+        id: boardId,
       },
       {
-        populate: ['owner'],
+        populate: ['project.owner.id'],
       },
     );
 
-    // If the project doesn't exist, deny access.
-    if (!project) return false;
+    // If the board doesn't exist, deny access.
+    if (!board) return false;
 
-    // If the user is the project's owner, grant access.
-    if (project.owner.id === userReq.sub) return true;
+    // If the user is the board's owner, grant access.
+    if (board.project.owner.id === userReq.sub) return true;
 
-    // Find the project's associated member.
+    // Find the board's associated member.
     const member = await this.membersRepository.findOne({
       user: userReq.sub,
     });
@@ -86,12 +84,12 @@ export class ProjectPermissionsGuard implements CanActivate {
     // If the user isn't a member, deny access and provide a specific reason.
     if (!member) {
       throw new ForbiddenException(
-        'You are not a member or owner of the project to view it.',
+        'You are not a member or owner of the board to view it.',
       );
     }
 
-    // Retrieve the count of roles related to the project.
-    const roles = await project.roles.loadCount();
+    // Retrieve the count of roles related to the board.
+    const roles = await board.roles.loadCount();
 
     if (roles) {
       // Identify the permissions needed for the current route or resolver.
@@ -105,7 +103,7 @@ export class ProjectPermissionsGuard implements CanActivate {
       return memberPermissions.has(requiredPermissions.permissions);
     }
 
-    // If no roles are associated with the project, only the owner can take actions.
+    // If no roles are associated with the board, only the project can take actions.
     throw new ForbiddenException(
       'Only the project owner can perform actions because there are no member roles available.',
     );

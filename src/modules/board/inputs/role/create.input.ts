@@ -11,7 +11,7 @@ import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 @InputType({
   description: 'Input to create roles for boards.',
 })
-export class BoardRoleCreate {
+export class BoardRoleCreateInput {
   /**
    * Unique identifier for the board where the new role will be created.
    * This ensures that the new role is being created within the correct board context.
