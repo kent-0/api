@@ -25,7 +25,7 @@ import { BoardMembersMinimalObject } from './members-minimal.object';
 @ObjectType({
   description: 'Object representing users invited to boards.',
 })
-export class BoardsMembersObject extends BoardMembersMinimalObject {
+export class BoardMembersObject extends BoardMembersMinimalObject {
   /**
    * Represents the specific board to which the user is associated as a member.
    * This relationship offers clarity on the user's membership context, highlighting
