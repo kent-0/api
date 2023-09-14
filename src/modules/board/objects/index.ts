@@ -5,3 +5,4 @@ export * from './minimal/member.object';
 export * from './minimal/role.object';
 export * from './roles-paginated.object';
 export * from './roles.object';
+export * from './step.object';

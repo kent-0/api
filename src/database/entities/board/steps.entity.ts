@@ -26,7 +26,7 @@ export class BoardStepEntity extends ParentEntity {
    * Defines the optional properties that can be set on this entity, including
    * a description of the step and any optional properties from the parent entity.
    */
-  public [OptionalProps]?: 'description' | OptionalParentProps;
+  public [OptionalProps]?: 'description' | 'tasks' | OptionalParentProps;
 
   /**
    * Many-to-One relationship with the BoardEntity. Indicates the specific board
@@ -51,6 +51,13 @@ export class BoardStepEntity extends ParentEntity {
   })
   public description!: string;
 
+  @Property({
+    columnType: 'bool',
+    comment: 'Flag if this step is the final completion step of the step flow.',
+    default: false,
+  })
+  public finish_step!: boolean;
+
   /**
    * The maximum number of tasks that can be assigned to this step at any given time.
    * This can be used to enforce limits or manage workloads.
@@ -58,9 +65,10 @@ export class BoardStepEntity extends ParentEntity {
   @Property({
     columnType: 'int',
     comment: 'Maximum number of tasks assigned to the step.',
+    nullable: true,
     type: 'number',
   })
-  public max!: number;
+  public max?: number;
 
   /**
    * The name of the step, which provides a quick identifier for users.
