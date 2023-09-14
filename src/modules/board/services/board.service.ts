@@ -203,11 +203,15 @@ export class BoardService {
    * @param description - The new description for the board.
    * @param name - The new name for the board.
    *
-   * @returns The updated board entity.
+   * @returns Promise<ToCollections<BoardObject>> The updated board entity.
    *
    * @throws NotFoundException if the board cannot be found.
    */
-  public async update({ boardId, description, name }: BoardUpdateInput) {
+  public async update({
+    boardId,
+    description,
+    name,
+  }: BoardUpdateInput): Promise<ToCollections<BoardObject>> {
     const board = await this.boardRepository.findOne(
       {
         id: boardId,
