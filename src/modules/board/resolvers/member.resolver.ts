@@ -41,7 +41,7 @@ export class BoardMembersResolver {
     description: 'Add a user as a member of a board.',
     name: 'boardMemberAdd',
   })
-  @BoardPermissions([Permissions.AddMember])
+  @BoardPermissions([Permissions.MemberAdd])
   public add(@Args('input') input: AddRemoveBoardMemberInput) {
     return this._memberServie.add(input);
   }
@@ -58,7 +58,7 @@ export class BoardMembersResolver {
     description: 'Remove a user from a board.',
     name: 'boardMemberRemove',
   })
-  @BoardPermissions([Permissions.RemoveMember])
+  @BoardPermissions([Permissions.MemberRemove])
   public remove(@Args('input') input: AddRemoveBoardMemberInput) {
     return this._memberServie.remove(input);
   }

@@ -48,7 +48,7 @@ export class BoardRolesResolver {
     description: 'Assign board role to members.',
     name: 'boardRoleAssign',
   })
-  @BoardPermissions([Permissions.AssignRole])
+  @BoardPermissions([Permissions.RoleAssign])
   public assign(@Args('input') input: BoardRoleAssignInput) {
     return this._roleService.assign(input);
   }
@@ -65,7 +65,7 @@ export class BoardRolesResolver {
     description: 'Create a new board role.',
     name: 'boardCreateRole',
   })
-  @BoardPermissions([Permissions.CreateRole])
+  @BoardPermissions([Permissions.RoleCreate])
   public create(@Args('input') input: BoardRoleCreateInput) {
     return this._roleService.create(input);
   }
@@ -82,7 +82,7 @@ export class BoardRolesResolver {
     description: 'Delete a board role.',
     name: 'deleteBoardRole',
   })
-  @BoardPermissions([Permissions.DeleteRole])
+  @BoardPermissions([Permissions.RoleDelete])
   public delete(@Args('roleId') roleId: string) {
     return this._roleService.delete(roleId);
   }
@@ -115,7 +115,7 @@ export class BoardRolesResolver {
     description: 'Unassign a role from a board member.',
     name: 'unassignBoardRole',
   })
-  @BoardPermissions([Permissions.UnassignRole])
+  @BoardPermissions([Permissions.RoleUnassign])
   public unassign(@Args('input') input: BoardRoleUnassignInput) {
     return this._roleService.unassign(input);
   }
@@ -132,7 +132,7 @@ export class BoardRolesResolver {
     description: 'Update the details of a board role.',
     name: 'updateBoardRole',
   })
-  @BoardPermissions([Permissions.UpdateRole])
+  @BoardPermissions([Permissions.RoleUpdate])
   public update(@Args('input') input: BoardRoleUpdateInput) {
     return this._roleService.update(input);
   }

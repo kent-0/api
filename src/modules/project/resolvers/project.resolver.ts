@@ -96,7 +96,7 @@ export class ProjectResolver {
     description: 'Update the details of a project.',
     name: 'projectUpdate',
   })
-  @ProjectPermissions([Permissions.UpdateProject])
+  @ProjectPermissions([Permissions.ProjectUpdate])
   public update(@Args('input') input: UpdateProjectInput) {
     return this._projectService.update(input);
   }

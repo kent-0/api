@@ -42,7 +42,7 @@ export class ProjectMembersResolver {
     description: 'Add a user as a member of a project.',
     name: 'projectMemberAdd',
   })
-  @ProjectPermissions([Permissions.AddMember])
+  @ProjectPermissions([Permissions.MemberAdd])
   public add(@Args('input') input: AddRemoveProjectMemberInput) {
     return this._memberServie.add(input);
   }
@@ -59,7 +59,7 @@ export class ProjectMembersResolver {
     description: 'Remove a user from a project.',
     name: 'projectMemberRemove',
   })
-  @ProjectPermissions([Permissions.RemoveMember])
+  @ProjectPermissions([Permissions.MemberRemove])
   public remove(@Args('input') input: AddRemoveProjectMemberInput) {
     return this._memberServie.remove(input);
   }

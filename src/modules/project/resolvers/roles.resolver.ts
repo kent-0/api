@@ -48,7 +48,7 @@ export class ProjectRolesResolver {
     description: 'Assign project role to members.',
     name: 'projectRoleAssign',
   })
-  @ProjectPermissions([Permissions.AssignRole])
+  @ProjectPermissions([Permissions.RoleAssign])
   public assign(@Args('input') input: AssignProjectRoleInput) {
     return this._roleService.assign(input);
   }
@@ -65,7 +65,7 @@ export class ProjectRolesResolver {
     description: 'Create a new project role.',
     name: 'projectCreateRole',
   })
-  @ProjectPermissions([Permissions.CreateRole])
+  @ProjectPermissions([Permissions.RoleCreate])
   public create(@Args('input') input: ProjectCreateRole) {
     return this._roleService.create(input);
   }
@@ -82,7 +82,7 @@ export class ProjectRolesResolver {
     description: 'Delete a project role.',
     name: 'deleteProjectRole',
   })
-  @ProjectPermissions([Permissions.DeleteRole])
+  @ProjectPermissions([Permissions.RoleDelete])
   public delete(@Args('roleId') roleId: string) {
     return this._roleService.delete(roleId);
   }
@@ -115,7 +115,7 @@ export class ProjectRolesResolver {
     description: 'Unassign a role from a project member.',
     name: 'unassignProjectRole',
   })
-  @ProjectPermissions([Permissions.UnassignRole])
+  @ProjectPermissions([Permissions.RoleUnassign])
   public unassign(@Args('input') input: UnassignProjectRoleInput) {
     return this._roleService.unassign(input);
   }
@@ -132,7 +132,7 @@ export class ProjectRolesResolver {
     description: 'Update the details of a project role.',
     name: 'updateProjectRole',
   })
-  @ProjectPermissions([Permissions.UpdateRole])
+  @ProjectPermissions([Permissions.RoleUpdate])
   public update(@Args('input') input: UpdateProjectRoleInput) {
     return this._roleService.update(input);
   }

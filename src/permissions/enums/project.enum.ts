@@ -6,17 +6,17 @@
  * For example, `CreateRole` is represented by the second bit being set.
  */
 export enum Permissions {
-  CreateRole = 1 << 1,
-  DeleteRole = 1 << 2,
-  UpdateRole = 1 << 3,
-  AssignRole = 1 << 4,
-  UnassignRole = 1 << 5,
-  UpdateProject = 1 << 6,
-  AddMember = 1 << 7,
-  RemoveMember = 1 << 8,
-  UpdateGoal = 1 << 9,
-  CreateGoal = 1 << 10,
-  RemoveGoal = 1 << 11,
+  RoleCreate = 1 << 1,
+  RoleDelete = 1 << 2,
+  RoleUpdate = 1 << 3,
+  RoleAssign = 1 << 4,
+  RoleUnassign = 1 << 5,
+  ProjectUpdate = 1 << 6,
+  MemberAdd = 1 << 7,
+  MemberRemove = 1 << 8,
+  GoalUpdate = 1 << 9,
+  GoalCreate = 1 << 10,
+  GoalRemove = 1 << 11,
 }
 
 /**

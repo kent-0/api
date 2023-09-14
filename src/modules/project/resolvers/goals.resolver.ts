@@ -44,7 +44,7 @@ export class ProjectGoalsResolver {
     description: 'Create a new project goal.',
     name: 'projectGoalCreate',
   })
-  @ProjectPermissions([Permissions.CreateGoal])
+  @ProjectPermissions([Permissions.GoalCreate])
   public create(@Args('input') input: ProjectGoalCreateInput) {
     return this._projectGoalsService.create(input);
   }
@@ -59,7 +59,7 @@ export class ProjectGoalsResolver {
     description: 'Delete a project goal.',
     name: 'projectGoalDelete',
   })
-  @ProjectPermissions([Permissions.RemoveGoal])
+  @ProjectPermissions([Permissions.GoalRemove])
   public delete(@Args('input') input: ProjectGoalRemoveInput) {
     return this._projectGoalsService.delete(input);
   }
@@ -74,7 +74,7 @@ export class ProjectGoalsResolver {
     description: 'Update a project goal.',
     name: 'projectGoalUpdate',
   })
-  @ProjectPermissions([Permissions.UpdateGoal])
+  @ProjectPermissions([Permissions.GoalUpdate])
   public update(@Args('input') input: ProjectGoalUpdateInput) {
     return this._projectGoalsService.update(input);
   }
