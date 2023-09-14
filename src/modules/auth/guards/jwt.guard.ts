@@ -31,7 +31,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
    *
    * @returns {Request} The HTTP request object.
    */
-  getRequest(context: ExecutionContext) {
+  public getRequest(context: ExecutionContext): Request {
     // Transform the standard execution context into a GraphQL execution context.
     const ctx = GqlExecutionContext.create(context);
     // Extract and return the HTTP request object.

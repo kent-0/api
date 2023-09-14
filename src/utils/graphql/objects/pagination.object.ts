@@ -36,7 +36,7 @@ export abstract class PaginationObject {
     description:
       'A flag indicating if there are more items available after the current page.',
   })
-  hasNextPage!: boolean;
+  public hasNextPage!: boolean;
 
   /**
    * Indicates if there are items available in previous pages.
@@ -46,7 +46,7 @@ export abstract class PaginationObject {
     description:
       'A flag indicating if there are items available before the current page.',
   })
-  hasPreviousPage!: boolean;
+  public hasPreviousPage!: boolean;
 
   /**
    * Represents the total count of items available in the dataset.
@@ -55,7 +55,7 @@ export abstract class PaginationObject {
   @Field(() => Int, {
     description: 'The total count of items available across all pages.',
   })
-  totalItems!: number;
+  public totalItems!: number;
 
   /**
    * Indicates the total number of pages available. This is calculated based on the `totalItems` and the size of each page.
@@ -64,5 +64,5 @@ export abstract class PaginationObject {
   @Field(() => Int, {
     description: 'The total number of available pages.',
   })
-  totalPages!: number;
+  public totalPages!: number;
 }

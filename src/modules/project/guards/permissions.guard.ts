@@ -37,7 +37,7 @@ export class ProjectPermissionsGuard implements CanActivate {
    * @param context - The ExecutionContext instance, which provides metadata about the ongoing request.
    * @returns A boolean indicating whether the user can proceed (true) or not (false).
    */
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const args: { projectId: string } = ctx.getArgs();
     const projectId = deepFindKey<string>(args, 'projectId');
