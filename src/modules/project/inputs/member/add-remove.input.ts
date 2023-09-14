@@ -19,7 +19,7 @@ import { IsUUID } from 'class-validator';
   description:
     'Input details necessary to either add or remove a user from a specific project.',
 })
-export class AddRemoveProjectMemberInput {
+export class ProjectMemberAddRemoveInput {
   /**
    * The unique identifier of the project to which the user will be added or removed.
    */

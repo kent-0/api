@@ -11,16 +11,16 @@ import {
 } from '~/database/entities';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
-import { ProjectGoalsResolver } from './resolvers/goals.resolver';
-import { ProjectMembersResolver } from './resolvers/members.resolver';
-import { ProjectNotesResolver } from './resolvers/notes.resolver';
+import { ProjectGoalResolver } from './resolvers/goal.resolver';
+import { ProjectMemberResolver } from './resolvers/member.resolver';
+import { ProjectNoteResolver } from './resolvers/note.resolver';
 import { ProjectResolver } from './resolvers/project.resolver';
-import { ProjectRolesResolver } from './resolvers/roles.resolver';
-import { ProjectGoalsService } from './services/goals.service';
-import { ProjectMembersService } from './services/members.service';
-import { ProjectNotesService } from './services/notes.service';
+import { ProjectRoleResolver } from './resolvers/role.resolver';
+import { ProjectGoalService } from './services/goal.service';
+import { ProjectMemberService } from './services/member.service';
+import { ProjectNoteService } from './services/note.service';
 import { ProjectService } from './services/project.service';
-import { ProjectRolesService } from './services/roles.service';
+import { ProjectRoleService } from './services/role.service';
 
 /**
  * The `ProjectModule` class is a NestJS module responsible for grouping together
@@ -49,17 +49,17 @@ import { ProjectRolesService } from './services/roles.service';
   providers: [
     ProjectService,
     ProjectResolver,
-    ProjectGoalsResolver,
-    ProjectNotesResolver,
-    ProjectRolesResolver,
-    ProjectMembersResolver,
+    ProjectGoalResolver,
+    ProjectNoteResolver,
+    ProjectRoleResolver,
+    ProjectMemberResolver,
     PermissionManagerService,
-    ProjectRolesService,
-    ProjectMembersService,
-    ProjectGoalsService,
-    ProjectMembersService,
-    ProjectRolesService,
-    ProjectNotesService,
+    ProjectRoleService,
+    ProjectMemberService,
+    ProjectGoalService,
+    ProjectMemberService,
+    ProjectRoleService,
+    ProjectNoteService,
   ],
 })
 export class ProjectModule {}

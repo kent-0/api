@@ -14,7 +14,7 @@ import { IsUUID } from 'class-validator';
 @InputType({
   description: 'Assign a project role to a member.',
 })
-export class AssignProjectRoleInput {
+export class ProjectRoleAssignInput {
   /**
    * This field represents the unique identifier of a project member.
    * It's important to note that this ID is specific to the member's

@@ -12,7 +12,7 @@ import {
   ProjectNoteUpdateInput,
 } from '../inputs';
 import { ProjectNotesObject } from '../objects';
-import { ProjectNotesService } from '../services/notes.service';
+import { ProjectNoteService } from '../services/note.service';
 
 /**
  * Resolver class for managing project note-related GraphQL operations.
@@ -26,13 +26,13 @@ import { ProjectNotesService } from '../services/notes.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectNotesResolver {
+export class ProjectNoteResolver {
   /**
    * Initializes the resolver with the necessary services.
    *
    * @param _projectNotesService - Service responsible for project note-related operations.
    */
-  constructor(private _projectNotesService: ProjectNotesService) {}
+  constructor(private _projectNotesService: ProjectNoteService) {}
 
   /**
    * Creates a new project note.

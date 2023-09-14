@@ -18,7 +18,7 @@ import {
   BoardPaginatedBoardRoles,
   BoardRolesObject,
 } from '../objects';
-import { BoardRolesService } from '../services/roles.service';
+import { BoardRoleService } from '../services/role.service';
 
 /**
  * `BoardResolver` handles the GraphQL mutations and queries related to board roles.
@@ -34,7 +34,7 @@ export class BoardRolesResolver {
    *
    * @param _roleService - Service responsible for role-related operations.
    */
-  constructor(private _roleService: BoardRolesService) {}
+  constructor(private _roleService: BoardRoleService) {}
 
   /**
    * Assigns a role to board members.

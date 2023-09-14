@@ -6,9 +6,9 @@ import { ProjectPermissions } from '~/permissions/decorators/request-permissions
 import { Permissions } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
-import { AddRemoveProjectMemberInput } from '../inputs';
+import { ProjectMemberAddRemoveInput } from '../inputs';
 import { ProjectMembersObject } from '../objects';
-import { ProjectMembersService } from '../services/members.service';
+import { ProjectMemberService } from '../services/member.service';
 
 /**
  * Resolver class for handling project-related operations.
@@ -22,13 +22,13 @@ import { ProjectMembersService } from '../services/members.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectMembersResolver {
+export class ProjectMemberResolver {
   /**
    * Initializes the resolver with the necessary service.
    *
    * @param _memberServie - Service responsible for project member-related operations.
    */
-  constructor(private _memberServie: ProjectMembersService) {}
+  constructor(private _memberServie: ProjectMemberService) {}
 
   /**
    * Adds a user as a member of a project.
@@ -43,7 +43,7 @@ export class ProjectMembersResolver {
     name: 'projectMemberAdd',
   })
   @ProjectPermissions([Permissions.MemberAdd])
-  public add(@Args('input') input: AddRemoveProjectMemberInput) {
+  public add(@Args('input') input: ProjectMemberAddRemoveInput) {
     return this._memberServie.add(input);
   }
 
@@ -60,7 +60,7 @@ export class ProjectMembersResolver {
     name: 'projectMemberRemove',
   })
   @ProjectPermissions([Permissions.MemberRemove])
-  public remove(@Args('input') input: AddRemoveProjectMemberInput) {
+  public remove(@Args('input') input: ProjectMemberAddRemoveInput) {
     return this._memberServie.remove(input);
   }
 }

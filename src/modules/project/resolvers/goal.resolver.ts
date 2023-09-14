@@ -12,7 +12,7 @@ import {
   ProjectGoalUpdateInput,
 } from '../inputs';
 import { ProjectGoalsObject } from '../objects';
-import { ProjectGoalsService } from '../services/goals.service';
+import { ProjectGoalService } from '../services/goal.service';
 
 /**
  * Resolver class for managing project goal-related GraphQL operations.
@@ -26,13 +26,13 @@ import { ProjectGoalsService } from '../services/goals.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectGoalsResolver {
+export class ProjectGoalResolver {
   /**
    * Initializes the resolver with the necessary services.
    *
    * @param _projectGoalsService - Service responsible for project goal-related operations.
    */
-  constructor(private _projectGoalsService: ProjectGoalsService) {}
+  constructor(private _projectGoalsService: ProjectGoalService) {}
 
   /**
    * Creates a new project goal.

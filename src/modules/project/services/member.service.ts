@@ -6,17 +6,15 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { ProjectMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { AddRemoveProjectMemberInput } from '../inputs';
+import { ProjectMemberAddRemoveInput } from '../inputs';
 import { ProjectMembersObject } from '../objects';
 
 /**
- * ProjectMembersService Class
- *
  * Provides methods to manage project members, including adding and removing members from projects.
  * This service interacts with the database using MikroORM's entity repository and EntityManager.
  */
 @Injectable()
-export class ProjectMembersService {
+export class ProjectMemberService {
   constructor(
     @InjectRepository(ProjectMembersEntity)
     private readonly membersRepository: EntityRepository<ProjectMembersEntity>,
@@ -37,7 +35,7 @@ export class ProjectMembersService {
   public async add({
     projectId,
     userId,
-  }: AddRemoveProjectMemberInput): Promise<
+  }: ProjectMemberAddRemoveInput): Promise<
     ToCollections<ProjectMembersObject>
   > {
     // Check if the user is already a member of the project.
@@ -77,7 +75,7 @@ export class ProjectMembersService {
   public async remove({
     projectId,
     userId,
-  }: AddRemoveProjectMemberInput): Promise<string> {
+  }: ProjectMemberAddRemoveInput): Promise<string> {
     // Find the project member entity for the specified project and user.
     const member = await this.membersRepository.findOne(
       {

@@ -16,7 +16,7 @@ import { IsUUID } from 'class-validator';
 @InputType({
   description: 'Unassign a project role to a member.',
 })
-export class UnassignProjectRoleInput {
+export class ProjectRoleUnassignInput {
   /**
    * Represents the unique identifier of the member within the project context.
    * This is different from the general user ID, allowing for more specific

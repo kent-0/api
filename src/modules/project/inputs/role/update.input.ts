@@ -21,7 +21,7 @@ import {
 @InputType({
   description: 'Input to update roles for projects.',
 })
-export class UpdateProjectRoleInput {
+export class ProjectRoleUpdateInput {
   /**
    * Represents the name of the role that is to be updated.
    * It's an optional field, meaning that if not provided, the role's name

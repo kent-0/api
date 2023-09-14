@@ -31,7 +31,7 @@ import {
  * such as assignment, unassignment, creation, deletion, updating, and pagination.
  */
 @Injectable()
-export class BoardRolesService {
+export class BoardRoleService {
   /**
    * Constructs a new instance of the BoardRolesService.
    *

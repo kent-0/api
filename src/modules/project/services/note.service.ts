@@ -18,7 +18,7 @@ import { ProjectNotesObject } from '../objects';
  * This service provides methods to create, update, delete, and manage project notes.
  */
 @Injectable()
-export class ProjectNotesService {
+export class ProjectNoteService {
   /**
    * Constructor for the ProjectNotesService class.
    *

@@ -18,7 +18,7 @@ import { ProjectGoalsObject } from '../objects';
  * This service provides methods to create, update, delete, and manage project goals.
  */
 @Injectable()
-export class ProjectGoalsService {
+export class ProjectGoalService {
   /**
    * Constructor for the ProjectGoalsService class.
    *

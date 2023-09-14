@@ -12,11 +12,11 @@ import { checkValidPermissions } from '~/permissions/enums/project.enum';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
-  AssignProjectRoleInput,
   ProjectCreateRole,
+  ProjectRoleAssignInput,
   ProjectRolePaginationInput,
-  UnassignProjectRoleInput,
-  UpdateProjectRoleInput,
+  ProjectRoleUnassignInput,
+  ProjectRoleUpdateInput,
 } from '../inputs';
 import {
   ProjectMembersObject,
@@ -31,7 +31,7 @@ import {
  * such as assignment, unassignment, creation, deletion, updating, and pagination.
  */
 @Injectable()
-export class ProjectRolesService {
+export class ProjectRoleService {
   /**
    * Constructs a new instance of the ProjectRolesService.
    *
@@ -64,7 +64,7 @@ export class ProjectRolesService {
     memberId,
     projectId,
     roleId,
-  }: AssignProjectRoleInput): Promise<ToCollections<ProjectMembersObject>> {
+  }: ProjectRoleAssignInput): Promise<ToCollections<ProjectMembersObject>> {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -270,7 +270,7 @@ export class ProjectRolesService {
     memberId,
     projectId,
     roleId,
-  }: UnassignProjectRoleInput): Promise<ToCollections<ProjectMembersObject>> {
+  }: ProjectRoleUnassignInput): Promise<ToCollections<ProjectMembersObject>> {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -344,7 +344,7 @@ export class ProjectRolesService {
     name,
     permissions,
     roleId,
-  }: UpdateProjectRoleInput): Promise<ToCollections<ProjectRolesObject>> {
+  }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRolesObject>> {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne({
       id: roleId,

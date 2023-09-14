@@ -7,18 +7,18 @@ import { Permissions } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import {
-  AssignProjectRoleInput,
   ProjectCreateRole,
+  ProjectRoleAssignInput,
   ProjectRolePaginationInput,
-  UnassignProjectRoleInput,
-  UpdateProjectRoleInput,
+  ProjectRoleUnassignInput,
+  ProjectRoleUpdateInput,
 } from '../inputs';
 import {
   ProjectMembersObject,
   ProjectPaginatedProjectRoles,
   ProjectRolesObject,
 } from '../objects';
-import { ProjectRolesService } from '../services/roles.service';
+import { ProjectRoleService } from '../services/role.service';
 
 /**
  * `ProjectResolver` handles the GraphQL mutations and queries related to project roles.
@@ -28,13 +28,13 @@ import { ProjectRolesService } from '../services/roles.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, ProjectPermissionsGuard)
-export class ProjectRolesResolver {
+export class ProjectRoleResolver {
   /**
    * Initializes the resolver with the necessary service.
    *
    * @param _roleService - Service responsible for role-related operations.
    */
-  constructor(private _roleService: ProjectRolesService) {}
+  constructor(private _roleService: ProjectRoleService) {}
 
   /**
    * Assigns a role to project members.
@@ -49,7 +49,7 @@ export class ProjectRolesResolver {
     name: 'projectRoleAssign',
   })
   @ProjectPermissions([Permissions.RoleAssign])
-  public assign(@Args('input') input: AssignProjectRoleInput) {
+  public assign(@Args('input') input: ProjectRoleAssignInput) {
     return this._roleService.assign(input);
   }
 
@@ -116,7 +116,7 @@ export class ProjectRolesResolver {
     name: 'unassignProjectRole',
   })
   @ProjectPermissions([Permissions.RoleUnassign])
-  public unassign(@Args('input') input: UnassignProjectRoleInput) {
+  public unassign(@Args('input') input: ProjectRoleUnassignInput) {
     return this._roleService.unassign(input);
   }
 
@@ -133,7 +133,7 @@ export class ProjectRolesResolver {
     name: 'updateProjectRole',
   })
   @ProjectPermissions([Permissions.RoleUpdate])
-  public update(@Args('input') input: UpdateProjectRoleInput) {
+  public update(@Args('input') input: ProjectRoleUpdateInput) {
     return this._roleService.update(input);
   }
 }

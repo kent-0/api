@@ -8,7 +8,7 @@ import { Permissions } from '~/permissions/enums/board.enum';
 import { BoardPermissionsGuard } from '../guards/permissions.guard';
 import { AddRemoveBoardMemberInput } from '../inputs';
 import { BoardMembersObject } from '../objects';
-import { BoardMembersService } from '../services/members.service';
+import { BoardMemberService } from '../services/member.service';
 /**
  * Resolver class for handling board-related operations.
  *
@@ -27,7 +27,7 @@ export class BoardMembersResolver {
    *
    * @param _memberServie - Service responsible for board member-related operations.
    */
-  constructor(private _memberServie: BoardMembersService) {}
+  constructor(private _memberServie: BoardMemberService) {}
 
   /**
    * Adds a user as a member of a board.

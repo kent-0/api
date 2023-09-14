@@ -10,13 +10,11 @@ import { AddRemoveBoardMemberInput } from '../inputs';
 import { BoardMembersObject } from '../objects';
 
 /**
- * BoardMembersService Class
- *
  * Provides methods to manage board members, including adding and removing members from boards.
  * This service interacts with the database using MikroORM's entity repository and EntityManager.
  */
 @Injectable()
-export class BoardMembersService {
+export class BoardMemberService {
   constructor(
     @InjectRepository(BoardMembersEntity)
     private readonly membersRepository: EntityRepository<BoardMembersEntity>,

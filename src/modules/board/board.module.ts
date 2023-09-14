@@ -12,8 +12,8 @@ import { BoardResolver } from './resolvers/board.resolver';
 import { BoardMembersResolver } from './resolvers/member.resolver';
 import { BoardRolesResolver } from './resolvers/role.resolver';
 import { BoardService } from './services/board.service';
-import { BoardMembersService } from './services/members.service';
-import { BoardRolesService } from './services/roles.service';
+import { BoardMemberService } from './services/member.service';
+import { BoardRoleService } from './services/role.service';
 
 @Module({
   imports: [
@@ -29,8 +29,8 @@ import { BoardRolesService } from './services/roles.service';
   providers: [
     BoardService,
     BoardResolver,
-    BoardMembersService,
-    BoardRolesService,
+    BoardMemberService,
+    BoardRoleService,
     BoardMembersResolver,
     BoardRolesResolver,
   ],
