@@ -15,6 +15,7 @@ import {
   BoardRoleAssignInput,
   BoardRoleCreateInput,
   BoardRolePaginationInput,
+  BoardRoleRemoveInput,
   BoardRoleUnassignInput,
   BoardRoleUpdateInput,
 } from '../inputs';
@@ -157,37 +158,6 @@ export class BoardRoleService {
   }
 
   /**
-   * Deletes a board role by its ID.
-   *
-   * This method performs the following steps:
-   * 1. Fetches the role using the provided ID.
-   * 2. If the role does not exist, throws a NotFoundException.
-   * 3. Removes the role from the database.
-   * 4. Returns a confirmation message indicating the role has been removed.
-   *
-   * @param {string} roleId - The ID of the role to be deleted.
-   *
-   * @returns {Promise<string>} - Returns a confirmation message indicating successful deletion.
-   *
-   * @throws {NotFoundException} - Throws this exception if the specified role is not found.
-   */
-  public async delete(roleId: string): Promise<string> {
-    // Fetch the role using the provided ID.
-    const role = await this.rolesRepository.findOne({
-      id: roleId,
-    });
-
-    // If the role does not exist, throw an exception.
-    if (!role) throw new NotFoundException('Could not find role to delete.');
-
-    // Remove the role from the database.
-    await this.em.removeAndFlush(role);
-
-    // Return a confirmation message.
-    return 'The role for board has been removed.';
-  }
-
-  /**
    * Paginates and returns a list of board roles for a specific board.
    *
    * This method performs the following steps:
@@ -241,6 +211,40 @@ export class BoardRoleService {
       totalItems: total,
       totalPages,
     };
+  }
+
+  /**
+   * Removes a role associated with a board from the database.
+   *
+   * The method first checks if the role with the provided `roleId` exists within the context of the board identified by `boardId`.
+   * If the role is found, it is deleted from the database. If not, a `NotFoundException` is thrown.
+   *
+   * @param {BoardRoleRemoveInput} input - The input object containing details of the board and role.
+   * @param {string} input.boardId - The unique identifier of the board from which the role will be removed.
+   * @param {string} input.roleId - The unique identifier of the role intended for removal.
+   *
+   * @returns {Promise<string>} - Returns a confirmation message indicating successful removal of the role.
+   *
+   * @throws {NotFoundException} - Throws an exception if the role to be deleted is not found.
+   */
+  public async remove({
+    boardId,
+    roleId,
+  }: BoardRoleRemoveInput): Promise<string> {
+    // Fetch the role using the provided ID.
+    const role = await this.rolesRepository.findOne({
+      board: boardId,
+      id: roleId,
+    });
+
+    // If the role does not exist, throw an exception.
+    if (!role) throw new NotFoundException('Could not find role to delete.');
+
+    // Remove the role from the database.
+    await this.em.removeAndFlush(role);
+
+    // Return a confirmation message.
+    return 'The role for board has been removed.';
   }
 
   /**

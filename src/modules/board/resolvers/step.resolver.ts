@@ -37,10 +37,11 @@ export class BoardStepResolver {
   /**
    * Creates a new task step on a board.
    * @param {BoardStepCreateInput} input - Parameters required to create a new step.
-   * @returns {BoardStepObject} - The newly created step.
+   * @returns The newly created step.
    */
   @Mutation(() => BoardStepObject, {
     description: 'Create a new task step on the board.',
+    name: 'projectStepCreate',
   })
   @BoardPermissions([Permissions.StepCreate])
   public create(input: BoardStepCreateInput) {
@@ -50,10 +51,11 @@ export class BoardStepResolver {
   /**
    * Marks a task step as the final step in the step flow.
    * @param {BoardStepFinishedInput} input - Parameters required to mark a step as finished.
-   * @returns {BoardStepObject} - The updated step.
+   * @returns The updated step.
    */
   @Mutation(() => BoardStepObject, {
     description: 'Mark a task step as the final step in the step flow.',
+    name: 'projectStepMarkAsFinished',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public markAsFinished(input: BoardStepFinishedInput) {
@@ -63,10 +65,11 @@ export class BoardStepResolver {
   /**
    * Moves the position of a task step on a board.
    * @param {BoardStepMoveInput} input - Parameters required to move a step to a new position.
-   * @returns {BoardStepObject} - The updated step.
+   * @returns The updated step.
    */
   @Mutation(() => BoardStepObject, {
     description: 'Move a task step on the board.',
+    name: 'projectStepMove',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public move(input: BoardStepMoveInput) {
@@ -76,10 +79,11 @@ export class BoardStepResolver {
   /**
    * Removes a task step from a board.
    * @param {BoardStepRemoveInput} input - Parameters required to remove a step from a board.
-   * @returns {string} - A message indicating the step has been removed.
+   * @returns A message indicating the step has been removed.
    */
   @Mutation(() => String, {
     description: 'Remove a task step from the board.',
+    name: 'projectStepRemove',
   })
   @BoardPermissions([Permissions.StepRemove])
   public remove(input: BoardStepRemoveInput) {
@@ -89,10 +93,11 @@ export class BoardStepResolver {
   /**
    * Updates a task step on a board.
    * @param {BoardStepUpdateInput} input - Parameters required to update a step on a board.
-   * @returns {BoardStepObject} - The updated step.
+   * @returns The updated step.
    */
   @Mutation(() => BoardStepObject, {
     description: 'Update a task step from the board.',
+    name: 'projectStepUpdate',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public update(input: BoardStepUpdateInput) {

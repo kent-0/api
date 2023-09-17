@@ -10,6 +10,7 @@ import {
   BoardRoleAssignInput,
   BoardRoleCreateInput,
   BoardRolePaginationInput,
+  BoardRoleRemoveInput,
   BoardRoleUnassignInput,
   BoardRoleUpdateInput,
 } from '../inputs';
@@ -83,8 +84,8 @@ export class BoardRolesResolver {
     name: 'deleteBoardRole',
   })
   @BoardPermissions([Permissions.RoleDelete])
-  public delete(@Args('roleId') roleId: string) {
-    return this._roleService.delete(roleId);
+  public delete(@Args('ìnput') input: BoardRoleRemoveInput) {
+    return this._roleService.remove(input);
   }
 
   /**
