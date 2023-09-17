@@ -4,6 +4,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProjectGoalsEntity } from '~/database/entities';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -11,7 +12,11 @@ import {
   ProjectGoalRemoveInput,
   ProjectGoalUpdateInput,
 } from '../inputs';
-import { ProjectGoalObject } from '../objects';
+import {
+  ProjectGoalMinimalProperties,
+  ProjectGoalObject,
+  ProjectMinimalProperties,
+} from '../objects';
 
 /**
  * Service class responsible for handling operations related to project goals.
@@ -130,10 +135,18 @@ export class ProjectGoalService {
     status,
   }: ProjectGoalUpdateInput): Promise<ToCollections<ProjectGoalObject>> {
     // Fetch the project goal using provided goal and project IDs.
-    const projectGoal = await this.goalsRepository.findOne({
-      id: goalId,
-      project: projectId,
-    });
+    const projectGoal = await this.goalsRepository.findOne(
+      {
+        id: goalId,
+        project: projectId,
+      },
+      {
+        fields: [
+          ProjectGoalMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
+        ],
+      },
+    );
 
     // Check if the project goal exists. If not, throw a NotFoundException.
     if (!projectGoal) {

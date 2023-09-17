@@ -9,6 +9,7 @@ import {
 
 import { ProjectMembersEntity, ProjectRolesEntity } from '~/database/entities';
 import { checkValidPermissions } from '~/permissions/enums/project.enum';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -20,7 +21,10 @@ import {
 } from '../inputs';
 import {
   ProjectMemberObject,
+  ProjectMembersMinimalProperties,
+  ProjectMinimalProperties,
   ProjectRoleObject,
+  ProjectRolesMinimalProperties,
   ProjectRolesPaginated,
 } from '../objects';
 
@@ -77,12 +81,9 @@ export class ProjectRoleService {
         id: memberId,
       },
       {
-        populate: [
-          'roles',
-          'user.id',
-          'user.username',
-          'user.last_name',
-          'user.first_name',
+        fields: [
+          ProjectMembersMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
         ],
       },
     );
@@ -199,29 +200,10 @@ export class ProjectRoleService {
         },
         {
           fields: [
-            'name',
-            'id',
-            'permissions',
-            'project.id',
-            'project.name',
-            'project.description',
-            'project.end_date',
-            'project.start_date',
-            'project.owner.id',
-            'project.owner.username',
-            'project.owner.first_name',
-            'project.owner.last_name',
-            'members.id',
-            'members.user.username',
-            'members.user.first_name',
-            'members.project.id',
-            'members.project.name',
-            'members.project.description',
-            'members.project.end_date',
-            'members.project.start_date',
-            'members.roles.id',
-            'members.roles.name',
-            'members.roles.permissions',
+            ProjectRolesMinimalProperties,
+            ...createFieldPaths('project', ProjectMinimalProperties),
+            ...createFieldPaths('members', ProjectMembersMinimalProperties),
+            ...createFieldPaths('members.project', ProjectMinimalProperties),
           ],
           limit: size,
           offset: (page - 1) * size,
@@ -313,12 +295,9 @@ export class ProjectRoleService {
         id: memberId,
       },
       {
-        populate: [
-          'roles',
-          'user.id',
-          'user.username',
-          'user.last_name',
-          'user.first_name',
+        fields: [
+          ProjectMembersMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
         ],
       },
     );
@@ -389,16 +368,10 @@ export class ProjectRoleService {
       },
       {
         fields: [
-          'id',
-          'name',
-          'permissions',
-          'members.user.id',
-          'members.user.username',
-          'members.user.last_name',
-          'members.user.first_name',
-          'project.description',
-          'project.id',
-          'project.name',
+          ProjectRolesMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...createFieldPaths('members', ProjectMembersMinimalProperties),
+          ...createFieldPaths('members.project', ProjectMinimalProperties),
         ],
       },
     );

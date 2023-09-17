@@ -1,8 +1,58 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
+import {
+  AuthUserMinimalObject,
+  AuthUserMinimalProperties,
+} from '~/modules/auth/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
+import { tuple } from '~/utils/functions/tuple';
 
 /* import { BoardObject } from './board.object'; */
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for a project entity. This not only includes the direct properties of the project
+ * but also the fields related to the user who owns the project.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the project (`id`).
+ * - A brief description of the project (`description`).
+ * - The end date or expected completion date for the project (`end_date`).
+ * - The name or title of the project (`name`).
+ * - The start or commencement date of the project (`start_date`).
+ * - The associated properties of the user (`owner`) who owns the project.
+ *   This is achieved using the `createFieldPaths` function, which combines the
+ *   base entity ('owner' in this case) with its minimal properties
+ *   (from `AuthUserMinimalProperties`).
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a project across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant ProjectMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'description'
+ * - 'end_date'
+ * - 'name'
+ * - 'start_date'
+ * - 'owner.id'
+ * - 'owner.first_name'
+ * - 'owner.last_name'
+ * - 'owner.username'
+ */
+export const ProjectMinimalProperties = tuple(
+  'id',
+  'description',
+  'end_date',
+  'name',
+  'start_date',
+  ...createFieldPaths('owner', AuthUserMinimalProperties),
+);
 
 /**
  * The `ProjectObject` class serves as a foundational blueprint for representing projects within the application.

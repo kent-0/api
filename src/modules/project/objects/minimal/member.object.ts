@@ -1,8 +1,58 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
+import {
+  AuthUserMinimalObject,
+  AuthUserMinimalProperties,
+} from '~/modules/auth/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
+import { tuple } from '~/utils/functions/tuple';
 
-import { ProjectRoleMinimalObject } from './role.object';
+import {
+  ProjectRoleMinimalObject,
+  ProjectRolesMinimalProperties,
+} from './role.object';
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for members associated with a project. This includes the direct properties
+ * of the project member as well as the fields related to the roles the member
+ * has and the user details.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the project member (`id`).
+ * - The associated properties of the roles (`roles`) assigned to the project member.
+ *   This is achieved using the `createFieldPaths` function, which combines the
+ *   base entity ('roles' in this case) with its minimal properties
+ *   (from `ProjectRolesMinimalProperties`).
+ * - The associated properties of the user (`user`) which represents the project member.
+ *   This is achieved using the `createFieldPaths` function, which combines the
+ *   base entity ('user' in this case) with its minimal properties
+ *   (from `AuthUserMinimalProperties`).
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a project's members across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant ProjectMembersMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'roles.id'
+ * - 'roles.name'
+ * - 'roles.permissions'
+ * - 'user.id'
+ * - 'user.first_name'
+ * - 'user.last_name'
+ * - 'user.username'
+ */
+export const ProjectMembersMinimalProperties = tuple(
+  'id',
+  ...createFieldPaths('roles', ProjectRolesMinimalProperties),
+  ...createFieldPaths('user', AuthUserMinimalProperties),
+);
 
 /**
  * The `ProjectMembersObject` class defines a structured representation of

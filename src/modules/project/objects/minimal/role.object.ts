@@ -1,5 +1,34 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { tuple } from '~/utils/functions/tuple';
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for roles associated with a project. This tuple focuses on capturing
+ * the most essential details that define a role within a project's context.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the role (`id`).
+ * - The name representing the role (`name`).
+ * - The permissions associated with the role, typically represented
+ *   as bit-based values (`permissions`).
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a project's roles across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant ProjectRolesMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'name'
+ * - 'permissions'
+ */
+export const ProjectRolesMinimalProperties = tuple('id', 'name', 'permissions');
+
 /**
  * The `ProjectRolesObject` class serves as a blueprint for defining roles within a project management system.
  * In many applications, especially in project management platforms, roles are fundamental for access control,

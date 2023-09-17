@@ -3,6 +3,32 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 import { tuple } from '~/utils/functions/tuple';
 
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for a project's goals. This tuple is designed to capture the most essential
+ * details that define a goal within the context of a project.
+ *
+ * The tuple is structured to capture:
+ * - A brief description of the goal (`description`).
+ * - The unique identifier for the goal (`id`).
+ * - The name or title of the goal (`name`).
+ * - The current status or progress of the goal (`status`).
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a project's goals across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant ProjectGoalMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'description'
+ * - 'id'
+ * - 'name'
+ * - 'status'
+ */
 export const ProjectGoalMinimalProperties = tuple(
   'description',
   'id',

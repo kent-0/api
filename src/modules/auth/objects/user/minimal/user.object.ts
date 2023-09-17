@@ -1,5 +1,35 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { tuple } from '~/utils/functions/tuple';
+
+/**
+ * Represents a tuple containing the minimal set of properties
+ * required to identify and display basic information for an authenticated user.
+ *
+ * This tuple is designed to be used in conjunction with the `createFieldPaths`
+ * function to generate fully qualified paths for accessing specific fields
+ * within nested objects or database structures.
+ *
+ * By having this tuple, it standardizes the essential fields for an authenticated user
+ * across the application, ensuring consistency and reducing chances of errors.
+ * This can be especially useful when selecting nested properties from databases
+ * or filtering nested properties in API responses.
+ *
+ * @constant AuthUserMinimalProperties
+ *
+ * @example
+ * If you want to generate field paths for an entity named 'user':
+ *
+ * const fieldPaths = createFieldPaths('user', ...AuthUserMinimalProperties);
+ * // Returns: ['user.id', 'user.first_name', 'user.last_name', 'user.username']
+ */
+export const AuthUserMinimalProperties = tuple(
+  'id',
+  'first_name',
+  'last_name',
+  'username',
+);
+
 /**
  * Represents a user's basic information on the platform. This includes details
  * like their unique identifier, first name, last name, username, and associated email.

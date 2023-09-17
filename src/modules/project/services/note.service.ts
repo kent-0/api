@@ -11,7 +11,7 @@ import {
   ProjectNoteRemoveInput,
   ProjectNoteUpdateInput,
 } from '../inputs';
-import { ProjectNoteObject } from '../objects';
+import { ProjectNoteObject, ProjectNotesMinimalProperties } from '../objects';
 
 /**
  * Service class responsible for handling operations related to project notes.
@@ -128,11 +128,16 @@ export class ProjectNoteService {
     userId: string,
   ): Promise<ToCollections<ProjectNoteObject>> {
     // Fetch the project note using provided note and project IDs.
-    const projectNote = await this.notesRepository.findOne({
-      created_by: userId,
-      id: noteId,
-      project: projectId,
-    });
+    const projectNote = await this.notesRepository.findOne(
+      {
+        created_by: userId,
+        id: noteId,
+        project: projectId,
+      },
+      {
+        fields: [ProjectNotesMinimalProperties],
+      },
+    );
 
     // Check if the project note exists. If not, throw a NotFoundException.
     if (!projectNote) {

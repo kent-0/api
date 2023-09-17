@@ -81,7 +81,7 @@ export class ProjectMemberService {
         user: userId,
       },
       {
-        populate: ['project', 'project.owner'],
+        fields: ['project.owner.id'],
       },
     );
 

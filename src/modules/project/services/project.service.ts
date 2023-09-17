@@ -8,11 +8,17 @@ import {
 } from '@nestjs/common';
 
 import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
+import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectCreateInput, ProjectUpdateInput } from '../inputs';
-import { ProjectGoalMinimalProperties } from '../objects';
+import {
+  ProjectGoalMinimalProperties,
+  ProjectMembersMinimalProperties,
+  ProjectNotesMinimalProperties,
+  ProjectRolesMinimalProperties,
+} from '../objects';
 import { ProjectObject } from '../objects/project.object';
 
 /**
@@ -106,7 +112,7 @@ export class ProjectService {
         id: projectId,
       },
       {
-        populate: ['owner'],
+        fields: ['owner.id'],
       },
     );
 
@@ -153,24 +159,11 @@ export class ProjectService {
           'id',
           'name',
           'description',
-          'owner.id',
-          'owner.username',
-          'owner.first_name',
-          'owner.last_name',
-          'members.user.id',
-          'members.user.username',
-          'members.user.first_name',
-          'members.user.last_name',
-          'roles.name',
-          'roles.permissions',
+          ...createFieldPaths('owner', AuthUserMinimalProperties),
+          ...createFieldPaths('members', ProjectMembersMinimalProperties),
+          ...createFieldPaths('roles', ProjectRolesMinimalProperties),
+          ...createFieldPaths('notes', ProjectNotesMinimalProperties),
           ...createFieldPaths('goals', ProjectGoalMinimalProperties),
-          'notes.id',
-          'notes.title',
-          'notes.content',
-          'notes.created_by.id',
-          'notes.created_by.username',
-          'notes.created_by.first_name',
-          'notes.created_by.last_name',
         ],
       },
     );
@@ -211,12 +204,15 @@ export class ProjectService {
         id: projectId,
       },
       {
-        populate: [
-          'owner',
-          'members',
-          'roles',
-          'members.roles',
-          'members.user',
+        fields: [
+          'id',
+          'name',
+          'description',
+          ...createFieldPaths('owner', AuthUserMinimalProperties),
+          ...createFieldPaths('members', ProjectMembersMinimalProperties),
+          ...createFieldPaths('roles', ProjectRolesMinimalProperties),
+          ...createFieldPaths('notes', ProjectNotesMinimalProperties),
+          ...createFieldPaths('goals', ProjectGoalMinimalProperties),
         ],
       },
     );
