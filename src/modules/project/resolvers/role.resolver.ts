@@ -63,7 +63,7 @@ export class ProjectRoleResolver {
    */
   @Mutation(() => ProjectRoleObject, {
     description: 'Create a new project role.',
-    name: 'projectCreateRole',
+    name: 'projectRoleCreate',
   })
   @ProjectPermissions([Permissions.RoleCreate])
   public create(@Args('input') input: ProjectRoleCreateInput) {
@@ -80,7 +80,7 @@ export class ProjectRoleResolver {
    */
   @Query(() => ProjectRolesPaginated, {
     description: 'Paginate the roles of a project.',
-    name: 'paginateProjectRoles',
+    name: 'projectRolesPaginate',
   })
   public paginate(@Args('input') input: ProjectRolePaginationInput) {
     return this._roleService.paginate(input);

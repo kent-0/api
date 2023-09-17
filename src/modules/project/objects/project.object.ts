@@ -6,6 +6,7 @@ import {
   ProjectGoalMinimalObject,
   ProjectMemberMinimalObject,
   ProjectMinimalObject,
+  ProjectNoteMinimalObject,
   ProjectRoleMinimalObject,
 } from '.';
 
@@ -42,10 +43,10 @@ export class ProjectObject extends ProjectMinimalObject {
    * The `notes` field represents any additional information, thoughts, or remarks associated with the project.
    * This is especially useful for capturing insights, decisions, or any other significant data points.
    */
-  @Field(() => [ProjectMinimalObject], {
+  @Field(() => [ProjectNoteMinimalObject], {
     description: 'Notes assigned to the project.',
   })
-  public notes!: ProjectMinimalObject[];
+  public notes!: ProjectNoteMinimalObject[];
 
   /**
    * The `roles` field lists all the roles available within the project. These roles define what actions members
