@@ -1,8 +1,7 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { NotFoundException } from '@nestjs/common';
-import { Resolver } from '@nestjs/graphql';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardStepEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
@@ -17,15 +16,13 @@ import {
 import { BoardStepObject } from '../objects';
 
 /**
- * StepService Resolver
- *
  * This service resolver is responsible for handling operations related to board steps in the application.
  * Board steps represent various phases or stages in a project management process, and this resolver provides
  * methods for their CRUD operations.
  *
  */
-@Resolver()
-export class StepService {
+@Injectable()
+export class BoardStepService {
   /**
    * Constructor for the StepService class.
    *

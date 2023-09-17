@@ -14,6 +14,9 @@ export enum Permissions {
   RoleUnassign = 1 << 5,
   MemberAdd = 1 << 7,
   MemberRemove = 1 << 8,
+  StepCreate = 1 << 9,
+  StepRemove = 1 << 10,
+  StepUpdate = 1 << 11,
 }
 
 /**
