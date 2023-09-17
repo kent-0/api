@@ -78,7 +78,13 @@ export class BoardRoleService {
         id: memberId,
       },
       {
-        populate: ['roles', 'user'],
+        populate: [
+          'roles',
+          'user.id',
+          'user.username',
+          'user.last_name',
+          'user.first_name',
+        ],
       },
     );
 
@@ -152,6 +158,21 @@ export class BoardRoleService {
 
     // Persist the new role to the database.
     await this.em.persistAndFlush(role);
+
+    role.populate(['members', 'board'], {
+      fields: [
+        'id',
+        'name',
+        'permissions',
+        'members.user.id',
+        'members.user.username',
+        'members.user.last_name',
+        'members.user.first_name',
+        'board.description',
+        'board.id',
+        'board.name',
+      ],
+    });
 
     // Return the newly created role object.
     return role;
@@ -287,7 +308,13 @@ export class BoardRoleService {
         id: memberId,
       },
       {
-        populate: ['roles', 'user'],
+        populate: [
+          'roles',
+          'user.id',
+          'user.username',
+          'user.last_name',
+          'user.first_name',
+        ],
       },
     );
 
@@ -350,9 +377,25 @@ export class BoardRoleService {
     roleId,
   }: BoardRoleUpdateInput): Promise<ToCollections<BoardRolesObject>> {
     // Fetch the role using the provided ID.
-    const role = await this.rolesRepository.findOne({
-      id: roleId,
-    });
+    const role = await this.rolesRepository.findOne(
+      {
+        id: roleId,
+      },
+      {
+        fields: [
+          'id',
+          'name',
+          'permissions',
+          'members.user.id',
+          'members.user.username',
+          'members.user.last_name',
+          'members.user.first_name',
+          'board.description',
+          'board.id',
+          'board.name',
+        ],
+      },
+    );
 
     // If the role does not exist, throw an exception.
     if (!role) throw new NotFoundException('Could not find role to update.');

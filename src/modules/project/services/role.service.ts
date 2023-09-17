@@ -77,7 +77,13 @@ export class ProjectRoleService {
         id: memberId,
       },
       {
-        populate: ['roles', 'user'],
+        populate: [
+          'roles',
+          'user.id',
+          'user.username',
+          'user.last_name',
+          'user.first_name',
+        ],
       },
     );
 
@@ -192,10 +198,34 @@ export class ProjectRoleService {
           project: projectId,
         },
         {
+          fields: [
+            'name',
+            'id',
+            'permissions',
+            'project.id',
+            'project.name',
+            'project.description',
+            'project.end_date',
+            'project.start_date',
+            'project.owner.id',
+            'project.owner.username',
+            'project.owner.first_name',
+            'project.owner.last_name',
+            'members.id',
+            'members.user.username',
+            'members.user.first_name',
+            'members.project.id',
+            'members.project.name',
+            'members.project.description',
+            'members.project.end_date',
+            'members.project.start_date',
+            'members.roles.id',
+            'members.roles.name',
+            'members.roles.permissions',
+          ],
           limit: size,
           offset: (page - 1) * size,
           orderBy,
-          populate: ['members', 'project'],
         },
       );
 
@@ -205,7 +235,7 @@ export class ProjectRoleService {
     // Returns the paginated roles, along with metadata about the pagination.
     return {
       hasNextPage: page < totalPages,
-      hasPreviousPage: page !== 0,
+      hasPreviousPage: page !== 1,
       items: projectRolesPaginated,
       totalItems: total,
       totalPages,
@@ -283,7 +313,13 @@ export class ProjectRoleService {
         id: memberId,
       },
       {
-        populate: ['roles', 'user'],
+        populate: [
+          'roles',
+          'user.id',
+          'user.username',
+          'user.last_name',
+          'user.first_name',
+        ],
       },
     );
 
@@ -328,8 +364,9 @@ export class ProjectRoleService {
    * 1. Fetches the role using the provided ID.
    * 2. If the role does not exist, throws a NotFoundException.
    * 3. Updates the role's name and permissions if provided.
-   * 4. Persists the updated role to the database.
-   * 5. Returns the updated role object.
+   * 4. Check if the permissions are valid for the type of role.
+   * 5. Persists the updated role to the database.
+   * 6. Returns the updated role object.
    *
    * @param {Object} params - The parameters for updating a project role.
    * @param {string} params.name - The new name for the role (optional).
@@ -346,16 +383,42 @@ export class ProjectRoleService {
     roleId,
   }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRoleObject>> {
     // Fetch the role using the provided ID.
-    const role = await this.rolesRepository.findOne({
-      id: roleId,
-    });
+    const role = await this.rolesRepository.findOne(
+      {
+        id: roleId,
+      },
+      {
+        fields: [
+          'id',
+          'name',
+          'permissions',
+          'members.user.id',
+          'members.user.username',
+          'members.user.last_name',
+          'members.user.first_name',
+          'project.description',
+          'project.id',
+          'project.name',
+        ],
+      },
+    );
 
     // If the role does not exist, throw an exception.
     if (!role) throw new NotFoundException('Could not find role to update.');
 
     // Update the role's name and permissions if provided.
     role.name = name ?? role.name;
-    role.permissions = permissions ?? role.permissions;
+
+    if (permissions) {
+      // Check if the permissions are valid for the type of role.
+      if (!checkValidPermissions(permissions)) {
+        throw new ConflictException(
+          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
+        );
+      }
+
+      role.permissions = permissions ?? role.permissions;
+    }
 
     // Persist the updated role to the database.
     await this.em.persistAndFlush(role);
