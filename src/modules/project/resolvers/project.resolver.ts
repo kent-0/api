@@ -9,7 +9,7 @@ import { Permissions } from '~/permissions/enums/project.enum';
 import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
-import { ProjectCreateInput, UpdateProjectInput } from '../inputs';
+import { ProjectCreateInput, ProjectUpdateInput } from '../inputs';
 import { ProjectObject } from '../objects';
 import { ProjectService } from '../services/project.service';
 
@@ -97,7 +97,7 @@ export class ProjectResolver {
     name: 'projectUpdate',
   })
   @ProjectPermissions([Permissions.ProjectUpdate])
-  public update(@Args('input') input: UpdateProjectInput) {
+  public update(@Args('input') input: ProjectUpdateInput) {
     return this._projectService.update(input);
   }
 }

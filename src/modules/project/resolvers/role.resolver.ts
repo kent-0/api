@@ -7,8 +7,8 @@ import { Permissions } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import {
-  ProjectCreateRole,
   ProjectRoleAssignInput,
+  ProjectRoleCreateInput,
   ProjectRolePaginationInput,
   ProjectRoleUnassignInput,
   ProjectRoleUpdateInput,
@@ -66,25 +66,8 @@ export class ProjectRoleResolver {
     name: 'projectCreateRole',
   })
   @ProjectPermissions([Permissions.RoleCreate])
-  public create(@Args('input') input: ProjectCreateRole) {
+  public create(@Args('input') input: ProjectRoleCreateInput) {
     return this._roleService.create(input);
-  }
-
-  /**
-   * Deletes a specified role from a project.
-   * Steps:
-   * 1. Calls the role service's delete method with provided roleId to remove the role.
-   *
-   * @param roleId - The ID of the role to delete.
-   * @returns A message confirming the deletion.
-   */
-  @Mutation(() => String, {
-    description: 'Delete a project role.',
-    name: 'deleteProjectRole',
-  })
-  @ProjectPermissions([Permissions.RoleDelete])
-  public delete(@Args('roleId') roleId: string) {
-    return this._roleService.delete(roleId);
   }
 
   /**
@@ -104,6 +87,23 @@ export class ProjectRoleResolver {
   }
 
   /**
+   * Deletes a specified role from a project.
+   * Steps:
+   * 1. Calls the role service's delete method with provided roleId to remove the role.
+   *
+   * @param roleId - The ID of the role to delete.
+   * @returns A message confirming the deletion.
+   */
+  @Mutation(() => String, {
+    description: 'Delete a project role.',
+    name: 'projectRoleRemove',
+  })
+  @ProjectPermissions([Permissions.RoleDelete])
+  public remove(@Args('roleId') roleId: string) {
+    return this._roleService.remove(roleId);
+  }
+
+  /**
    * Removes an assigned role from a project member.
    * Steps:
    * 1. Calls the role service's unassign method to remove the role assignment from the member.
@@ -113,7 +113,7 @@ export class ProjectRoleResolver {
    */
   @Mutation(() => ProjectMemberObject, {
     description: 'Unassign a role from a project member.',
-    name: 'unassignProjectRole',
+    name: 'ProjectRoleUnassign',
   })
   @ProjectPermissions([Permissions.RoleUnassign])
   public unassign(@Args('input') input: ProjectRoleUnassignInput) {
@@ -130,7 +130,7 @@ export class ProjectRoleResolver {
    */
   @Mutation(() => ProjectRoleObject, {
     description: 'Update the details of a project role.',
-    name: 'updateProjectRole',
+    name: 'ProjectRoleUpdate',
   })
   @ProjectPermissions([Permissions.RoleUpdate])
   public update(@Args('input') input: ProjectRoleUpdateInput) {

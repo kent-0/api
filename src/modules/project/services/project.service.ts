@@ -10,7 +10,7 @@ import {
 import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { ProjectCreateInput, UpdateProjectInput } from '../inputs';
+import { ProjectCreateInput, ProjectUpdateInput } from '../inputs';
 import { ProjectObject } from '../objects/project.object';
 
 /**
@@ -198,7 +198,7 @@ export class ProjectService {
    * 4. Persists the changes to the database.
    * 5. Returns the updated project details.
    *
-   * @param {UpdateProjectInput} projectData - The input data for updating the project.
+   * @param {ProjectUpdateInput} projectData - The input data for updating the project.
    * @returns {Promise<ToCollections<ProjectObject>>} The updated project details.
    * @throws {NotFoundException} If the project is not found.
    */
@@ -206,7 +206,7 @@ export class ProjectService {
     description,
     name,
     projectId,
-  }: UpdateProjectInput): Promise<ToCollections<ProjectObject>> {
+  }: ProjectUpdateInput): Promise<ToCollections<ProjectObject>> {
     // Fetch the project entity using the provided project ID.
     const project = await this.projectRepository.findOne(
       {

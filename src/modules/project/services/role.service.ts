@@ -12,8 +12,8 @@ import { checkValidPermissions } from '~/permissions/enums/project.enum';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
-  ProjectCreateRole,
   ProjectRoleAssignInput,
+  ProjectRoleCreateInput,
   ProjectRolePaginationInput,
   ProjectRoleUnassignInput,
   ProjectRoleUpdateInput,
@@ -134,7 +134,7 @@ export class ProjectRoleService {
     name,
     permissions,
     projectId,
-  }: ProjectCreateRole): Promise<ToCollections<ProjectRoleObject>> {
+  }: ProjectRoleCreateInput): Promise<ToCollections<ProjectRoleObject>> {
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       name,
@@ -154,37 +154,6 @@ export class ProjectRoleService {
 
     // Return the newly created role object.
     return role;
-  }
-
-  /**
-   * Deletes a project role by its ID.
-   *
-   * This method performs the following steps:
-   * 1. Fetches the role using the provided ID.
-   * 2. If the role does not exist, throws a NotFoundException.
-   * 3. Removes the role from the database.
-   * 4. Returns a confirmation message indicating the role has been removed.
-   *
-   * @param {string} roleId - The ID of the role to be deleted.
-   *
-   * @returns {Promise<string>} - Returns a confirmation message indicating successful deletion.
-   *
-   * @throws {NotFoundException} - Throws this exception if the specified role is not found.
-   */
-  public async delete(roleId: string): Promise<string> {
-    // Fetch the role using the provided ID.
-    const role = await this.rolesRepository.findOne({
-      id: roleId,
-    });
-
-    // If the role does not exist, throw an exception.
-    if (!role) throw new NotFoundException('Could not find role to delete.');
-
-    // Remove the role from the database.
-    await this.em.removeAndFlush(role);
-
-    // Return a confirmation message.
-    return 'The role for project has been removed.';
   }
 
   /**
@@ -241,6 +210,37 @@ export class ProjectRoleService {
       totalItems: total,
       totalPages,
     };
+  }
+
+  /**
+   * Deletes a project role by its ID.
+   *
+   * This method performs the following steps:
+   * 1. Fetches the role using the provided ID.
+   * 2. If the role does not exist, throws a NotFoundException.
+   * 3. Removes the role from the database.
+   * 4. Returns a confirmation message indicating the role has been removed.
+   *
+   * @param {string} roleId - The ID of the role to be deleted.
+   *
+   * @returns {Promise<string>} - Returns a confirmation message indicating successful deletion.
+   *
+   * @throws {NotFoundException} - Throws this exception if the specified role is not found.
+   */
+  public async remove(roleId: string): Promise<string> {
+    // Fetch the role using the provided ID.
+    const role = await this.rolesRepository.findOne({
+      id: roleId,
+    });
+
+    // If the role does not exist, throw an exception.
+    if (!role) throw new NotFoundException('Could not find role to delete.');
+
+    // Remove the role from the database.
+    await this.em.removeAndFlush(role);
+
+    // Return a confirmation message.
+    return 'The role for project has been removed.';
   }
 
   /**

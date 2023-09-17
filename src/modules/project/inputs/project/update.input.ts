@@ -15,7 +15,7 @@ import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
   description:
     'Details required to modify an existing project that manages boards.',
 })
-export class UpdateProjectInput {
+export class ProjectUpdateInput {
   /**
    * This field captures an updated brief description of the project.
    * It should provide context about the project's purpose or goals.
