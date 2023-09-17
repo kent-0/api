@@ -1,4 +1,4 @@
-import { Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -7,6 +7,9 @@ import { IsUUID } from 'class-validator';
  * It requires the ID of the board where the step is located and the ID of the step to be removed.
  * Both IDs should be in valid UUID format.
  */
+@InputType({
+  description: 'Remove a step from a board.',
+})
 export class BoardStepRemoveInput {
   /**
    * ID of the board where the step is located.

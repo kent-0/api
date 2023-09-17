@@ -7,8 +7,12 @@ import { Resolver } from '@nestjs/graphql';
 import { BoardStepEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { BoardStepCreateInput, BoardStepRemoveInput } from '../inputs';
-import { BoardStepUpdateInput } from '../inputs/step/update.input';
+import {
+  BoardStepCreateInput,
+  BoardStepFinishedInput,
+  BoardStepRemoveInput,
+  BoardStepUpdateInput,
+} from '../inputs';
 import { BoardStepObject } from '../objects';
 
 /**
@@ -87,6 +91,59 @@ export class StepService {
   }
 
   /**
+   * Marks a specific step on a project board as the "finished" step.
+   *
+   * The function serves to indicate that a particular step represents the final stage
+   * in a task's lifecycle on the specified board. If a step was previously marked as
+   * "finished", it will be reverted to its normal state, ensuring that only one step
+   * remains marked as "finished" at any given time.
+   *
+   * @param {BoardStepFinishedInput} params - Input parameters for this function.
+   * @param {string} params.boardId - The ID of the board containing the step.
+   * @param {string} params.stepId - The ID of the step intended to be marked as "finished."
+   *
+   * @returns {Promise<BoardStepEntity>} - Returns the updated step after being marked as "finished."
+   *
+   * @throws {NotFoundException} - Throws an exception if the step intended to be marked
+   *                               as "finished" is not found on the specified board.
+   */
+  public async markAsFinished({
+    boardId,
+    stepId,
+  }: BoardStepFinishedInput): Promise<ToCollections<BoardStepObject>> {
+    // Retrieve any step currently marked as "finished" on the board.
+    const previousFinishedStep = await this.stepRepository.findOne({
+      board: boardId,
+      finish_step: true,
+    });
+
+    // If such a step exists, revert its "finished" status.
+    if (previousFinishedStep) previousFinishedStep.finish_step = false;
+
+    // Fetch the step that is intended to be marked as "finished."
+    const newFinishedStep = await this.stepRepository.findOne({
+      board: boardId,
+      id: stepId,
+    });
+
+    // If this step is not found, throw an exception.
+    if (!newFinishedStep) {
+      throw new NotFoundException(
+        'The step was not found on the board to mark as a finished step.',
+      );
+    }
+
+    // Mark the retrieved step as "finished."
+    newFinishedStep.finish_step = true;
+
+    // Save the changes to both steps (if applicable) in the database.
+    await this.em.persistAndFlush([previousFinishedStep, newFinishedStep]);
+
+    // Return the step that was marked as "finished."
+    return newFinishedStep;
+  }
+
+  /**
    * Removes a specific step from a board.
    *
    * This function is designed to find and remove a particular step from a board.
@@ -145,7 +202,7 @@ export class StepService {
     max,
     name,
     stepId,
-  }: BoardStepUpdateInput): Promise<BoardStepObject> {
+  }: BoardStepUpdateInput): Promise<ToCollections<BoardStepObject>> {
     // Try to locate the step in the database using the board and step IDs.
     const step = await this.stepRepository.findOne({
       board: boardId,
