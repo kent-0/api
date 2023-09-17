@@ -1,13 +1,13 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Resolver } from '@nestjs/graphql';
 
 import { BoardStepEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
-import { BoardStepCreateInput } from '../inputs';
+import { BoardStepCreateInput, BoardStepRemoveInput } from '../inputs';
 import { BoardStepObject } from '../objects';
 
 /**
@@ -83,5 +83,41 @@ export class StepService {
 
     // Return the newly created step.
     return newStep;
+  }
+
+  /**
+   * Removes a specific step from a board.
+   *
+   * This function is designed to find and remove a particular step from a board.
+   * It first checks if the step exists for the provided board and step IDs.
+   * If the step doesn't exist, it throws an error.
+   * Otherwise, it proceeds to remove the step from the database.
+   *
+   * @param {BoardStepRemoveInput} boardStepRemoveInput - Contains the IDs of the board and the step to be removed.
+   * @returns {string} - A message indicating the result of the operation.
+   * @throws {NotFoundException} - Throws this exception if the step to be removed cannot be found.
+   */
+  public async remove({
+    boardId,
+    stepId,
+  }: BoardStepRemoveInput): Promise<string> {
+    // Try to find the step with the provided board and step IDs.
+    const step = await this.stepRepository.findOne({
+      board: boardId,
+      id: stepId,
+    });
+
+    // If the step doesn't exist, throw a NotFoundException.
+    if (!step) {
+      throw new NotFoundException(
+        'Could not find the step to remove from the board.',
+      );
+    }
+
+    // Remove the step from the database.
+    await this.em.removeAndFlush(step);
+
+    // Return a success message.
+    return 'The step has been successfully removed.';
   }
 }
