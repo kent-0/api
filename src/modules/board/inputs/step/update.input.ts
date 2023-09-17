@@ -66,7 +66,7 @@ export class BoardStepUpdateInput {
    * The unique identifier of the step that needs to be updated.
    * This ensures that the correct step is targeted for the update operation.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'ID of the step to update on the board.',
   })
   @IsUUID(4, { message: 'The step ID must be a valid UUID.' })

@@ -10,6 +10,7 @@ import { ToCollections } from '~/utils/types/to-collection';
 import {
   BoardStepCreateInput,
   BoardStepFinishedInput,
+  BoardStepMoveInput,
   BoardStepRemoveInput,
   BoardStepUpdateInput,
 } from '../inputs';
@@ -141,6 +142,60 @@ export class StepService {
 
     // Return the step that was marked as "finished."
     return newFinishedStep;
+  }
+
+  /**
+   * Move or reorder the position of a specific step within a board.
+   *
+   * This function is designed to rearrange the order of steps on a board, ensuring that
+   * the board's layout suits the user's workflow. It performs a swap between the targeted
+   * step and another step that currently occupies the desired position.
+   *
+   * @param {BoardStepMoveInput} input - Contains the details required for moving a step.
+   * @returns {Promise<BoardStepObject>} - Returns the moved step.
+   * @throws {NotFoundException} - Throws an exception if the targeted step or the replacement
+   * step position is not found.
+   */
+  public async move({
+    boardId,
+    position,
+    stepId,
+  }: BoardStepMoveInput): Promise<ToCollections<BoardStepObject>> {
+    // Retrieve the step intended to be moved.
+    const step = await this.stepRepository.findOne({
+      board: boardId,
+      id: stepId,
+    });
+
+    // If the step is not found, throw an exception.
+    if (!step) {
+      throw new NotFoundException(
+        'Could not find the step to move from the board.',
+      );
+    }
+
+    // Retrieve the step currently occupying the desired position.
+    const positionReplaceStep = await this.stepRepository.findOne({
+      board: boardId,
+      position,
+    });
+
+    // If the replacement position doesn't have a step, throw an exception.
+    if (!positionReplaceStep) {
+      throw new NotFoundException(
+        'You are trying to move the column to a position that is not on the board.',
+      );
+    }
+
+    // Swap positions between the targeted step and the replacement step.
+    positionReplaceStep.position = step.position;
+    step.position = positionReplaceStep.position;
+
+    // Persist the changes to the database.
+    await this.em.persistAndFlush([positionReplaceStep, step]);
+
+    // Return the step that has been moved.
+    return step;
   }
 
   /**

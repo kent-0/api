@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -19,7 +19,7 @@ export class BoardStepFinishedInput {
    *
    * This is essential to ensure that the step belongs to the right board. It must be in valid UUID format.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Board where the step is located.',
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })
@@ -30,7 +30,7 @@ export class BoardStepFinishedInput {
    *
    * This ensures that the correct step is targeted for the update. It must be in valid UUID format.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'ID of the step to mark as finished step.',
   })
   @IsUUID(4, { message: 'The step ID must be a valid UUID.' })

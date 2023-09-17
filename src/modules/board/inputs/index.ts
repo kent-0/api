@@ -8,6 +8,7 @@ export * from './role/pagination.input';
 export * from './role/unassign.input';
 export * from './role/update.input';
 export * from './step/create.input';
+export * from './step/move.input';
 export * from './step/remove.update';
 export * from './step/step-finished.input';
 export * from './step/update.input';
