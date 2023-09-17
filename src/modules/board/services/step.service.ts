@@ -4,6 +4,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardStepEntity } from '~/database/entities';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -13,7 +14,11 @@ import {
   BoardStepRemoveInput,
   BoardStepUpdateInput,
 } from '../inputs';
-import { BoardStepObject } from '../objects';
+import {
+  BoardMinimalProperties,
+  BoardStepMinimalProperties,
+  BoardStepObject,
+} from '../objects';
 
 /**
  * This service resolver is responsible for handling operations related to board steps in the application.
@@ -116,12 +121,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          'board.name',
-          'board.description',
-          'board.created_by.id',
-          'board.created_by.username',
-          'board.created_by.first_name',
-          'board.created_by.last_name',
+          BoardStepMinimalProperties,
+          ...createFieldPaths('board', BoardMinimalProperties),
         ],
       },
     );
@@ -168,12 +169,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          'board.name',
-          'board.description',
-          'board.created_by.id',
-          'board.created_by.username',
-          'board.created_by.first_name',
-          'board.created_by.last_name',
+          BoardStepMinimalProperties,
+          ...createFieldPaths('board', BoardMinimalProperties),
         ],
       },
     );
@@ -277,12 +274,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          'board.name',
-          'board.description',
-          'board.created_by.id',
-          'board.created_by.username',
-          'board.created_by.first_name',
-          'board.created_by.last_name',
+          BoardStepMinimalProperties,
+          ...createFieldPaths('board', BoardMinimalProperties),
         ],
       },
     );

@@ -1,8 +1,57 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
+import {
+  AuthUserMinimalObject,
+  AuthUserMinimalProperties,
+} from '~/modules/auth/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
+import { tuple } from '~/utils/functions/tuple';
 
-import { BoardRolesMinimalObject } from './role.object';
+import {
+  BoardRolesMinimalObject,
+  BoardRolesMinimalProperties,
+} from './role.object';
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for a board's members. This tuple is designed to not only capture the
+ * direct properties of a board member but also the attributes related
+ * to their roles and user details.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the board member (`id`).
+ * - The associated properties of the roles (`roles`) assigned to the board member.
+ *   This is achieved using the `createFieldPaths` function, which combines the
+ *   base entity ('roles' in this case) with its minimal properties
+ *   (from `BoardRolesMinimalProperties`).
+ * - The associated properties of the user (`user`) who is the member of the board.
+ *   Again, this is achieved using the `createFieldPaths` function combined with
+ *   `AuthUserMinimalProperties`.
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a board's members across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant BoardMembersMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'roles.id'
+ * - 'roles.name'
+ * - 'roles.permissions'
+ * - 'user.id'
+ * - 'user.first_name'
+ * - 'user.last_name'
+ * - 'user.username'
+ */
+export const BoardMembersMinimalProperties = tuple(
+  'id',
+  ...createFieldPaths('roles', BoardRolesMinimalProperties),
+  ...createFieldPaths('user', AuthUserMinimalProperties),
+);
 
 /**
  * Represents a minimalistic view of members associated with a board.

@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
 import { ProjectMinimalObject } from '~/modules/project/objects';
+
+import { BoardMinimalObject } from './minimal/board.object';
 
 /**
  * The `BoardObject` provides a comprehensive view of a project board, encapsulating
@@ -27,37 +28,7 @@ import { ProjectMinimalObject } from '~/modules/project/objects';
 @ObjectType({
   description: 'Object that represents information on a project board.',
 })
-export class BoardObject {
-  /**
-   * Represents the creator of the board. The field provides basic information about
-   * the user who initiated the board. This relationship offers insights into the
-   * board's origin, ensuring that users can trace back its creation to a specific individual.
-   */
-  @Field(() => AuthUserMinimalObject, {
-    description: 'Basic information about the board creator.',
-  })
-  public created_by!: AuthUserMinimalObject;
-
-  /**
-   * Offers a descriptive overview of the board's theme or objective. The description
-   * allows users to quickly understand the board's context and its role within the
-   * overarching project.
-   */
-  @Field(() => String, {
-    description: 'Brief description that explains what the board is about.',
-  })
-  public description!: string;
-
-  /**
-   * The board's name acts as its main identifier. It's prominently displayed in
-   * user interfaces, listings, or when referencing the board in various contexts.
-   * The name should be both unique and descriptive to ensure easy identification.
-   */
-  @Field(() => String, {
-    description: "Board's name.",
-  })
-  public name!: string;
-
+export class BoardObject extends BoardMinimalObject {
   /**
    * Represents the project to which the board is linked. This relationship establishes
    * the board's placement within the project's hierarchy. It's essential for users

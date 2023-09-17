@@ -1,6 +1,51 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { AuthUserMinimalObject } from '~/modules/auth/objects';
+import {
+  AuthUserMinimalObject,
+  AuthUserMinimalProperties,
+} from '~/modules/auth/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
+import { tuple } from '~/utils/functions/tuple';
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for a board. This tuple is intended to capture not only the direct
+ * attributes of a board but also details related to the board's creator.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the board (`id`).
+ * - A brief description that provides insights about the board (`description`).
+ * - The name of the board (`name`).
+ * - The associated properties of the user (`created_by`) who created the board.
+ *   This is achieved using the `createFieldPaths` function, which combines the
+ *   base entity ('created_by' in this case) with its minimal properties
+ *   (from `AuthUserMinimalProperties`).
+ *
+ * By defining this tuple, it offers a standardized approach to select the essential
+ * fields for a board across the application. This ensures data consistency,
+ * optimizes data fetching by selecting only necessary fields, and aids in
+ * reducing potential errors.
+ *
+ * @constant BoardMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'description'
+ * - 'name'
+ * - 'created_by.id'
+ * - 'created_by.first_name'
+ * - 'created_by.last_name'
+ * - 'created_by.username'
+ */
+export const BoardMinimalProperties = tuple(
+  'id',
+  'description',
+  'name',
+  ...createFieldPaths('created_by', AuthUserMinimalProperties),
+);
+
 /**
  * The `BoardMinimalObject` provides a concise view of a project board. It offers
  * the essential details without delving into the complexities of nested relationships

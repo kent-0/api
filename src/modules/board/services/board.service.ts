@@ -4,6 +4,8 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
+import { ProjectMinimalProperties } from '~/modules/project/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -12,7 +14,7 @@ import {
   BoardUpdateInput,
 } from '../inputs';
 import { BoardGetInput } from '../inputs/board/get.input';
-import { BoardObject } from '../objects';
+import { BoardMinimalProperties, BoardObject } from '../objects';
 
 /**
  * Provides essential services related to board management within the application.
@@ -154,19 +156,8 @@ export class BoardService {
       },
       {
         fields: [
-          'created_by.id',
-          'created_by.username',
-          'created_by.first_name',
-          'created_by.last_name',
-          'project.description',
-          'project.end_date',
-          'project.owner.id',
-          'project.owner.username',
-          'project.owner.first_name',
-          'project.owner.last_name',
-          'project.start_date',
-          'project.id',
-          'project.name',
+          BoardMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
         ],
       },
     );
@@ -218,19 +209,8 @@ export class BoardService {
       },
       {
         fields: [
-          'created_by.id',
-          'created_by.username',
-          'created_by.first_name',
-          'created_by.last_name',
-          'project.description',
-          'project.end_date',
-          'project.owner.id',
-          'project.owner.username',
-          'project.owner.first_name',
-          'project.owner.last_name',
-          'project.start_date',
-          'project.id',
-          'project.name',
+          BoardMinimalProperties,
+          ...createFieldPaths('project', ProjectMinimalProperties),
         ],
       },
     );

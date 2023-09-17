@@ -75,15 +75,10 @@ export class BoardMemberService {
     userId,
   }: AddRemoveBoardMemberInput): Promise<string> {
     // Find the board member entity for the specified board and user.
-    const member = await this.membersRepository.findOne(
-      {
-        board: boardId,
-        user: userId,
-      },
-      {
-        populate: ['board'],
-      },
-    );
+    const member = await this.membersRepository.findOne({
+      board: boardId,
+      user: userId,
+    });
 
     // If the user is not a board member, throw an exception.
     if (!member) {

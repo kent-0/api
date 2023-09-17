@@ -1,5 +1,33 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { tuple } from '~/utils/functions/tuple';
+
+/**
+ * Represents a tuple containing the minimal set of properties required
+ * for a board's roles. This tuple is designed to capture the fundamental
+ * attributes that characterize a role within the context of a board.
+ *
+ * The tuple is structured to capture:
+ * - The unique identifier for the role (`id`).
+ * - The name or title of the role (`name`).
+ * - The specific permissions associated with the role (`permissions`).
+ *
+ * By defining this tuple, it provides a standardized approach to select the essential
+ * fields for a board's roles across the application. This ensures consistency,
+ * optimizes queries by selecting only necessary fields, and aids in reducing chances
+ * of errors.
+ *
+ * @constant BoardRolesMinimalProperties
+ *
+ * @example
+ * Assuming the tuple is used to generate a SQL SELECT statement:
+ * The fields would be:
+ * - 'id'
+ * - 'name'
+ * - 'permissions'
+ */
+export const BoardRolesMinimalProperties = tuple('id', 'name', 'permissions');
+
 /**
  * Represents a concise view of roles associated with a board.
  * This object type provides just the essential details of a role within the context
