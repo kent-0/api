@@ -33,6 +33,18 @@ import './utils/graphql/registers/enum.register';
       context: ({ connection, req }) =>
         connection ? { req: connection.context } : { req },
       driver: ApolloDriver,
+      formatError: (error) => ({
+        extensions: {
+          code: error.extensions?.code,
+          originalError: error.extensions?.originalError,
+          stacktrace:
+            process.env.NODE_ENV !== 'production'
+              ? error.extensions?.stacktrace
+              : undefined,
+          status: error.extensions?.status,
+        },
+        message: error.message,
+      }),
       playground: true,
       sortSchema: true,
     }),
