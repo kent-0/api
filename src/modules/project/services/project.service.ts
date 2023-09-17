@@ -8,9 +8,11 @@ import {
 } from '@nestjs/common';
 
 import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectCreateInput, ProjectUpdateInput } from '../inputs';
+import { ProjectGoalMinimalProperties } from '../objects';
 import { ProjectObject } from '../objects/project.object';
 
 /**
@@ -161,11 +163,7 @@ export class ProjectService {
           'members.user.last_name',
           'roles.name',
           'roles.permissions',
-          'goals.name',
-          'goals.id',
-          'goals.name',
-          'goals.description',
-          'goals.status',
+          ...createFieldPaths('goals', ProjectGoalMinimalProperties),
           'notes.id',
           'notes.title',
           'notes.content',

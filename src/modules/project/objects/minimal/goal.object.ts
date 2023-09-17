@@ -1,6 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
+import { tuple } from '~/utils/functions/tuple';
+
+export const ProjectGoalMinimalProperties = tuple(
+  'description',
+  'id',
+  'name',
+  'status',
+);
 
 /**
  * The `ProjectGoalsObject` class represents a structured format for goals
