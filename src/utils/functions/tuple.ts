@@ -11,5 +11,4 @@
  * @example
  * const exampleTuple = tuple('a', 'b', 'c'); // Returns a tuple ['a', 'b', 'c']
  */
-export const tuple = <T extends string[]>(...args: T): (typeof args)[number] =>
-  args[0];
+export const tuple = <T extends string[]>(...args: T): T => args;

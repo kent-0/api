@@ -156,8 +156,8 @@ export class BoardService {
       },
       {
         fields: [
-          BoardMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...BoardMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
         ],
       },
     );
@@ -209,8 +209,8 @@ export class BoardService {
       },
       {
         fields: [
-          BoardMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...BoardMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
         ],
       },
     );

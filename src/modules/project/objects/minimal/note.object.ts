@@ -43,7 +43,7 @@ export const ProjectNotesMinimalProperties = tuple(
   'id',
   'title',
   'content',
-  ...createFieldPaths('created_by', AuthUserMinimalProperties),
+  ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
 );
 
 /**

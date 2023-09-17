@@ -43,7 +43,7 @@ export const BoardMinimalProperties = tuple(
   'id',
   'description',
   'name',
-  ...createFieldPaths('created_by', AuthUserMinimalProperties),
+  ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
 );
 
 /**

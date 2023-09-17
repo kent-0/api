@@ -49,8 +49,8 @@ import {
  */
 export const BoardMembersMinimalProperties = tuple(
   'id',
-  ...createFieldPaths('roles', BoardRolesMinimalProperties),
-  ...createFieldPaths('user', AuthUserMinimalProperties),
+  ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+  ...createFieldPaths('user', ...AuthUserMinimalProperties),
 );
 
 /**

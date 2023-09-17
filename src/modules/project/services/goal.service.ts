@@ -142,8 +142,8 @@ export class ProjectGoalService {
       },
       {
         fields: [
-          ProjectGoalMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...ProjectGoalMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
         ],
       },
     );

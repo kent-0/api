@@ -50,8 +50,8 @@ import {
  */
 export const ProjectMembersMinimalProperties = tuple(
   'id',
-  ...createFieldPaths('roles', ProjectRolesMinimalProperties),
-  ...createFieldPaths('user', AuthUserMinimalProperties),
+  ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
+  ...createFieldPaths('user', ...AuthUserMinimalProperties),
 );
 
 /**

@@ -51,7 +51,7 @@ export const ProjectMinimalProperties = tuple(
   'end_date',
   'name',
   'start_date',
-  ...createFieldPaths('owner', AuthUserMinimalProperties),
+  ...createFieldPaths('owner', ...AuthUserMinimalProperties),
 );
 
 /**

@@ -83,8 +83,8 @@ export class BoardRoleService {
       },
       {
         fields: [
-          BoardMembersMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
+          ...BoardMembersMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
         ],
       },
     );
@@ -201,9 +201,9 @@ export class BoardRoleService {
         },
         {
           fields: [
-            BoardRolesMinimalProperties,
-            ...createFieldPaths('board', BoardMinimalProperties),
-            ...createFieldPaths('members', BoardMembersMinimalProperties),
+            ...BoardRolesMinimalProperties,
+            ...createFieldPaths('board', ...BoardMinimalProperties),
+            ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ],
           limit: size,
           offset: (page - 1) * size,
@@ -299,8 +299,8 @@ export class BoardRoleService {
       },
       {
         fields: [
-          BoardMembersMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
+          ...BoardMembersMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
         ],
       },
     );
@@ -370,9 +370,9 @@ export class BoardRoleService {
       },
       {
         fields: [
-          BoardRolesMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
-          ...createFieldPaths('members', BoardMembersMinimalProperties),
+          ...BoardRolesMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('members', ...BoardMembersMinimalProperties),
         ],
       },
     );

@@ -4,6 +4,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProjectNotesEntity } from '~/database/entities';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import {
@@ -11,7 +12,11 @@ import {
   ProjectNoteRemoveInput,
   ProjectNoteUpdateInput,
 } from '../inputs';
-import { ProjectNoteObject, ProjectNotesMinimalProperties } from '../objects';
+import {
+  ProjectMinimalProperties,
+  ProjectNoteObject,
+  ProjectNotesMinimalProperties,
+} from '../objects';
 
 /**
  * Service class responsible for handling operations related to project notes.
@@ -135,7 +140,10 @@ export class ProjectNoteService {
         project: projectId,
       },
       {
-        fields: [ProjectNotesMinimalProperties],
+        fields: [
+          ...ProjectNotesMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
+        ],
       },
     );
 

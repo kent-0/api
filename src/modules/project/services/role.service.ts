@@ -82,8 +82,8 @@ export class ProjectRoleService {
       },
       {
         fields: [
-          ProjectMembersMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...ProjectMembersMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
         ],
       },
     );
@@ -200,10 +200,10 @@ export class ProjectRoleService {
         },
         {
           fields: [
-            ProjectRolesMinimalProperties,
-            ...createFieldPaths('project', ProjectMinimalProperties),
-            ...createFieldPaths('members', ProjectMembersMinimalProperties),
-            ...createFieldPaths('members.project', ProjectMinimalProperties),
+            ...ProjectRolesMinimalProperties,
+            ...createFieldPaths('project', ...ProjectMinimalProperties),
+            ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
+            ...createFieldPaths('members.project', ...ProjectMinimalProperties),
           ],
           limit: size,
           offset: (page - 1) * size,
@@ -296,8 +296,8 @@ export class ProjectRoleService {
       },
       {
         fields: [
-          ProjectMembersMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
+          ...ProjectMembersMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
         ],
       },
     );
@@ -368,10 +368,10 @@ export class ProjectRoleService {
       },
       {
         fields: [
-          ProjectRolesMinimalProperties,
-          ...createFieldPaths('project', ProjectMinimalProperties),
-          ...createFieldPaths('members', ProjectMembersMinimalProperties),
-          ...createFieldPaths('members.project', ProjectMinimalProperties),
+          ...ProjectRolesMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
+          ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
+          ...createFieldPaths('members.project', ...ProjectMinimalProperties),
         ],
       },
     );

@@ -121,8 +121,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          BoardStepMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
+          ...BoardStepMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
         ],
       },
     );
@@ -169,8 +169,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          BoardStepMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
+          ...BoardStepMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
         ],
       },
     );
@@ -274,8 +274,8 @@ export class BoardStepService {
       },
       {
         fields: [
-          BoardStepMinimalProperties,
-          ...createFieldPaths('board', BoardMinimalProperties),
+          ...BoardStepMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
         ],
       },
     );
