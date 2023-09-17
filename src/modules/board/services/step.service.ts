@@ -109,10 +109,22 @@ export class BoardStepService {
     if (previousFinishedStep) previousFinishedStep.finish_step = false;
 
     // Fetch the step that is intended to be marked as "finished."
-    const newFinishedStep = await this.stepRepository.findOne({
-      board: boardId,
-      id: stepId,
-    });
+    const newFinishedStep = await this.stepRepository.findOne(
+      {
+        board: boardId,
+        id: stepId,
+      },
+      {
+        fields: [
+          'board.name',
+          'board.description',
+          'board.created_by.id',
+          'board.created_by.username',
+          'board.created_by.first_name',
+          'board.created_by.last_name',
+        ],
+      },
+    );
 
     // If this step is not found, throw an exception.
     if (!newFinishedStep) {
@@ -149,10 +161,22 @@ export class BoardStepService {
     stepId,
   }: BoardStepMoveInput): Promise<ToCollections<BoardStepObject>> {
     // Retrieve the step intended to be moved.
-    const step = await this.stepRepository.findOne({
-      board: boardId,
-      id: stepId,
-    });
+    const step = await this.stepRepository.findOne(
+      {
+        board: boardId,
+        id: stepId,
+      },
+      {
+        fields: [
+          'board.name',
+          'board.description',
+          'board.created_by.id',
+          'board.created_by.username',
+          'board.created_by.first_name',
+          'board.created_by.last_name',
+        ],
+      },
+    );
 
     // If the step is not found, throw an exception.
     if (!step) {
@@ -246,10 +270,22 @@ export class BoardStepService {
     stepId,
   }: BoardStepUpdateInput): Promise<ToCollections<BoardStepObject>> {
     // Try to locate the step in the database using the board and step IDs.
-    const step = await this.stepRepository.findOne({
-      board: boardId,
-      id: stepId,
-    });
+    const step = await this.stepRepository.findOne(
+      {
+        board: boardId,
+        id: stepId,
+      },
+      {
+        fields: [
+          'board.name',
+          'board.description',
+          'board.created_by.id',
+          'board.created_by.username',
+          'board.created_by.first_name',
+          'board.created_by.last_name',
+        ],
+      },
+    );
 
     // If the step cannot be found, throw an exception.
     if (!step) {
