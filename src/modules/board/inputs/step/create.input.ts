@@ -36,7 +36,7 @@ export class BoardStepCreateInput {
    * Provides a concise overview of the step, explaining its role or significance within
    * the task's lifecycle on the board.
    */
-  @Field(() => ID, {
+  @Field(() => String, {
     description: 'Brief explanation of what the step is about.',
   })
   public description!: string;
@@ -58,7 +58,7 @@ export class BoardStepCreateInput {
    * can be useful for steps like 'In Review', where only a limited number of tasks should
    * be reviewed at a time.
    */
-  @Field(() => ID, {
+  @Field(() => Number, {
     description: 'Maximum number of tasks that can be in the step.',
     nullable: true,
   })
@@ -68,7 +68,7 @@ export class BoardStepCreateInput {
    * Provides a descriptive name for the step, offering clarity on its purpose or stage
    * within the task's lifecycle.
    */
-  @Field(() => ID, {
+  @Field(() => String, {
     description: 'Name that the step will have.',
   })
   public name!: string;
@@ -78,7 +78,7 @@ export class BoardStepCreateInput {
    * will be displayed before those with higher positions, dictating the flow of tasks
    * from one step to the next.
    */
-  @Field(() => ID, {
+  @Field(() => Number, {
     description: 'Position of the step in the steps column of the board.',
   })
   public position!: number;

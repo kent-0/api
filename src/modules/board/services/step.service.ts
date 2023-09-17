@@ -8,6 +8,7 @@ import { BoardStepEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import { BoardStepCreateInput, BoardStepRemoveInput } from '../inputs';
+import { BoardStepUpdateInput } from '../inputs/step/update.input';
 import { BoardStepObject } from '../objects';
 
 /**
@@ -119,5 +120,55 @@ export class StepService {
 
     // Return a success message.
     return 'The step has been successfully removed.';
+  }
+
+  /**
+   * This function updates an existing step on a project board.
+   *
+   * Given the necessary fields for the update, it locates the step using the board and step IDs.
+   * If the step is found, it updates the fields and then saves the updated step back to the database.
+   *
+   * @param boardId - The unique identifier of the board where the step resides.
+   * @param description - A brief explanation of the step's purpose or role within the board.
+   * @param finishStep - Flag to indicate if this step represents the final stage in a task's lifecycle.
+   * @param max - The maximum number of tasks that can be present in this step at any given time.
+   * @param name - The name of the step.
+   * @param stepId - The unique identifier of the step to be updated.
+   *
+   * @returns The updated step.
+   * @throws NotFoundException if the step to be updated cannot be found.
+   */
+  public async update({
+    boardId,
+    description,
+    finishStep,
+    max,
+    name,
+    stepId,
+  }: BoardStepUpdateInput): Promise<BoardStepObject> {
+    // Try to locate the step in the database using the board and step IDs.
+    const step = await this.stepRepository.findOne({
+      board: boardId,
+      id: stepId,
+    });
+
+    // If the step cannot be found, throw an exception.
+    if (!step) {
+      throw new NotFoundException(
+        'Could not find the step to update from the board.',
+      );
+    }
+
+    // Update the step's fields with the provided values, or leave them unchanged if no new value is provided.
+    step.description = description ?? step.description;
+    step.finish_step = finishStep ?? step.finish_step;
+    step.max = max ?? step.max;
+    step.name = name ?? step.name;
+
+    // Save the updated step back to the database.
+    await this.em.persistAndFlush(step);
+
+    // Return the updated step.
+    return step;
   }
 }
