@@ -42,18 +42,6 @@ export class BoardStepCreateInput {
   public description!: string;
 
   /**
-   * Indicates whether this step represents the final stage for tasks within the board.
-   * For example, a step named 'Done' or 'Completed' might be flagged as the finish step,
-   * signifying that tasks within this step have been fully addressed.
-   */
-  @Field(() => Boolean, {
-    description:
-      "Determines if the step represents the final stage in the task's lifecycle.",
-    nullable: true,
-  })
-  public finishStep?: boolean;
-
-  /**
    * Specifies the maximum number of tasks that can be contained within this step. This
    * can be useful for steps like 'In Review', where only a limited number of tasks should
    * be reviewed at a time.
@@ -72,14 +60,4 @@ export class BoardStepCreateInput {
     description: 'Name that the step will have.',
   })
   public name!: string;
-
-  /**
-   * Determines the step's display position within the board. Steps with lower positions
-   * will be displayed before those with higher positions, dictating the flow of tasks
-   * from one step to the next.
-   */
-  @Field(() => Number, {
-    description: 'Position of the step in the steps column of the board.',
-  })
-  public position!: number;
 }

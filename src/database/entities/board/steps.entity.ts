@@ -26,7 +26,11 @@ export class BoardStepEntity extends ParentEntity {
    * Defines the optional properties that can be set on this entity, including
    * a description of the step and any optional properties from the parent entity.
    */
-  public [OptionalProps]?: 'description' | 'tasks' | OptionalParentProps;
+  public [OptionalProps]?:
+    | 'description'
+    | 'finish_step'
+    | 'tasks'
+    | OptionalParentProps;
 
   /**
    * Many-to-One relationship with the BoardEntity. Indicates the specific board
@@ -56,7 +60,7 @@ export class BoardStepEntity extends ParentEntity {
     comment: 'Flag if this step is the final completion step of the step flow.',
     default: false,
   })
-  public finish_step!: boolean;
+  public finish_step?: boolean;
 
   /**
    * The maximum number of tasks that can be assigned to this step at any given time.

@@ -53,8 +53,9 @@ export class BoardStepObject {
   @Field(() => Boolean, {
     description:
       "Determines whether the step is the end of the board's step flow.",
+    nullable: true,
   })
-  public finish_step!: boolean;
+  public finish_step?: boolean;
 
   /**
    * Sets a constraint on the number of tasks that can be present within the step. This can

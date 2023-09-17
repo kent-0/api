@@ -1,7 +1,7 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Resolver } from '@nestjs/graphql';
 
 import { BoardStepEntity } from '~/database/entities';
@@ -41,53 +41,43 @@ export class StepService {
   ) {}
 
   /**
-   * Creates a new step for a specific project board.
-   * Steps in a board can be used to represent various phases or stages in a project management process.
-   * Each step can have certain attributes, such as whether it's the final step in the board's process flow,
-   * or the maximum number of tasks it can hold. This method ensures that only one step is marked as the
-   * final step and creates a new step based on the provided parameters.
+   * Method to create a new step on a given board.
    *
-   * @param {BoardStepCreateInput} boardStepCreateInput - Input object containing the details required to create the new step.
+   * This method is responsible for creating a new step on a specific board.
+   * The new step's position is determined by the number of existing steps on
+   * the board, ensuring the new step is appended at the end. By doing so, we ensure
+   * that the new step's position is always the next available position on the board.
    *
-   * @throws {ConflictException} - Throws an exception if trying to create another finishing step when one already exists.
+   * @param {BoardStepCreateInput} params - Input parameters that contain:
+   *   - `boardId`: ID of the board where the new step will be created.
+   *   - `max`: Maximum number of tasks that can be in the new step.
+   *   - `name`: Name that the new step will have.
+   * @returns {Promise<BoardStepObject>} - The newly created step.
    *
-   * @returns {Promise<ToCollections<BoardStepObject>>} - A promise that resolves to the created board step object.
+   * @throws Will throw an error if saving the new step to the database fails.
    */
   public async create({
     boardId,
-    finishStep,
     max,
     name,
-    position,
   }: BoardStepCreateInput): Promise<ToCollections<BoardStepObject>> {
-    // Check if the step is intended to be the finishing step in the board's flow.
-    if (finishStep) {
-      const finishedStep = await this.stepRepository.findOne({
-        board: boardId,
-        finish_step: true,
-      });
-
-      // If a finishing step already exists for the board, throw an error.
-      if (finishedStep) {
-        throw new ConflictException(
-          'You cannot mark another step as the end of the step flow because it already exists.',
-        );
-      }
-    }
-
-    // Create a new board step based on the input parameters.
-    const newStep = this.stepRepository.create({
+    // Fetch all the steps associated with the given board.
+    const boardSteps = await this.stepRepository.find({
       board: boardId,
-      finish_step: finishStep ?? false,
-      max,
-      name,
-      position,
     });
 
-    // Persist the new step in the database and flush the changes.
+    // Construct a new step object with the given parameters and the calculated position.
+    const newStep = this.stepRepository.create({
+      board: boardId,
+      max,
+      name,
+      position: boardSteps.length + 1, // Determine the position by counting existing steps.
+    });
+
+    // Save the newly created step to the database.
     await this.em.persistAndFlush(newStep);
 
-    // Return the newly created step.
+    // Return the new step.
     return newStep;
   }
 
