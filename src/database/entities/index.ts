@@ -1,3 +1,5 @@
+export * from './parent.entity';
+
 export * from './auth/emails.entity';
 export * from './auth/passwords.entity';
 export * from './auth/tokens.entity';
@@ -17,5 +19,3 @@ export * from './board/steps.entity';
 export * from './board/tags.entity';
 export * from './board/task-comments.entity';
 export * from './board/task.entity';
-
-export * from './parent.entity';
