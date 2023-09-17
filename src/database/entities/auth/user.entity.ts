@@ -8,11 +8,13 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthEmailsEntity } from './emails.entity';
-import { AuthPasswordEntity } from './passwords.entity';
-
-import { OptionalParentProps, ParentEntity } from '../base.entity';
-import { ProjectMembersEntity } from '../project/members.entity';
+import {
+  AuthEmailsEntity,
+  AuthPasswordEntity,
+  OptionalParentProps,
+  ParentEntity,
+  ProjectMembersEntity,
+} from '..';
 
 /**
  * Entity representing individual user profiles within the platform.

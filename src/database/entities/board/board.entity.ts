@@ -8,13 +8,15 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { BoardMembersEntity } from './members.entity';
-import { BoardRolesEntity } from './roles.entity';
-import { BoardStepEntity } from './steps.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
-import { ProjectEntity } from '../project/project.entity';
+import {
+  AuthUserEntity,
+  BoardMembersEntity,
+  BoardRolesEntity,
+  BoardStepEntity,
+  OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+} from '..';
 
 /**
  * Entity representing boards within a project management system.

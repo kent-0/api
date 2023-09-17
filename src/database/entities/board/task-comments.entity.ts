@@ -9,10 +9,7 @@ import {
 
 import { CommentsTypes } from '~/database/enums/comments.enum';
 
-import { BoardTaskEntity } from './task.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { ParentEntity } from '../base.entity';
+import { AuthUserEntity, BoardTaskEntity, ParentEntity } from '..';
 
 /**
  * Entity representing different comments that members can make on tasks.

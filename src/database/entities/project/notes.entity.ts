@@ -6,10 +6,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { ProjectEntity } from './project.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  AuthUserEntity,
+  OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+} from '..';
 
 /**
  * The `ProjectNotesEntity` represents a specific note related to a project. Each instance

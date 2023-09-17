@@ -7,8 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { ProjectMembersEntity } from '~/database/entities';
-import { ProjectEntity } from '~/database/entities/project/project.entity';
+import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectCreateInput, UpdateProjectInput } from '../inputs';

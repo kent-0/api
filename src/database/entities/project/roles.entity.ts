@@ -8,10 +8,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { ProjectMembersEntity } from './members.entity';
-import { ProjectEntity } from './project.entity';
-
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+  ProjectMembersEntity,
+} from '..';
 
 /**
  * Represents a role within a project. Roles define the permissions and responsibilities of project members.

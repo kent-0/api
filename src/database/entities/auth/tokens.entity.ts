@@ -7,10 +7,9 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity } from './user.entity';
+import { TokenType } from '~/database/enums/token.enum';
 
-import { TokenType } from '../../enums/token.enum';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import { AuthUserEntity, OptionalParentProps, ParentEntity } from '..';
 
 /**
  * Entity representing the authentication tokens. These tokens can be of various types,

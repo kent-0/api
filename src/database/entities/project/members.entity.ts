@@ -9,11 +9,13 @@ import {
 
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
-import { ProjectEntity } from './project.entity';
-import { ProjectRolesEntity } from './roles.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  AuthUserEntity,
+  OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+  ProjectRolesEntity,
+} from '..';
 
 /**
  * The `ProjectMembersEntity` entity captures the relationship between a user and a project.

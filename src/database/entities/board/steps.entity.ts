@@ -7,10 +7,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { BoardEntity } from './board.entity';
-import { BoardTaskEntity } from './task.entity';
-
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  BoardEntity,
+  BoardTaskEntity,
+  OptionalParentProps,
+  ParentEntity,
+} from '..';
 
 /**
  * Entity representing various steps or stages that tasks must go through on a board.

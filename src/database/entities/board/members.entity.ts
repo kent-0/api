@@ -9,11 +9,13 @@ import {
 
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
-import { BoardEntity } from './board.entity';
-import { BoardRolesEntity } from './roles.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  AuthUserEntity,
+  BoardEntity,
+  BoardRolesEntity,
+  OptionalParentProps,
+  ParentEntity,
+} from '..';
 
 /**
  * Entity representing the association between users and boards within a board management system.

@@ -9,9 +9,7 @@ import {
 
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
 
-import { ProjectEntity } from './project.entity';
-
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import { OptionalParentProps, ParentEntity, ProjectEntity } from '..';
 
 /**
  * This entity captures the goals set for a specific project. Each goal

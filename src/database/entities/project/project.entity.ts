@@ -11,14 +11,16 @@ import {
 
 import { ProjectStatus } from '~/database/enums/status.enum';
 
-import { ProjectGoalsEntity } from './goals.entity';
-import { ProjectMembersEntity } from './members.entity';
-import { ProjectNotesEntity } from './notes.entity';
-import { ProjectRolesEntity } from './roles.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
-import { BoardEntity } from '../board/board.entity';
+import {
+  AuthUserEntity,
+  BoardEntity,
+  OptionalParentProps,
+  ParentEntity,
+  ProjectGoalsEntity,
+  ProjectMembersEntity,
+  ProjectNotesEntity,
+  ProjectRolesEntity,
+} from '..';
 
 /**
  * Represents a project entity used to manage and group boards.

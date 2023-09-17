@@ -8,10 +8,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { BoardTaskEntity } from './task.entity';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  AuthUserEntity,
+  BoardTaskEntity,
+  OptionalParentProps,
+  ParentEntity,
+} from '..';
 
 /**
  * Entity representing different tags or labels that can be assigned to tasks within a board.

@@ -8,10 +8,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { BoardEntity } from './board.entity';
-import { BoardMembersEntity } from './members.entity';
-
-import { OptionalParentProps, ParentEntity } from '../base.entity';
+import {
+  BoardEntity,
+  BoardMembersEntity,
+  OptionalParentProps,
+  ParentEntity,
+} from '..';
 
 /**
  * Entity representing different roles within the board management system.

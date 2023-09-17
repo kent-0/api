@@ -1,5 +1,22 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
+/**
+ * Represents a set of properties that are commonly found in the base entity.
+ *
+ * Entities in the system typically inherit from a base entity. This base entity
+ * often includes a set of standard properties like `createdAt`, `updatedAt`, etc.
+ * There might be scenarios where we want to make these properties optional when extending
+ * or interacting with derived entities. The `OptionalParentProps` type is specifically
+ * created for this purpose, allowing these common properties to be marked as optional
+ * in derived entities or in certain operations.
+ *
+ * @type {OptionalParentProps}
+ *
+ * @property {string} 'createdAt' - Represents the date and time when the entity was created.
+ * @property {string} 'id' - The unique identifier of the entity.
+ * @property {string} 'updatedAt' - Represents the last date and time when the entity was updated.
+ * @property {string} 'version' - Indicates the version of the entity, useful for concurrency control.
+ */
 export type OptionalParentProps = 'createdAt' | 'id' | 'updatedAt' | 'version';
 
 /**
