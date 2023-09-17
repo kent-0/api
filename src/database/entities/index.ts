@@ -18,4 +18,4 @@ export * from './board/tags.entity';
 export * from './board/task-comments.entity';
 export * from './board/task.entity';
 
-export * from './base.entity';
+export * from './parent.entity';
