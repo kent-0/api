@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -19,7 +19,7 @@ export class AddRemoveBoardMemberInput {
    * Represents the unique identifier of the board in question.
    * This ID ensures that the targeted board is correctly identified in the operation.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Id of the board to which the user will be a member.',
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })
@@ -29,7 +29,7 @@ export class AddRemoveBoardMemberInput {
    * Represents the unique identifier of the user who is the subject of the operation,
    * either being added to or removed from the board within the specified project.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the project in which the board to be managed is located.',
   })

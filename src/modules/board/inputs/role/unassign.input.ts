@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -20,7 +20,7 @@ export class BoardRoleUnassignInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Board to which the role is unassigned.',
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })
@@ -34,7 +34,7 @@ export class BoardRoleUnassignInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Board member ID. This is different from the user ID itself.',
   })
   @IsUUID(4, { message: 'The member ID must be a valid UUID.' })
@@ -48,7 +48,7 @@ export class BoardRoleUnassignInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the role to unassign. This must exist as a role at the board level.',
   })

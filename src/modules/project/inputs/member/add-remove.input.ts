@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -23,7 +23,7 @@ export class ProjectMemberAddRemoveInput {
   /**
    * The unique identifier of the project to which the user will be added or removed.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'Unique ID of the project where the user is to be added or removed. Must be in valid UUID format.',
   })
@@ -33,7 +33,7 @@ export class ProjectMemberAddRemoveInput {
   /**
    * The unique identifier of the user to be added as a member or removed from the project.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'Unique ID of the user who is being added to or removed from the specified project. Must be in valid UUID format.',
   })

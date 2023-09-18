@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -18,7 +18,7 @@ export class ProjectGoalRemoveInput {
    * This ID ensures that the correct goal is targeted for deletion. It's crucial
    * to provide the correct ID to prevent unintended deletions.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       "Unique identifier for the goal that is intended for deletion. It's essential to ensure the correct goal is targeted.",
   })
@@ -31,7 +31,7 @@ export class ProjectGoalRemoveInput {
    * linked to the mentioned project. This extra layer of verification helps in
    * maintaining data integrity and ensures that goals from other projects are not mistakenly deleted.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       "ID of the project associated with the goal. This helps in cross-verifying the goal's association to maintain data integrity. Must be in valid UUID format.",
   })

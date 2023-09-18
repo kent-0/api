@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
@@ -64,7 +64,7 @@ export class ProjectUpdateInput {
    *
    * The ID must be a valid UUID.
    */
-  @Field({
+  @Field(() => ID, {
     description:
       'The unique identifier of the project that is set to be updated. This ID is essential for identifying the specific project in the database. It must be a valid UUID format.',
   })

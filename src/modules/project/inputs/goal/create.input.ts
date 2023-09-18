@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -42,7 +42,7 @@ export class ProjectGoalCreateInput {
    * It's crucial to specify this ID correctly to ensure that the goal gets added to the
    * right project. The provided ID must adhere to the UUID format for system consistency.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the project to which this goal pertains. Must be in valid UUID format.',
   })

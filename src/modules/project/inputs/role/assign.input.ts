@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -21,7 +21,7 @@ export class ProjectRoleAssignInput {
    * association with a particular project and is not the same as the user's
    * global ID. It's used to uniquely identify the member within the project.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'Project member ID. This is different from the user ID itself.',
   })
@@ -33,7 +33,7 @@ export class ProjectRoleAssignInput {
    * the role will be assigned to the member. It is used to ensure that
    * the member and the role are associated within the correct project context.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Project to which the role is assigned.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
@@ -45,7 +45,7 @@ export class ProjectRoleAssignInput {
    * that exists at the project level. It ensures that the member is
    * granted the correct set of permissions and responsibilities.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the role to assign. This must exist as a role at the project level.',
   })

@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import {
   IsNumber,
@@ -55,7 +55,7 @@ export class ProjectRoleUpdateInput {
    * Specifies the unique identifier of the project in which the role exists.
    * This ensures that the role update is executed in the correct project context.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Project to which the role is unassigned.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
@@ -66,7 +66,7 @@ export class ProjectRoleUpdateInput {
    * By specifying the role ID, it ensures that the correct role is updated
    * and prevents unintended changes to other roles.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'ID of the role to update.',
   })
   @IsUUID(4, { message: 'The role ID must be a valid UUID.' })

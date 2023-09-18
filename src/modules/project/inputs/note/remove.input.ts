@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -17,7 +17,7 @@ export class ProjectNoteRemoveInput {
    * Represents the unique identifier for the note targeted for deletion.
    * This ensures that the exact note intended for removal is correctly identified and deleted.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       "Unique identifier for the note that is intended for deletion. It's essential to ensure the correct note is targeted.",
   })
@@ -30,7 +30,7 @@ export class ProjectNoteRemoveInput {
    *
    * @IsUUID() ensures that the provided ID adheres to the UUID format.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       "ID of the project associated with the note. This helps in cross-verifying the note's association to maintain data integrity. Must be in valid UUID format.",
   })

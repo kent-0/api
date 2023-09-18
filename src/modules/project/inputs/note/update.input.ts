@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -27,7 +27,7 @@ export class ProjectNoteUpdateInput {
    * The unique identifier for the note. This ID is instrumental in pinpointing
    * the exact note that needs modification, ensuring that other notes remain untouched.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'Unique identifier targeting the specific note intended for update.',
   })
@@ -38,7 +38,7 @@ export class ProjectNoteUpdateInput {
    * This ID ensures that the system recognizes the correct project context when
    * updating the note. It adds an extra layer of verification.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the project housing the note. Acts as a verification layer to ensure updates are made in the right context. Must be in valid UUID format.',
   })

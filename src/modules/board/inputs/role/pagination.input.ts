@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { PaginationInput } from '~/utils/graphql/inputs';
 
@@ -23,7 +23,7 @@ export class BoardRolePaginationInput extends PaginationInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Project where the roles to page are.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })

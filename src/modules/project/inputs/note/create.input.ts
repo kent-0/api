@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -29,7 +29,7 @@ export class ProjectNoteCreateInput {
    *
    * @IsUUID() ensures that the provided ID adheres to the UUID format.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the project to which this note pertains. Must be in valid UUID format.',
   })

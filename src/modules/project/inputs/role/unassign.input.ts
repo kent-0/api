@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
 
@@ -24,7 +24,7 @@ export class ProjectRoleUnassignInput {
    * member ID, the system can determine which user's role needs updating within
    * the project.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'Project member ID. This is different from the user ID itself.',
   })
@@ -37,7 +37,7 @@ export class ProjectRoleUnassignInput {
    * the role is removed in the correct project context, preventing accidental
    * changes in other projects.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Project to which the role is unassigned.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })
@@ -48,7 +48,7 @@ export class ProjectRoleUnassignInput {
    * This ensures that the correct role is being removed, preventing unintended
    * changes to a member's permissions.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description:
       'ID of the role to unassign. This must exist as a role at the project level.',
   })

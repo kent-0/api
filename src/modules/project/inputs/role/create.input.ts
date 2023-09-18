@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 
@@ -50,7 +50,7 @@ export class ProjectRoleCreateInput {
    * in the correct project context and can be used to assign members
    * within that project.
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Project to which the role is assigned.',
   })
   @IsUUID(4, { message: 'The project ID must be a valid UUID.' })

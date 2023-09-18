@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsNumber, IsString, IsUUID, MaxLength } from 'class-validator';
 
@@ -19,7 +19,7 @@ export class BoardRoleCreateInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Board to which the role is assigned.',
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })

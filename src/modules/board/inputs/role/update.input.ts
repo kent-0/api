@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 import {
   IsNumber,
@@ -26,7 +26,7 @@ export class BoardRoleUpdateInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'Board to which the role is unassigned.',
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })
@@ -72,7 +72,7 @@ export class BoardRoleUpdateInput {
    * @type {string}
    * @required
    */
-  @Field(() => String, {
+  @Field(() => ID, {
     description: 'ID of the role to update.',
   })
   @IsUUID(4, { message: 'The role ID must be a valid UUID.' })
