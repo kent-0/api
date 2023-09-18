@@ -12,7 +12,7 @@ import { PermissionManagerService } from '~/permissions/services/manager.service
 
 import { BoardResolver } from './resolvers/board.resolver';
 import { BoardMembersResolver } from './resolvers/member.resolver';
-import { BoardRolesResolver } from './resolvers/role.resolver';
+import { BoardRoleResolver } from './resolvers/role.resolver';
 import { BoardStepResolver } from './resolvers/step.resolver';
 import { BoardService } from './services/board.service';
 import { BoardMemberService } from './services/member.service';
@@ -34,16 +34,13 @@ import { BoardStepService } from './services/step.service';
   providers: [
     BoardService,
     BoardResolver,
+    PermissionManagerService,
     BoardMemberService,
     BoardRoleService,
     BoardMembersResolver,
-    BoardRolesResolver,
+    BoardRoleResolver,
     BoardStepResolver,
-    BoardService,
-    BoardMemberService,
-    BoardRoleService,
     BoardStepService,
-    PermissionManagerService,
   ],
 })
 export class BoardModule {}

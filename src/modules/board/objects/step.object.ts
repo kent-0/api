@@ -1,4 +1,4 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { BoardMinimalObject } from './minimal/board.object';
 import { BoardStepMinimalObject } from './minimal/step.object';
@@ -17,7 +17,7 @@ import { BoardStepMinimalObject } from './minimal/step.object';
  * By defining steps using this class, users can create a structured flow for their tasks,
  * moving them from one stage to another based on progress, reviews, or other criteria.
  */
-@InputType({
+@ObjectType({
   description: 'Steps on a project board.',
 })
 export class BoardStepObject extends BoardStepMinimalObject {

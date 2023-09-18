@@ -29,7 +29,7 @@ import { BoardRoleService } from '../services/role.service';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, BoardPermissionsGuard)
-export class BoardRolesResolver {
+export class BoardRoleResolver {
   /**
    * Initializes the resolver with the necessary service.
    *
@@ -81,10 +81,10 @@ export class BoardRolesResolver {
    */
   @Mutation(() => String, {
     description: 'Delete a board role.',
-    name: 'deleteBoardRole',
+    name: 'boardRemoveRole',
   })
   @BoardPermissions([Permissions.RoleDelete])
-  public delete(@Args('ìnput') input: BoardRoleRemoveInput) {
+  public delete(@Args('input') input: BoardRoleRemoveInput) {
     return this._roleService.remove(input);
   }
 
