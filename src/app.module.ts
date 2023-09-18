@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { BoardModule } from './modules/board/board.module';
 import { ProjectModule } from './modules/project/project.module';
 import './utils/graphql/registers/enum.register';
 
@@ -82,6 +83,7 @@ import './utils/graphql/registers/enum.register';
     // App modules
     AuthModule,
     ProjectModule,
+    BoardModule,
   ],
 })
 export class AppModule {}

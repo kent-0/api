@@ -1,8 +1,12 @@
+import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UserToken } from '~/modules/auth/decorators/user.decorator';
+import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
+import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
+import { BoardPermissionsGuard } from '../guards/permissions.guard';
 import {
   BoardCreateInput,
   BoardRemoveInput,
@@ -17,10 +21,10 @@ import { BoardService } from '../services/board.service';
  *
  * This resolver handles GraphQL queries and mutations related to boards within a project.
  * It provides functionalities to create, retrieve, update, and delete boards.
- *
- * @decorator {Resolver} - Indicates that the class is a NestJS GraphQL resolver.
  */
 @Resolver()
+@UsePipes(ValidationPipe)
+@UseGuards(JwtAuthGuard, BoardPermissionsGuard)
 export class BoardResolver {
   /**
    * Constructor initializes the resolver with the BoardService to handle board operations.
@@ -40,6 +44,7 @@ export class BoardResolver {
     description: 'Create a new board for a project.',
     name: 'boardCreate',
   })
+  @ExcludeGuards([BoardPermissionsGuard])
   public create(
     @Args('input') input: BoardCreateInput,
     @UserToken() token: JWTPayload,
