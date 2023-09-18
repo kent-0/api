@@ -40,6 +40,7 @@ export class BoardMembersEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Board to which the user is a member.',
     entity: () => BoardEntity,
+    onDelete: 'cascade',
   })
   public board!: Rel<BoardEntity>;
 

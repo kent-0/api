@@ -49,6 +49,7 @@ export class BoardService {
    * 2. Save the board to the database.
    * 3. Add the creator (user) as the first member of the board.
    * 4. Save the new board member to the database.
+   * 5. Populate relations with the board.
    *
    * @param {BoardCreateInput} description, name, projectId - Input data to create a new board.
    * @param {string} userId - ID of the user creating the board.
@@ -77,6 +78,14 @@ export class BoardService {
 
     // Step 4: Persist the new board member to the database.
     await this.em.persistAndFlush(newMember);
+
+    // Step 5: Populate relations.
+    await newBoard.populate(['project', 'created_by'], {
+      fields: [
+        ...BoardMinimalProperties,
+        ...createFieldPaths('project', ...ProjectMinimalProperties),
+      ],
+    });
 
     return newBoard;
   }
