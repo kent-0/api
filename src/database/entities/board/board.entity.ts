@@ -93,7 +93,7 @@ export class BoardEntity extends ParentEntity {
   @OneToMany(() => BoardRolesEntity, (r) => r.board, {
     comment: 'Roles to manage the board.',
   })
-  public roles = new Collection<Rel<BoardMembersEntity>>(this);
+  public roles = new Collection<Rel<BoardRolesEntity>>(this);
 
   /**
    * One-to-Many relationship with the BoardStepEntity. Represents the different stages

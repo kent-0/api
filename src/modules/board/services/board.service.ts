@@ -14,7 +14,13 @@ import {
   BoardUpdateInput,
 } from '../inputs';
 import { BoardGetInput } from '../inputs/board/get.input';
-import { BoardMinimalProperties, BoardObject } from '../objects';
+import {
+  BoardMembersMinimalProperties,
+  BoardMinimalProperties,
+  BoardObject,
+  BoardRolesMinimalProperties,
+  BoardStepMinimalProperties,
+} from '../objects';
 
 /**
  * Provides essential services related to board management within the application.
@@ -80,10 +86,13 @@ export class BoardService {
     await this.em.persistAndFlush(newMember);
 
     // Step 5: Populate relations.
-    await newBoard.populate(['project', 'created_by'], {
+    await newBoard.populate([], {
       fields: [
         ...BoardMinimalProperties,
         ...createFieldPaths('project', ...ProjectMinimalProperties),
+        ...createFieldPaths('members', ...BoardMembersMinimalProperties),
+        ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+        ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
       ],
     });
 
@@ -121,6 +130,9 @@ export class BoardService {
         fields: [
           ...BoardMinimalProperties,
           ...createFieldPaths('project', ...ProjectMinimalProperties),
+          ...createFieldPaths('members', ...BoardMembersMinimalProperties),
+          ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+          ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
         ],
       },
     );
@@ -220,6 +232,9 @@ export class BoardService {
         fields: [
           ...BoardMinimalProperties,
           ...createFieldPaths('project', ...ProjectMinimalProperties),
+          ...createFieldPaths('members', ...BoardMembersMinimalProperties),
+          ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+          ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
         ],
       },
     );

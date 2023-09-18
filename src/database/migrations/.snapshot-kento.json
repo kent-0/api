@@ -294,6 +294,7 @@
           "primary": false,
           "nullable": false,
           "length": 100,
+          "comment": "The actual value of the token, which is sent in requests for authentication and authorization.",
           "mappedType": "string"
         },
         "user_id": {
@@ -1088,13 +1089,24 @@
           "comment": "Brief description of what the step is about.",
           "mappedType": "string"
         },
+        "finish_step": {
+          "name": "finish_step",
+          "type": "bool",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "comment": "Flag if this step is the final completion step of the step flow.",
+          "mappedType": "boolean"
+        },
         "max": {
           "name": "max",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "comment": "Maximum number of tasks assigned to the step.",
           "mappedType": "integer"
         },
@@ -1777,6 +1789,7 @@
             "id"
           ],
           "referencedTableName": "public.boards",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "boards_members_user_id_foreign": {

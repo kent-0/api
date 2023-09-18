@@ -3,6 +3,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { ProjectMinimalObject } from '~/modules/project/objects';
 
 import { BoardMinimalObject } from './minimal/board.object';
+import { BoardMembersMinimalObject } from './minimal/member.object';
+import { BoardRolesMinimalObject } from './minimal/role.object';
+import { BoardStepMinimalObject } from './minimal/step.object';
 
 /**
  * The `BoardObject` provides a comprehensive view of a project board, encapsulating
@@ -29,6 +32,21 @@ import { BoardMinimalObject } from './minimal/board.object';
 })
 export class BoardObject extends BoardMinimalObject {
   /**
+   * Represents a list of members associated with a board.
+   * This field provides a collection of minimal details about each member
+   * associated with the board. This is useful for quickly retrieving a list of
+   * members without needing the full details of each member.
+   *
+   * When querying a board, this field can be used to get an overview of all
+   * the members who have access to or are collaborating on the board. It can
+   * also be useful when managing permissions or roles within the board.
+   */
+  @Field(() => [BoardMembersMinimalObject], {
+    description: 'Basic information about board members.',
+  })
+  public members!: BoardMembersMinimalObject[];
+
+  /**
    * Represents the project to which the board is linked. This relationship establishes
    * the board's placement within the project's hierarchy. It's essential for users
    * to understand how the board contributes to the project's broader goals.
@@ -38,4 +56,34 @@ export class BoardObject extends BoardMinimalObject {
       'Basic information of the project where the board is assigned.',
   })
   public project!: ProjectMinimalObject;
+
+  /**
+   * Represents a list of roles defined for a board.
+   * Each board can have multiple roles, defining the access level or permissions
+   * for members. This field provides a collection of those roles with minimal
+   * details.
+   *
+   * By querying this field, one can understand the different roles available
+   * within the board and their associated permissions. This is essential for
+   * board administration and security.
+   */
+  @Field(() => [BoardRolesMinimalObject], {
+    description: 'Basic information about board roles.',
+  })
+  public roles!: BoardRolesMinimalObject[];
+
+  /**
+   * Represents a list of steps or stages within a board.
+   * In many board-based project management systems, tasks or items move through
+   * different steps (like "To Do", "In Progress", "Done"). This field provides
+   * a collection of those steps with minimal details.
+   *
+   * This is crucial for understanding the workflow of the board and the stages
+   * tasks will pass through. It also aids users in visualizing the board's
+   * structure and flow.
+   */
+  @Field(() => [BoardStepMinimalObject], {
+    description: 'Basic information about board steps.',
+  })
+  public steps!: BoardStepMinimalObject[];
 }
