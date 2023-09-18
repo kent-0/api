@@ -41,7 +41,7 @@ export class BoardStepResolver {
    */
   @Mutation(() => BoardStepObject, {
     description: 'Create a new task step on the board.',
-    name: 'projectStepCreate',
+    name: 'boardStepCreate',
   })
   @BoardPermissions([Permissions.StepCreate])
   public create(input: BoardStepCreateInput) {
@@ -55,7 +55,7 @@ export class BoardStepResolver {
    */
   @Mutation(() => BoardStepObject, {
     description: 'Mark a task step as the final step in the step flow.',
-    name: 'projectStepMarkAsFinished',
+    name: 'boardStepMarkAsFinished',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public markAsFinished(input: BoardStepFinishedInput) {
@@ -69,7 +69,7 @@ export class BoardStepResolver {
    */
   @Mutation(() => BoardStepObject, {
     description: 'Move a task step on the board.',
-    name: 'projectStepMove',
+    name: 'boardStepMove',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public move(input: BoardStepMoveInput) {
@@ -83,7 +83,7 @@ export class BoardStepResolver {
    */
   @Mutation(() => String, {
     description: 'Remove a task step from the board.',
-    name: 'projectStepRemove',
+    name: 'boardStepRemove',
   })
   @BoardPermissions([Permissions.StepRemove])
   public remove(input: BoardStepRemoveInput) {
@@ -97,7 +97,7 @@ export class BoardStepResolver {
    */
   @Mutation(() => BoardStepObject, {
     description: 'Update a task step from the board.',
-    name: 'projectStepUpdate',
+    name: 'boardStepUpdate',
   })
   @BoardPermissions([Permissions.StepUpdate])
   public update(input: BoardStepUpdateInput) {

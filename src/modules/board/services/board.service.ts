@@ -10,7 +10,7 @@ import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   BoardCreateInput,
-  BoardDeleteInput,
+  BoardRemoveInput,
   BoardUpdateInput,
 } from '../inputs';
 import { BoardGetInput } from '../inputs/board/get.input';
@@ -82,52 +82,6 @@ export class BoardService {
   }
 
   /**
-   * Asynchronously deletes a specific board from the database.
-   *
-   * Steps:
-   * 1. Attempt to find the board in the database using the provided boardId and projectId.
-   * 2. If the board is not found, throw a NotFoundException.
-   * 3. If the board is found, proceed to delete it from the database.
-   * 4. Return a confirmation message indicating successful deletion.
-   *
-   * @param {BoardDeleteInput} input - Contains the unique identifiers for the board and the associated project.
-   * @property {string} boardId - The unique identifier of the board to be deleted.
-   * @property {string} projectId - The unique identifier of the project associated with the board.
-   *
-   * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
-   *
-   * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
-   */
-  public async delete({
-    boardId,
-    projectId,
-  }: BoardDeleteInput): Promise<string> {
-    // Attempt to find the board based on the provided boardId and projectId.
-    const board = await this.boardRepository.findOne(
-      {
-        id: boardId,
-        project: projectId,
-      },
-      {
-        fields: ['created_by.id'],
-      },
-    );
-
-    // If the board is not found, throw a NotFoundException.
-    if (!board) {
-      throw new NotFoundException(
-        'The board you are trying to delete could not be found.',
-      );
-    }
-
-    // If the board is found, remove it from the database and flush the changes.
-    await this.em.removeAndFlush(board);
-
-    // Return a confirmation message indicating successful deletion.
-    return `Board ${board.name} successfully deleted.`;
-  }
-
-  /**
    * Retrieves a specific board from the system based on the provided board ID.
    * This function performs a detailed query, not only fetching the board's basic details but also
    * associated information about the creator of the board and the project to which the board belongs.
@@ -171,6 +125,52 @@ export class BoardService {
 
     // Step 3: Return the board details.
     return board;
+  }
+
+  /**
+   * Asynchronously deletes a specific board from the database.
+   *
+   * Steps:
+   * 1. Attempt to find the board in the database using the provided boardId and projectId.
+   * 2. If the board is not found, throw a NotFoundException.
+   * 3. If the board is found, proceed to delete it from the database.
+   * 4. Return a confirmation message indicating successful deletion.
+   *
+   * @param {BoardRemoveInput} input - Contains the unique identifiers for the board and the associated project.
+   * @property {string} boardId - The unique identifier of the board to be deleted.
+   * @property {string} projectId - The unique identifier of the project associated with the board.
+   *
+   * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
+   *
+   * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
+   */
+  public async remove({
+    boardId,
+    projectId,
+  }: BoardRemoveInput): Promise<string> {
+    // Attempt to find the board based on the provided boardId and projectId.
+    const board = await this.boardRepository.findOne(
+      {
+        id: boardId,
+        project: projectId,
+      },
+      {
+        fields: ['created_by.id'],
+      },
+    );
+
+    // If the board is not found, throw a NotFoundException.
+    if (!board) {
+      throw new NotFoundException(
+        'The board you are trying to delete could not be found.',
+      );
+    }
+
+    // If the board is found, remove it from the database and flush the changes.
+    await this.em.removeAndFlush(board);
+
+    // Return a confirmation message indicating successful deletion.
+    return `Board ${board.name} successfully deleted.`;
   }
 
   /**

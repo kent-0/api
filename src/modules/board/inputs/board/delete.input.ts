@@ -9,9 +9,9 @@ import { Field, ID, InputType } from '@nestjs/graphql';
  * the required information from the client.
  */
 @InputType({
-  description: 'Input to delete a board.',
+  description: 'Input to remove a board.',
 })
-export class BoardDeleteInput {
+export class BoardRemoveInput {
   /**
    * Represents the unique identifier of the board that is intended for deletion.
    * This ID is crucial to ensure that the correct board is targeted for deletion.

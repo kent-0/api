@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ProjectStatus } from '~/database/enums/status.enum';
+import { BoardMinimalObject } from '~/modules/board/objects';
 
 import {
   ProjectGoalMinimalObject,
@@ -21,6 +22,20 @@ import {
   description: 'Object that represents the complete data of a project.',
 })
 export class ProjectObject extends ProjectMinimalObject {
+  /**
+   * Represents the boards associated with a particular project.
+   * This field fetches the minimal set of information about the board,
+   * ensuring that only the most pertinent details about the board are retrieved.
+   *
+   * The field will return an object of type `BoardMinimalObject`, encapsulating
+   * the basic attributes of a board. It's ideal for scenarios where an exhaustive
+   * list of board attributes isn't necessary, and only key details are required.
+   */
+  @Field(() => [BoardMinimalObject], {
+    description: 'Basic information about the boards assigned to the project.',
+  })
+  public boards!: BoardMinimalObject[];
+
   /**
    * The `goals` field represents the objectives or targets that the project aims to achieve. These goals
    * can be milestones, deliverables, or any other significant achievements.

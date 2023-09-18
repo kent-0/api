@@ -22,7 +22,6 @@ import { BoardMinimalObject } from './minimal/board.object';
  * By encompassing these attributes, `BoardObject` offers a holistic view of the board,
  * making it suitable for detailed board examinations or management tasks.
  *
- * @see AuthUserMinimalObject - For details about the minimal representation of a user.
  * @see ProjectMinimalObject - For details about the minimal representation of a project.
  */
 @ObjectType({

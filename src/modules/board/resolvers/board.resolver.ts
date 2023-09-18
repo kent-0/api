@@ -5,7 +5,7 @@ import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
 
 import {
   BoardCreateInput,
-  BoardDeleteInput,
+  BoardRemoveInput,
   BoardUpdateInput,
 } from '../inputs';
 import { BoardGetInput } from '../inputs/board/get.input';
@@ -38,25 +38,13 @@ export class BoardResolver {
    */
   @Mutation(() => BoardObject, {
     description: 'Create a new board for a project.',
+    name: 'boardCreate',
   })
   public create(
     @Args('input') input: BoardCreateInput,
     @UserToken() token: JWTPayload,
   ) {
     return this._boardService.create(input, token.sub);
-  }
-
-  /**
-   * Handles the mutation to delete an existing board from a project.
-   *
-   * @param input - Contains the data needed to identify the board to be deleted.
-   * @returns A message confirming the deletion of the board.
-   */
-  @Mutation(() => String, {
-    description: 'Delete an existing board of a project.',
-  })
-  public delete(@Args('input') input: BoardDeleteInput) {
-    return this._boardService.delete(input);
   }
 
   /**
@@ -67,9 +55,24 @@ export class BoardResolver {
    */
   @Query(() => BoardObject, {
     description: 'Get a project board.',
+    name: 'board',
   })
   public get(@Args('input') input: BoardGetInput) {
     return this._boardService.get(input);
+  }
+
+  /**
+   * Handles the mutation to delete an existing board from a project.
+   *
+   * @param input - Contains the data needed to identify the board to be deleted.
+   * @returns A message confirming the deletion of the board.
+   */
+  @Mutation(() => String, {
+    description: 'Remove an existing board of a project.',
+    name: 'boardRemove',
+  })
+  public remove(@Args('input') input: BoardRemoveInput) {
+    return this._boardService.remove(input);
   }
 
   /**
@@ -80,6 +83,7 @@ export class BoardResolver {
    */
   @Mutation(() => BoardObject, {
     description: 'Update an existing board of a project.',
+    name: 'boardUpdate',
   })
   public update(@Args('input') input: BoardUpdateInput) {
     return this._boardService.update(input);
