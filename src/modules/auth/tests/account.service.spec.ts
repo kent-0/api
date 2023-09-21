@@ -23,9 +23,9 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * The tests are designed to ensure the core functionalities of the Account Service,
  * focusing on user registration (`signUp`) and user authentication (`signIn`).
  *
- * Before each test:
+ * Before each tests:
  * - A testing module is set up with necessary dependencies and configurations.
- * - Database connection is established with a test database.
+ * - Database connection is established with a tests database.
  * - Database schema is refreshed to ensure a clean state.
  *
  * After all tests:
@@ -37,9 +37,9 @@ describe('Account', () => {
   let orm: MikroORM;
 
   /**
-   * Setup for each test.
+   * Setup for each tests.
    * Initializes the necessary modules, services, and database configuration.
-   * Refreshes the database to ensure each test starts with a clean state.
+   * Refreshes the database to ensure each tests starts with a clean state.
    */
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -93,7 +93,7 @@ describe('Account', () => {
   });
 
   /**
-   * Basic test to ensure the `AuthAccountService` is defined and can be initialized.
+   * Basic tests to ensure the `AuthAccountService` is defined and can be initialized.
    */
   it('should be defined', () => {
     expect(accountService).toBeDefined();
@@ -125,7 +125,7 @@ describe('Account', () => {
 
   /**
    * Test both the `signUp` and `signIn` methods of the `AuthAccountService`.
-   * This test ensures that after a user is registered, they can successfully
+   * This tests ensures that after a user is registered, they can successfully
    * authenticate and receive a valid session containing access and refresh tokens.
    */
   it('should create a account session', async () => {
@@ -155,8 +155,8 @@ describe('Account', () => {
   /**
    * Test case to verify the user update functionality.
    *
-   * This test simulates the process of registering a user and then updating
-   * the user's first and last name. The test ensures that:
+   * This tests simulates the process of registering a user and then updating
+   * the user's first and last name. The tests ensures that:
    * 1. A user can be successfully registered with initial details.
    * 2. The user's first and last name can be updated to new values.
    * 3. The updated values are correctly reflected in the returned user object.

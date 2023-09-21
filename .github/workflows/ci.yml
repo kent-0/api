@@ -101,11 +101,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run Pretty
-        run: pnpm exec prettier --ignore-path .prettierignore --cache --no-error-on-unmatched-pattern --check "src/**/*.ts" "test/**/*.ts"
+        run: pnpm exec prettier --ignore-path .prettierignore --cache --no-error-on-unmatched-pattern --check "src/**/*.ts" "tests/**/*.ts"
 
   testing:
     runs-on: ubuntu-latest
     needs: [build]
+    env:
+      MIKRO_ORM_DB_TEST_URL: ${{ secrets.MIKRO_ORM_DB_TEST_URL }}
+      APP_PORT: 3000
+      APP_JWT_TOKEN: kentoapp
+      APP_JWT_ISSUER: https://auth.kento.app
+      APP_JWT_AUDIENCE: https://api.kento.app
     strategy:
       matrix:
         node-version: [18]
@@ -132,7 +138,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run Tests
-        run: pnpm test:cov
+        run: pnpm tests:cov
       - name: Store code coverage report
         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # tag=v3
         with:

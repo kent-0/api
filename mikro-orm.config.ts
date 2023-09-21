@@ -29,11 +29,11 @@ export default defineConfig({
 });
 
 /**
- * Generates a test configuration for MikroORM tailored for PostgreSQL.
+ * Generates a tests configuration for MikroORM tailored for PostgreSQL.
  *
  * This function returns a MikroORM configuration that's designed for testing purposes
  * with a PostgreSQL database. It allows the caller to specify the database URL, ensuring
- * flexibility in choosing different databases or schemas for various test scenarios.
+ * flexibility in choosing different databases or schemas for various tests scenarios.
  *
  * Features:
  * - Configurable database connection via `dbUrl` parameter.
