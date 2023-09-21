@@ -121,6 +121,7 @@ jobs:
       APP_JWT_TOKEN: kentoapp
       APP_JWT_ISSUER: https://auth.kento.app
       APP_JWT_AUDIENCE: https://api.kento.app
+      PGPASSWORD: password
     strategy:
       matrix:
         node-version: [18, 20]
