@@ -128,7 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Enable uuid-ossp extension
-        run: psql -h localhost -U user -d test_db -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
+        run: psql -h localhost -U user -d kento -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3
         with:
