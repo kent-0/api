@@ -44,6 +44,18 @@ export const AuthUserMinimalProperties = tuple(
 })
 export class AuthUserMinimalObject {
   /**
+   * Represents the user's biography.
+   *
+   * A brief overview or narrative about the user's background, achievements,
+   * interests, or other relevant information. Helps in providing a personal touch
+   * and context about the user.
+   */
+  @Field({
+    description: 'User biography',
+  })
+  public biography!: string;
+
+  /**
    * The first name of the user. This is typically the given name of the user.
    *
    * @type {string}

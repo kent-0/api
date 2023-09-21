@@ -27,14 +27,13 @@ export class AuthUpdateAccountInput {
   })
   @MaxLength(300, { message: 'The biography cannot exceed 300 characters.' })
   @IsString({ message: 'This field can only be of text type.' })
-  public biography!: string;
+  public biography?: string;
 
   /**
    * The user's first name. Used for personalized communication.
    *
    * @type {string}
    * @description First name of the person who owns the user account.
-   * @required
    * @validations
    *  - Maximum length of 30 characters.
    *  - Must only contain alphabet characters.
@@ -43,20 +42,20 @@ export class AuthUpdateAccountInput {
   @Field({
     description:
       "The user's first name, used for personalized communications. It should be a text containing only alphabetical characters and must not exceed 30 characters.",
+    nullable: true,
   })
   @MaxLength(30, { message: 'The first name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The first name can only contain text characters.',
   })
   @IsString({ message: 'This field can only be of text type.' })
-  public first_name!: string;
+  public first_name?: string;
 
   /**
    * The user's last name. Used in conjunction with the first name for full identification.
    *
    * @type {string}
    * @description Last name of the person who owns the user account.
-   * @required
    * @validations
    *  - Maximum length of 30 characters.
    *  - Must only contain alphabet characters.
@@ -65,20 +64,20 @@ export class AuthUpdateAccountInput {
   @Field({
     description:
       "The user's last name, used in conjunction with the first name for full identification. It should be a text containing only alphabetical characters and must not exceed 30 characters.",
+    nullable: true,
   })
   @MaxLength(30, { message: 'The last name cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z]+$/, {
     message: 'The last name can only contain text characters.',
   })
   @IsString({ message: 'This field can only be of text type.' })
-  public last_name!: string;
+  public last_name?: string;
 
   /**
    * An identifier chosen by the user, used to represent them within the application. This should be unique.
    *
    * @type {string}
    * @description Unique username of the user account.
-   * @required
    * @validations
    *  - Maximum length of 30 characters.
    *  - Only allows numbers, letters, and the symbols -_.
@@ -87,6 +86,7 @@ export class AuthUpdateAccountInput {
   @Field({
     description:
       'A unique identifier chosen by the user to represent themselves within the application. It can contain numbers, letters, and the symbols -_. It must not exceed 30 characters.',
+    nullable: true,
   })
   @MaxLength(30, { message: 'The username cannot exceed 30 characters.' })
   @Matches(/^[A-Za-z0-9_-]+$/, {
@@ -94,5 +94,5 @@ export class AuthUpdateAccountInput {
       'The username can only contain numbers, letters, and the symbols -_.',
   })
   @IsString({ message: 'This field can only be of text type.' })
-  public username!: string;
+  public username?: string;
 }

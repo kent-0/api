@@ -27,3 +27,35 @@ export default defineConfig({
     pathTs: './src/database/seeds', // Specify the path to TypeScript seeders
   },
 });
+
+/**
+ * Generates a test configuration for MikroORM tailored for PostgreSQL.
+ *
+ * This function returns a MikroORM configuration that's designed for testing purposes
+ * with a PostgreSQL database. It allows the caller to specify the database URL, ensuring
+ * flexibility in choosing different databases or schemas for various test scenarios.
+ *
+ * Features:
+ * - Configurable database connection via `dbUrl` parameter.
+ * - Utilizes the PostgreSQL driver for MikroORM.
+ * - Forces the usage of entity constructors. This ensures that entity hooks and methods
+ *   are always available during testing, providing a more realistic testing environment.
+ *
+ * Usage:
+ * Call this function with the desired PostgreSQL database URL to get a MikroORM
+ * configuration ready for testing.
+ *
+ * @function TestingMikroORMConfig
+ * @param {string} clientUrl - The PostgreSQL database connection string.
+ *
+ * @example
+ * const testConfig = testingMikroORMConfig('postgres://localhost:5432/test_db');
+ */
+export const TestingMikroORMConfig = (clientUrl: string) =>
+  defineConfig({
+    // @ts-expect-error - This is a valid option, but the type definition is missing it.
+    autoLoadEntities: true,
+    clientUrl,
+    driver: PostgreSqlDriver,
+    forceEntityConstructor: true,
+  });

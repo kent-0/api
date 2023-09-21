@@ -75,7 +75,6 @@ import './utils/graphql/registers/enum.register';
           path: './dist/database/seeds',
           pathTs: './srsc/database/seeds',
         },
-        type: 'postgresql',
         user: _configService.getOrThrow<string>('MIKRO_ORM_USER'),
       }),
     }),

@@ -503,10 +503,10 @@ export class AuthAccountService {
     }
 
     // Update the user's account details with the provided input.
-    user.username = username;
-    user.first_name = first_name;
-    user.last_name = last_name;
-    user.biography = biography;
+    user.username = username ?? user.username;
+    user.first_name = first_name ?? user.first_name;
+    user.last_name = last_name ?? user.last_name;
+    user.biography = biography ?? user.biography;
 
     // Persist the updated user information to the database.
     await this.em.persistAndFlush(user);
