@@ -4,7 +4,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import {
   AuthEmailsEntity,
@@ -35,6 +35,7 @@ describe('Account', () => {
   let accountService: AuthAccountService;
   let em: EntityManager;
   let orm: MikroORM;
+  let module: TestingModule;
 
   /**
    * Setup for each tests.
@@ -42,7 +43,7 @@ describe('Account', () => {
    * Refreshes the database to ensure each tests starts with a clean state.
    */
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
         MikroOrmModule.forRootAsync({
@@ -89,6 +90,7 @@ describe('Account', () => {
    * Ensures that the database connection is closed.
    */
   afterAll(async () => {
+    await module.close();
     await orm.close(true);
   });
 
