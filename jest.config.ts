@@ -2,8 +2,8 @@ import type { Config } from 'jest';
 
 export default async (): Promise<Config> => {
   return {
-    collectCoverageFrom: ['**/*.(t|j)s'],
-    moduleFileExtensions: ['js', 'json', 'ts'],
+    collectCoverageFrom: ['./src/**/*.ts'],
+    moduleFileExtensions: ['json', 'ts', 'js'],
     moduleNameMapper: {
       '^~/(.*)$': '<rootDir>/src/$1',
       '^~/auth/decorator$': '<rootDir>/src/auth/decorators/user.decorator',
@@ -12,6 +12,12 @@ export default async (): Promise<Config> => {
       '^~/permissions$': '<rootDir>/src/permissions/services/manager.service',
       '^~/permissions/list$': '<rootDir>/src/permissions/enums/index',
     },
+    modulePathIgnorePatterns: [
+      '<rootDir>/dist/',
+      '<rootdir>/node_modules/',
+      '<rootDir>/src/database/migrations',
+      '<rootDir>/src/test',
+    ],
     rootDir: '.',
     testEnvironment: 'node',
     testRegex: '.*\\.spec\\.ts$',
