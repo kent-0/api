@@ -1,5 +1,5 @@
-import { EntityManager, MikroORM } from '@mikro-orm/core';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { SqliteDriver } from '@mikro-orm/sqlite';
 
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -10,65 +10,35 @@ import {
   AuthTokensEntity,
   AuthUserEntity,
 } from '~/database/entities';
+import { AuthAccountService } from '~/modules/auth/services/account.service';
+import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
-import { AuthAccountService } from '../services/account.service';
-import { AuthPasswordService } from '../services/password.service';
+describe('Account', () => {
+  let accountService: AuthAccountService;
 
-const mockRepository = {
-  findOne: jest.fn(),
-  // ... otros métodos según sea necesario
-};
-
-const mockJwtService = {
-  // ... métodos y propiedades mockeadas
-};
-
-const mockPasswordService = {
-  // ... métodos y propiedades mockeadas
-};
-
-describe('Auth', () => {
-  let service: AuthAccountService;
-  let orm: MikroORM;
-
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [
-        AuthAccountService,
-        {
-          provide: getRepositoryToken(AuthUserEntity),
-          useValue: mockRepository,
-        },
-        {
-          provide: getRepositoryToken(AuthPasswordEntity),
-          useValue: mockRepository,
-        },
-        {
-          provide: getRepositoryToken(AuthTokensEntity),
-          useValue: mockRepository,
-        },
-        {
-          provide: getRepositoryToken(AuthEmailsEntity),
-          useValue: mockRepository,
-        },
-        {
-          provide: EntityManager,
-          useValue: MikroORM.init({}).then((orm) => orm.em),
-        },
-        {
-          provide: JwtService,
-          useValue: mockJwtService,
-        },
-        {
-          provide: AuthPasswordService,
-          useValue: mockPasswordService,
-        },
+      imports: [
+        MikroOrmModule.forRoot({
+          dbName: ':memory:',
+          driver: SqliteDriver,
+        }),
+        MikroOrmModule.forFeature({
+          entities: [
+            AuthTokensEntity,
+            AuthUserEntity,
+            AuthPasswordEntity,
+            AuthEmailsEntity,
+          ],
+        }),
       ],
+      providers: [AuthAccountService, AuthPasswordService, JwtService],
     }).compile();
 
-    service = module.get<AuthAccountService>(AuthAccountService);
-    orm = await MikroORM.init({});
-    service;
-    orm;
+    accountService = module.get<AuthAccountService>(AuthAccountService);
+  });
+
+  it('should be defined', () => {
+    expect(accountService).toBeDefined();
   });
 });
