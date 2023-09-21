@@ -28,6 +28,7 @@ export const AuthUserMinimalProperties = tuple(
   'first_name',
   'last_name',
   'username',
+  'biography',
 );
 
 /**

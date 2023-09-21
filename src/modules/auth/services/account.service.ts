@@ -19,6 +19,14 @@ import {
 import { DeviceTypes } from '~/database/enums/devices.enum';
 import { TokenType } from '~/database/enums/token.enum';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
+import { BoardMinimalProperties } from '~/modules/board/objects';
+import {
+  ProjectGoalMinimalProperties,
+  ProjectMembersMinimalProperties,
+  ProjectNotesMinimalProperties,
+  ProjectRolesMinimalProperties,
+} from '~/modules/project/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
 import * as bcrypt from 'bcrypt';
@@ -26,7 +34,11 @@ import * as bcrypt from 'bcrypt';
 import { AuthSignInInput, AuthSignUpInput } from '../inputs';
 import { AuthUpdateAccountInput } from '../inputs/account/update.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
-import { AuthSignInObject, AuthUserObject } from '../objects';
+import {
+  AuthSignInObject,
+  AuthUserMinimalProperties,
+  AuthUserObject,
+} from '../objects';
 
 /**
  * `AuthAccountService` is a service class that provides functionality to manage
@@ -124,6 +136,7 @@ export class AuthAccountService {
    * @throws NotFoundException if the user with the provided ID is not found.
    */
   public async me(userId: string): Promise<ToCollections<AuthUserObject>> {
+    console.log(this.usersRespository.findOne({}));
     // Fetch the user's information using the provided userId and populate the user's email.
     const user = await this.usersRespository.findOne(
       {
@@ -131,26 +144,34 @@ export class AuthAccountService {
       },
       {
         fields: [
-          'biography',
-          'createdAt',
-          'first_name',
-          'last_name',
-          'username',
-          'id',
-          'projects.project.description',
-          'projects.project.end_date',
-          'projects.project.id',
-          'projects.project.name',
-          'projects.project.owner.id',
-          'projects.project.owner.username',
-          'projects.project.owner.first_name',
-          'projects.project.owner.last_name',
-          'projects.project.start_date',
-          'projects.roles.id',
-          'projects.roles.name',
-          'projects.roles.permissions',
+          ...AuthUserMinimalProperties,
+          ...createFieldPaths(
+            'projects.project.owner',
+            ...AuthUserMinimalProperties,
+          ),
+          ...createFieldPaths(
+            'projects.project.members',
+            ...ProjectMembersMinimalProperties,
+          ),
+          ...createFieldPaths(
+            'projects.roles',
+            ...ProjectRolesMinimalProperties,
+          ),
+          ...createFieldPaths(
+            'projects.project.notes',
+            ...ProjectNotesMinimalProperties,
+          ),
+          ...createFieldPaths(
+            'projects.project.goals',
+            ...ProjectGoalMinimalProperties,
+          ),
+          ...createFieldPaths(
+            'projects.project.boards',
+            ...BoardMinimalProperties,
+          ),
           'email.value',
           'email.is_confirmed',
+          'createdAt',
         ],
       },
     );
