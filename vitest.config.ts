@@ -1,3 +1,5 @@
+import * as process from 'process';
+
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 
@@ -6,7 +8,7 @@ export default defineConfig({
     // This is required to build the test files with SWC
     swc.vite({
       jsc: {
-        baseUrl: './',
+        baseUrl: process.cwd(),
         parser: {
           dynamicImport: true,
           syntax: 'typescript',
