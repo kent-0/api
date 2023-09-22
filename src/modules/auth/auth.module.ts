@@ -24,7 +24,10 @@ import { JWTStrategy } from './strategy/jwt.strategy';
  * It integrates various services, strategies, and entities to handle authentication functionalities.
  */
 @Module({
+  exports: [JwtModule, PassportModule],
   imports: [
+    ConfigModule.forRoot(),
+
     // MikroORM module to enable interaction with specified entities.
     MikroOrmModule.forFeature({
       entities: [
@@ -54,7 +57,6 @@ import { JWTStrategy } from './strategy/jwt.strategy';
       }),
     }),
   ],
-
   // Define the providers for this module, which includes services and strategies.
   providers: [
     AuthAccountService,
