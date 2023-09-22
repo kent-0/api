@@ -47,5 +47,5 @@ export class AuthSignInObject {
       'Optional token to obtain a new access token once the current one expires, avoiding the need for user re-authentication.',
     nullable: true,
   })
-  public refresh_token?: string;
+  public refresh_token!: string;
 }

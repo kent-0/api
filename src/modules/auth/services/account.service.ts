@@ -136,7 +136,6 @@ export class AuthAccountService {
    * @throws NotFoundException if the user with the provided ID is not found.
    */
   public async me(userId: string): Promise<ToCollections<AuthUserObject>> {
-    console.log(this.usersRespository.findOne({}));
     // Fetch the user's information using the provided userId and populate the user's email.
     const user = await this.usersRespository.findOne(
       {
