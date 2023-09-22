@@ -48,6 +48,7 @@ export default defineConfig({
     },
     coverage: {
       all: true,
+      exclude: ['**/migrations/**'],
     },
     globals: true,
     root: './',
