@@ -15,7 +15,7 @@ jobs:
       - pretty
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [18, 20]
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -47,7 +47,7 @@ jobs:
       - pretty
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [18, 20]
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [18, 20]
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -124,7 +124,7 @@ jobs:
       PGPASSWORD: password
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [18, 20]
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: Wait for PostgreSQL to become ready
