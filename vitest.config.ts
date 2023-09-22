@@ -52,5 +52,6 @@ export default defineConfig({
     },
     globals: true,
     root: './',
+    singleThread: true,
   },
 });
