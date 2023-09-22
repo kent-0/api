@@ -92,8 +92,8 @@ describe('Account', () => {
    * Ensures that the database connection is closed.
    */
   afterAll(async () => {
-    await module.close();
     await orm.close(true);
+    await module.close();
   });
 
   /**

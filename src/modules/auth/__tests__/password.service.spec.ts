@@ -94,8 +94,8 @@ describe('Password', () => {
    * This includes closing the ORM connection and the testing module.
    */
   afterEach(async () => {
-    await orm.close();
     await module.close();
+    await orm.close();
   });
 
   /**
