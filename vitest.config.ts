@@ -7,6 +7,10 @@ export default defineConfig({
     swc.vite({
       jsc: {
         baseUrl: './',
+        parser: {
+          dynamicImport: true,
+          syntax: 'typescript',
+        },
         paths: {
           '~/*': ['./src/*'],
           '~/auth/decorator': ['./src/auth/decorators/user.decorator.js'],
