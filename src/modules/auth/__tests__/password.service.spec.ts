@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
@@ -15,7 +15,7 @@ import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
-import { expect } from 'vitest';
+import { beforeEach, expect } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
@@ -76,15 +76,17 @@ describe('Password', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    const userTest = await accountService.signUp({
-      email: 'sawa@acme.com',
-      first_name: 'Sawa',
-      last_name: 'Ko',
-      password: 'sawako',
-      username: 'sawako',
-    });
+    await RequestContext.createAsync(em, async () => {
+      const userTest = await accountService.signUp({
+        email: 'sawa@acme.com',
+        first_name: 'Sawa',
+        last_name: 'Ko',
+        password: 'sawako',
+        username: 'sawako',
+      });
 
-    user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
+      user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
+    });
   });
 
   /**
@@ -107,12 +109,14 @@ describe('Password', () => {
    * Validates that the password change operation works as expected.
    */
   it('should change password correcly', async () => {
-    const isChangedPassword = await passwordService.change(
-      { currentPassword: 'sawako', newPassword: 'sawa' },
-      user.id,
-    );
+    await RequestContext.createAsync(em, async () => {
+      const isChangedPassword = await passwordService.change(
+        { currentPassword: 'sawako', newPassword: 'sawa' },
+        user.id,
+      );
 
-    expect(isChangedPassword).toBe('Password updated correctly.');
+      expect(isChangedPassword).toBe('Password updated correctly.');
+    });
   });
 
   /**
@@ -120,15 +124,17 @@ describe('Password', () => {
    * It should appropriately handle and throw an error.
    */
   it('should has invalid user', async () => {
-    expect(
-      async () =>
-        await passwordService.change(
-          { currentPassword: 'sawako', newPassword: 'sawa' },
-          '8054de11-b6dc-481e-a8c2-90cef8169914',
-        ),
-    ).rejects.toThrowError(
-      'Something happened and your user information could not be obtained.',
-    );
+    await RequestContext.createAsync(em, async () => {
+      expect(
+        async () =>
+          await passwordService.change(
+            { currentPassword: 'sawako', newPassword: 'sawa' },
+            '8054de11-b6dc-481e-a8c2-90cef8169914',
+          ),
+      ).rejects.toThrowError(
+        'Something happened and your user information could not be obtained.',
+      );
+    });
   });
 
   /**
@@ -136,12 +142,14 @@ describe('Password', () => {
    * This should result in an error being thrown.
    */
   it('should has invalid current password', async () => {
-    expect(
-      async () =>
-        await passwordService.change(
-          { currentPassword: 'sawa', newPassword: 'sawa' },
-          user.id,
-        ),
-    ).rejects.toThrowError('The current password is incorrect.');
+    await RequestContext.createAsync(em, async () => {
+      expect(
+        async () =>
+          await passwordService.change(
+            { currentPassword: 'sawa', newPassword: 'sawa' },
+            user.id,
+          ),
+      ).rejects.toThrowError('The current password is incorrect.');
+    });
   });
 });

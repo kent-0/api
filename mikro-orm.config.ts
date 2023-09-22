@@ -53,7 +53,6 @@ export default defineConfig({
  */
 export const TestingMikroORMConfig = (clientUrl: string) =>
   defineConfig({
-    allowGlobalContext: true,
     // @ts-expect-error - This is a valid option, but the type definition is missing it.
     autoLoadEntities: true,
     clientUrl,

@@ -46,6 +46,9 @@ export default defineConfig({
       '~/permissions': './src/permissions/services/manager.service',
       '~/permissions/list': './src/permissions/enums/index',
     },
+    coverage: {
+      all: true,
+    },
     globals: true,
     root: './',
   },
