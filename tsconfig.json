@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es2021",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -24,6 +24,7 @@
       "~/auth/decorator": ["./src/auth/decorators/user.decorator"],
       "~/permissions": ["./src/permissions/services/manager.service"],
       "~/permissions/list": ["./src/permissions/enums/index"]
-    }
+    },
+    "types": ["vitest/globals"]
   }
 }
