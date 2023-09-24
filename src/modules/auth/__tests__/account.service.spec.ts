@@ -407,7 +407,7 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   /**
    * Validates that the system correctly identifies and responds to an invalid session token.
    */
-  it('should show error because the session token is invalid.', async () => {
+  it('should has error because the session token is invalid.', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
         accountService.logOut('invalid-token', user.id),
@@ -418,7 +418,7 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   /**
    * Validates the system's response when attempting to fetch details of a non-existent user.
    */
-  it('should show error because the user in the token does not exist.', async () => {
+  it('should has error because the user in the token does not exist.', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
         accountService.me('8054de11-b6dc-481e-a8c2-90cef8169914'),
@@ -429,7 +429,7 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   /**
    * Checks the system's response when provided with a non-existent refresh token.
    */
-  it('should show error because the refresh token does not exist.', async () => {
+  it('should has error because the refresh token does not exist.', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
         accountService.refreshSession('invalid-token', user.id),
@@ -440,7 +440,7 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   /**
    * Validates the system's handling of an expired refresh token.
    */
-  it('should show error because the refresh token is not valid.', async () => {
+  it('should has error because the refresh token is not valid.', async () => {
     await RequestContext.createAsync(em, async () => {
       const refreshTokenData = await em.findOneOrFail(AuthTokensEntity, {
         token_type: TokenType.REFRESH,
