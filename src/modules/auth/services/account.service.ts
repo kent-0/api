@@ -226,9 +226,9 @@ export class AuthAccountService {
     }
 
     // Verify the validity of the fetched refresh token.
-    const refreshTokenValid = await this._jwtService.verifyAsync(
-      refreshToken.token_value,
-    );
+    const refreshTokenValid = await this._jwtService
+      .verifyAsync(refreshToken.token_value)
+      .catch(() => false);
 
     // If the refresh token is invalid or expired, revoke it and throw an UnauthorizedException.
     if (!refreshTokenValid) {

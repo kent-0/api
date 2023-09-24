@@ -29,7 +29,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * 2. Setting up a mock database environment for isolated testing.
  * 3. Creating a sample user to be used throughout the test cases.
  */
-describe('Password', () => {
+describe('Passsword - Successful use cases', () => {
   let passwordService: AuthPasswordService;
   let accountService: AuthAccountService;
   let em: EntityManager;

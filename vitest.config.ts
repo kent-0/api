@@ -48,7 +48,13 @@ export default defineConfig({
     },
     coverage: {
       all: true,
-      exclude: ['**/migrations/**'],
+      exclude: [
+        '**/migrations/**',
+        '.eslintrc.js',
+        'mikro-orm-config.ts',
+        'main.ts',
+        'app.module.ts',
+      ],
     },
     globals: true,
     root: './',
