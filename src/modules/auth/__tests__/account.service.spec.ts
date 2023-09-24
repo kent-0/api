@@ -405,6 +405,13 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   });
 
   /**
+   * Cleanup after tests are finished.
+   */
+  afterEach(async () => {
+    await module.close();
+  });
+
+  /**
    * Validates that the system correctly identifies and responds to an invalid session token.
    */
   it('should has error because the session token is invalid.', async () => {
