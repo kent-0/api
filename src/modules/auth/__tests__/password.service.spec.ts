@@ -15,6 +15,8 @@ import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
+import { expect } from 'vitest';
+
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
@@ -95,10 +97,11 @@ describe('Passsword - Successful use cases', () => {
   });
 
   /**
-   * Checks if the password service has been initialized correctly.
+   * Basic tests to ensure the `AuthAccountService` and `user` is defined and can be initialized.
    */
-  it('should be defined', () => {
-    expect(passwordService).toBeDefined();
+  it('should be defined accountService, and User testing', () => {
+    expect(accountService).toBeDefined();
+    expect(user).toBeDefined();
   });
 
   /**
@@ -196,6 +199,14 @@ describe('Password - Cases of unsatisfactory uses.', async () => {
    */
   afterEach(async () => {
     await module.close();
+  });
+
+  /**
+   * Basic tests to ensure the `AuthAccountService`, `JWTService`, and `user` is defined and can be initialized.
+   */
+  it('should be defined accountService, and User testing', () => {
+    expect(accountService).toBeDefined();
+    expect(user).toBeDefined();
   });
 
   /**

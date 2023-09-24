@@ -16,6 +16,8 @@ import { TokenType } from '~/database/enums/token.enum';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
+import { expect } from 'vitest';
+
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
@@ -96,7 +98,7 @@ describe('Account - Successful use cases', () => {
   /**
    * Basic tests to ensure the `AuthAccountService` is defined and can be initialized.
    */
-  it('should be defined', () => {
+  it('should be defined accountService', () => {
     expect(accountService).toBeDefined();
   });
 
@@ -412,6 +414,15 @@ describe('Account - Cases of unsatisfactory uses.', () => {
   });
 
   /**
+   * Basic tests to ensure the `AuthAccountService`, `user` and `JWTService` is defined and can be initialized.
+   */
+  it('should be defined accountService, JWTService, and User testing', () => {
+    expect(accountService).toBeDefined();
+    expect(jwtService).toBeDefined();
+    expect(user).toBeDefined();
+  });
+
+  /**
    * Validates that the system correctly identifies and responds to an invalid session token.
    */
   it('should has error because the session token is invalid.', async () => {
@@ -468,6 +479,91 @@ describe('Account - Cases of unsatisfactory uses.', () => {
           'The refresh token has expired, please log in again.',
         );
       });
+    });
+  });
+
+  /**
+   * Validates the system's handling of an revoked refresh token.
+   */
+  it('should has error because the refresh token is expired.', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const refreshTokenData = await em.findOneOrFail(AuthTokensEntity, {
+        token_type: TokenType.REFRESH,
+        token_value: refreshToken,
+      });
+
+      refreshTokenData.revoked = true;
+
+      await em.persistAndFlush(refreshTokenData);
+
+      await RequestContext.createAsync(em, async () => {
+        await expect(
+          accountService.refreshSession(refreshTokenData.token_value, user.id),
+        ).rejects.toThrow('The refresh token has been revoked.');
+      });
+    });
+  });
+
+  it('should has error because has invalid account crendentials (username).', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(
+        accountService.signIn({ password: 'sawako', username: 'sawak0' }),
+      ).rejects.toThrow('No account found with that username.');
+    });
+  });
+
+  it('should has error because has invalid account crendentials (password).', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(
+        accountService.signIn({ password: 'sawak0', username: 'sawako' }),
+      ).rejects.toThrow('An incorrect password has been entered.');
+    });
+  });
+
+  it('should have error because there is already a user with that username.', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(
+        accountService.signUp({
+          email: 'sawa@acme.com',
+          first_name: 'Sawa',
+          last_name: 'Ko',
+          password: 'sawako',
+          username: 'sawako',
+        }),
+      ).rejects.toThrow(
+        'An account already exists with that email or username.',
+      );
+    });
+  });
+
+  it('should have error because it could not obtain user information to be updated', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(
+        accountService.update(
+          { username: 'sawak0' },
+          '8054de11-b6dc-481e-a8c2-90cef8169914',
+        ),
+      ).rejects.toThrow('Your account information could not be obtained.');
+    });
+  });
+
+  it('should have error because user wants to update his username to an existing one', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const newUser = await accountService.signUp({
+        email: 'kana@acme.com',
+        first_name: 'Sawa',
+        last_name: 'Ko',
+        password: 'sawako',
+        username: 'sawak0',
+      });
+
+      expect(newUser).toBeDefined();
+
+      await expect(
+        accountService.update({ username: 'sawak0' }, user.id),
+      ).rejects.toThrow(
+        "You can't select that username because another user already has it.",
+      );
     });
   });
 });

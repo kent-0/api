@@ -399,18 +399,6 @@ export class AuthAccountService {
       );
     }
 
-    // Check if the provided email is already registered in the database.
-    const isEmailRegistered = await this.authEmailsRepository.findOne({
-      value: email,
-    });
-
-    // If the email is registered, throw a BadRequestException.
-    if (isEmailRegistered) {
-      throw new BadRequestException(
-        'There is already a registered user with that email.',
-      );
-    }
-
     // Construct a new user entity using the provided registration details.
     const user = this.usersRespository.create({
       first_name,
