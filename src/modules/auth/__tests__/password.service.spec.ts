@@ -88,7 +88,7 @@ describe('Password', () => {
   });
 
   /**
-   * Cleanup after all tests are finished.
+   * Cleanup after tests are finished.
    */
   afterEach(async () => {
     await module.close();

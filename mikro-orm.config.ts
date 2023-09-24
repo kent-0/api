@@ -7,8 +7,12 @@ export default defineConfig({
   // Specify the driver to use for database connection (PostgreSQL in this case)
   driver: PostgreSqlDriver,
 
+  // Extra config
+  ensureDatabase: true,
+
   // Specify the paths to the compiled JavaScript and TypeScript entity files
   entities: ['./dist/database/entities'],
+
   entitiesTs: ['./src/database/entities'],
 
   // Enable entity constructors during hydration (loading data from the database)
@@ -19,7 +23,6 @@ export default defineConfig({
     path: './dist/database/migrations',
     pathTs: './src/database/migrations',
   },
-
   // Configure seeders for populating the database with initial data
   seeder: {
     defaultSeeder: 'InitialSeeder', // Specify the default seeder class
@@ -57,5 +60,6 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     autoLoadEntities: true,
     clientUrl,
     driver: PostgreSqlDriver,
+    ensureDatabase: true,
     forceEntityConstructor: true,
   });
