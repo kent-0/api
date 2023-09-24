@@ -15,8 +15,6 @@ import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
-import { beforeEach, expect } from 'vitest';
-
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
