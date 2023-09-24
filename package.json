@@ -119,10 +119,6 @@
     }
   },
   "mikro-orm": {
-    "useTsNode": true,
-    "configPaths": [
-      "./src/database/settings.ts",
-      "./dist/database/settings.js"
-    ]
+    "useTsNode": true
   }
 }
