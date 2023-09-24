@@ -15,6 +15,8 @@ import {
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 
+import { afterEach } from 'vitest';
+
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
@@ -87,10 +89,8 @@ describe('Account', () => {
 
   /**
    * Cleanup after all tests are finished.
-   * Ensures that the database connection is closed.
    */
-  afterAll(async () => {
-    await orm.close(true);
+  afterEach(async () => {
     await module.close();
   });
 

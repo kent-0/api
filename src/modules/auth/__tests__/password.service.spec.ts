@@ -88,12 +88,10 @@ describe('Password', () => {
   });
 
   /**
-   * Cleans up resources after all tests have been executed.
-   * This includes closing the ORM connection and the testing module.
+   * Cleanup after all tests are finished.
    */
   afterEach(async () => {
     await module.close();
-    await orm.close();
   });
 
   /**
