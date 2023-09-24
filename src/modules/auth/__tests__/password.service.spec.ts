@@ -145,7 +145,7 @@ describe('Password - Cases of unsatisfactory uses.', async () => {
    * Ensures the required setup before each test:
    * 1. Compiles the testing module with the necessary providers and services.
    * 2. Refreshes the database to ensure a clean state.
-   * 3. Creates a default test user.
+   * 3. Creates a default test user and session.
    */
   beforeEach(async () => {
     module = await Test.createTestingModule({
@@ -189,6 +189,13 @@ describe('Password - Cases of unsatisfactory uses.', async () => {
 
       user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
     });
+  });
+
+  /**
+   * Cleanup after tests are finished.
+   */
+  afterEach(async () => {
+    await module.close();
   });
 
   /**
