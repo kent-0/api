@@ -320,7 +320,7 @@ describe('Account - Successful use cases', () => {
  * 2. Refreshing the database to start from a clean state.
  * 3. Creating a sample user and capturing its session details.
  */
-describe('Account - Cases of unsatisfactory uses.', () => {
+describe('Account - Cases of unsatisfactory uses', () => {
   let accountService: AuthAccountService;
   let em: EntityManager;
   let orm: MikroORM;

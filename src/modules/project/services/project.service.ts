@@ -87,19 +87,22 @@ export class ProjectService {
     await this.em.persistAndFlush(ownerMember);
 
     // Load relations
-    await newProject.populate([], {
-      fields: [
-        'id',
-        'name',
-        'description',
-        ...createFieldPaths('owner', ...AuthUserMinimalProperties),
-        ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
-        ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
-        ...createFieldPaths('notes', ...ProjectNotesMinimalProperties),
-        ...createFieldPaths('goals', ...ProjectGoalMinimalProperties),
-        ...createFieldPaths('boards', ...BoardMinimalProperties),
-      ],
-    });
+    await newProject.populate(
+      ['owner', 'members', 'roles', 'notes', 'goals', 'boards'],
+      {
+        fields: [
+          'id',
+          'name',
+          'description',
+          ...createFieldPaths('owner', ...AuthUserMinimalProperties),
+          ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
+          ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
+          ...createFieldPaths('notes', ...ProjectNotesMinimalProperties),
+          ...createFieldPaths('goals', ...ProjectGoalMinimalProperties),
+          ...createFieldPaths('boards', ...BoardMinimalProperties),
+        ],
+      },
+    );
 
     // Return the newly created project object.
     return newProject;
