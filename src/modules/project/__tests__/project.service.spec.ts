@@ -21,8 +21,6 @@ import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
 import { ProjectService } from '~/modules/project/services/project.service';
 
-import { expect } from 'vitest';
-
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
