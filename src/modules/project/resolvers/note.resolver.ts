@@ -38,6 +38,8 @@ export class ProjectNoteResolver {
    * Creates a new project note.
    *
    * @param input - Data containing details about the new project note.
+   * @param token - User token payload.
+   *
    * @returns Details of the newly created project note.
    */
   @Mutation(() => ProjectNoteObject, {
@@ -55,6 +57,8 @@ export class ProjectNoteResolver {
    * Deletes a specified project note based on the given input data.
    *
    * @param input - Data containing details of the project note to delete.
+   * @param token - User token payload.
+   *
    * @returns A message confirming successful deletion or details of the deleted note.
    */
   @Mutation(() => String, {
@@ -72,6 +76,8 @@ export class ProjectNoteResolver {
    * Updates and returns the details of a specified project note.
    *
    * @param input - Data containing updated project note details.
+   * @param token - User token payload.
+   *
    * @returns Updated details of the project note.
    */
   @Mutation(() => ProjectNoteObject, {

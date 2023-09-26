@@ -49,6 +49,7 @@ export class ProjectNoteService {
    * @param content - Detailed explanation of the note to be achieved in the project.
    * @param title - Special title given to the project note to differentiate it.
    * @param projectId - The unique identifier of the project to which the new note will belong.
+   * @param userId - The user token id
    *
    * @returns The newly created project note.
    */
@@ -78,6 +79,7 @@ export class ProjectNoteService {
    *
    * @param noteId - The unique identifier of the note to be deleted.
    * @param projectId - The unique identifier of the project associated with the note.
+   * @param userId - The user token id
    *
    * @returns A success message confirming the note has been deleted.
    *
@@ -123,6 +125,7 @@ export class ProjectNoteService {
    * @param title - New title for the note.
    * @param projectId - The unique identifier of the project associated with the note.
    * @param status - New status to set for the note.
+   * @param userId - The user token id
    *
    * @returns The updated project note.
    *

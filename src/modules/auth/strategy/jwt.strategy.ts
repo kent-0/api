@@ -39,7 +39,6 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
   /**
    * Initializes the JWT strategy with necessary services and configuration.
    *
-   * @param {EntityRepository<AuthTokensEntity>} tokensRepository - ORM repository for handling authentication tokens.
    * @param {JwtService} _jwtService - Service for JWT-related operations.
    * @param {EntityManager} em - Entity Manager for database operations.
    * @param {ConfigService} _configService - Service to access configuration values.

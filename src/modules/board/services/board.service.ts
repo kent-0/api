@@ -110,6 +110,7 @@ export class BoardService {
    * 3. If found, return the board details.
    *
    * @param boardId - The unique identifier (typically a UUID) of the board to be retrieved.
+   * @param projectId - The unique identifier (typically a UUID) of the project to be retrieved.
    *
    * @returns Promise<ToCollections<BoardObject>> - Returns the board's details wrapped in a promise.
    * This includes board properties, creator's details, and associated project's details.

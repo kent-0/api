@@ -76,7 +76,8 @@ export class BoardRoleResolver {
    * Steps:
    * 1. Calls the role service's delete method with provided roleId to remove the role.
    *
-   * @param roleId - The ID of the role to delete.
+   * @param input - The role information.
+   *
    * @returns A message confirming the deletion.
    */
   @Mutation(() => String, {

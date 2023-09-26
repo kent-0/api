@@ -2,14 +2,14 @@ import { QueryOrder } from '@mikro-orm/core';
 
 import { registerEnumType } from '@nestjs/graphql';
 
-import { ActivityHistory } from '../../../database/entities/project/activity-history';
-import { CommentsTypes } from '../../../database/enums/comments.enum';
-import { DeviceTypes } from '../../../database/enums/devices.enum';
+import { ActivityHistory } from '~/database/entities';
+import { CommentsTypes } from '~/database/enums/comments.enum';
+import { DeviceTypes } from '~/database/enums/devices.enum';
 import {
   ProjectGoalsStatus,
   ProjectStatus,
-} from '../../../database/enums/status.enum';
-import { TokenType } from '../../../database/enums/token.enum';
+} from '~/database/enums/status.enum';
+import { TokenType } from '~/database/enums/token.enum';
 
 registerEnumType(ActivityHistory, {
   description: 'Tipo de actividad de auditoria de un projecto o tablero.',
