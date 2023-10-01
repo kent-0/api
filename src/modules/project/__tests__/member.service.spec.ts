@@ -34,8 +34,8 @@ describe('Member successfuly cases', () => {
   let em: EntityManager;
   let orm: MikroORM;
   let project: ProjectEntity;
-  let user: AuthUserEntity;
-  let user2: AuthUserEntity;
+  let userProjectOwner: AuthUserEntity;
+  let userMember: AuthUserEntity;
 
   /**
    * Before All Setup:
@@ -91,7 +91,9 @@ describe('Member successfuly cases', () => {
         username: 'sawako',
       });
 
-      user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
+      userProjectOwner = await em.findOneOrFail(AuthUserEntity, {
+        id: userTest.id,
+      });
 
       const userTest2 = await accountService.signUp({
         email: 'sawa2@acme.com',
@@ -101,7 +103,7 @@ describe('Member successfuly cases', () => {
         username: 'sawako2',
       });
 
-      user2 = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
+      userMember = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
     });
 
     await RequestContext.createAsync(em, async () => {
@@ -110,7 +112,7 @@ describe('Member successfuly cases', () => {
           description: 'Kento testing project',
           name: 'Kento',
         },
-        user.id,
+        userProjectOwner.id,
       );
 
       project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
@@ -138,35 +140,35 @@ describe('Member successfuly cases', () => {
 
   /**
    * Test Case: Adding a Member:
-   * Validates that a user can be successfully added as a member to a project.
+   * Validates that a userProjectOwner can be successfully added as a member to a project.
    * The system should acknowledge the addition and reflect it in the returned results.
    */
   it('should add a member to a project', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       const member = await service.add({
         projectId: project.id,
-        userId: user2.id,
+        userId: userMember.id,
       });
 
-      expect(member.user.id).toBe(user2.id);
+      expect(member.user.id).toBe(userMember.id);
       expect(member.project.id).toEqual(project.id);
     });
   });
 
   /**
    * Test Case: Removing a Member:
-   * Checks that a user, who is a member of a project, can be removed successfully.
+   * Checks that a userProjectOwner, who is a member of a project, can be removed successfully.
    * The system should acknowledge the removal and provide a confirmation message.
    */
   it('should remove a member to a project', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       const result = await service.remove({
         projectId: project.id,
-        userId: user2.id,
+        userId: userMember.id,
       });
 
       expect(result).toBe(
-        'The user was successfully removed from the project members.',
+        'The userProjectOwner was successfully removed from the project members.',
       );
     });
   });
