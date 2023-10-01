@@ -18,8 +18,6 @@ import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { ProjectMemberService } from '~/modules/project/services/member.service';
 import { ProjectService } from '~/modules/project/services/project.service';
 
-import { expect } from 'vitest';
-
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
