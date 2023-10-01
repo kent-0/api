@@ -73,7 +73,7 @@ import './utils/graphql/registers/enum.register';
         port: _configService.getOrThrow<number>('MIKRO_ORM_PORT'),
         seeder: {
           path: './dist/database/seeds',
-          pathTs: './srsc/database/seeds',
+          pathTs: './src/database/seeds',
         },
         user: _configService.getOrThrow<string>('MIKRO_ORM_USER'),
       }),
