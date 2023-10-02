@@ -3,7 +3,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/project.enum';
+import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import { ProjectMemberAddRemoveInput } from '../inputs';
@@ -42,7 +42,7 @@ export class ProjectMemberResolver {
     description: 'Add a user as a member of a project.',
     name: 'projectMemberAdd',
   })
-  @ProjectPermissions([Permissions.MemberAdd])
+  @ProjectPermissions([ProjectPermissionsEnum.MemberAdd])
   public add(@Args('input') input: ProjectMemberAddRemoveInput) {
     return this._memberServie.add(input);
   }
@@ -59,7 +59,7 @@ export class ProjectMemberResolver {
     description: 'Remove a user from a project.',
     name: 'projectMemberRemove',
   })
-  @ProjectPermissions([Permissions.MemberRemove])
+  @ProjectPermissions([ProjectPermissionsEnum.MemberRemove])
   public remove(@Args('input') input: ProjectMemberAddRemoveInput) {
     return this._memberServie.remove(input);
   }

@@ -5,7 +5,7 @@
  * Each permission is represented by a unique bit in the number.
  * For example, `CreateRole` is represented by the second bit being set.
  */
-export enum Permissions {
+export enum BoardPermissionsEnum {
   BoardUpdate = 2 << 1,
   RoleCreate = 2 << 2,
   RoleDelete = 2 << 3,
@@ -26,8 +26,8 @@ export enum Permissions {
  *
  * @returns A number representing the combined value of all permissions.
  */
-export const ALL_PERMISSIONS = Object.keys(Permissions).reduce(
-  (acc, val) => acc | Permissions[val],
+export const ALL_PERMISSIONS = Object.keys(BoardPermissionsEnum).reduce(
+  (acc, val) => acc | BoardPermissionsEnum[val],
   0,
 );
 

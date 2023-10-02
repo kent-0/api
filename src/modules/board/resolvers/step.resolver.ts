@@ -3,7 +3,7 @@ import { Mutation, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/board.enum';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 
 import { BoardPermissionsGuard } from '../guards/permissions.guard';
 import {
@@ -43,7 +43,7 @@ export class BoardStepResolver {
     description: 'Create a new task step on the board.',
     name: 'boardStepCreate',
   })
-  @BoardPermissions([Permissions.StepCreate])
+  @BoardPermissions([BoardPermissionsEnum.StepCreate])
   public create(input: BoardStepCreateInput) {
     return this._stepService.create(input);
   }
@@ -57,7 +57,7 @@ export class BoardStepResolver {
     description: 'Mark a task step as the final step in the step flow.',
     name: 'boardStepMarkAsFinished',
   })
-  @BoardPermissions([Permissions.StepUpdate])
+  @BoardPermissions([BoardPermissionsEnum.StepUpdate])
   public markAsFinished(input: BoardStepFinishedInput) {
     return this._stepService.markAsFinished(input);
   }
@@ -71,7 +71,7 @@ export class BoardStepResolver {
     description: 'Move a task step on the board.',
     name: 'boardStepMove',
   })
-  @BoardPermissions([Permissions.StepUpdate])
+  @BoardPermissions([BoardPermissionsEnum.StepUpdate])
   public move(input: BoardStepMoveInput) {
     return this._stepService.move(input);
   }
@@ -85,7 +85,7 @@ export class BoardStepResolver {
     description: 'Remove a task step from the board.',
     name: 'boardStepRemove',
   })
-  @BoardPermissions([Permissions.StepRemove])
+  @BoardPermissions([BoardPermissionsEnum.StepRemove])
   public remove(input: BoardStepRemoveInput) {
     return this._stepService.remove(input);
   }
@@ -99,7 +99,7 @@ export class BoardStepResolver {
     description: 'Update a task step from the board.',
     name: 'boardStepUpdate',
   })
-  @BoardPermissions([Permissions.StepUpdate])
+  @BoardPermissions([BoardPermissionsEnum.StepUpdate])
   public update(input: BoardStepUpdateInput) {
     return this._stepService.update(input);
   }

@@ -5,7 +5,7 @@ import { UserToken } from '~/modules/auth/decorators/user.decorator';
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
 import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/project.enum';
+import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
@@ -96,7 +96,7 @@ export class ProjectResolver {
     description: 'Update the details of a project.',
     name: 'projectUpdate',
   })
-  @ProjectPermissions([Permissions.ProjectUpdate])
+  @ProjectPermissions([ProjectPermissionsEnum.ProjectUpdate])
   public update(@Args('input') input: ProjectUpdateInput) {
     return this._projectService.update(input);
   }

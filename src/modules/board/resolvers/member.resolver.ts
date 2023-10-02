@@ -3,7 +3,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/board.enum';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 
 import { BoardPermissionsGuard } from '../guards/permissions.guard';
 import { AddRemoveBoardMemberInput } from '../inputs';
@@ -41,7 +41,7 @@ export class BoardMembersResolver {
     description: 'Add a user as a member of a board.',
     name: 'boardMemberAdd',
   })
-  @BoardPermissions([Permissions.MemberAdd])
+  @BoardPermissions([BoardPermissionsEnum.MemberAdd])
   public add(@Args('input') input: AddRemoveBoardMemberInput) {
     return this._memberServie.add(input);
   }
@@ -58,7 +58,7 @@ export class BoardMembersResolver {
     description: 'Remove a user from a board.',
     name: 'boardMemberRemove',
   })
-  @BoardPermissions([Permissions.MemberRemove])
+  @BoardPermissions([BoardPermissionsEnum.MemberRemove])
   public remove(@Args('input') input: AddRemoveBoardMemberInput) {
     return this._memberServie.remove(input);
   }

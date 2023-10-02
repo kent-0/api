@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/project.enum';
+import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import {
@@ -48,7 +48,7 @@ export class ProjectRoleResolver {
     description: 'Assign project role to members.',
     name: 'projectRoleAssign',
   })
-  @ProjectPermissions([Permissions.RoleAssign])
+  @ProjectPermissions([ProjectPermissionsEnum.RoleAssign])
   public assign(@Args('input') input: ProjectRoleAssignInput) {
     return this._roleService.assign(input);
   }
@@ -65,7 +65,7 @@ export class ProjectRoleResolver {
     description: 'Create a new project role.',
     name: 'projectRoleCreate',
   })
-  @ProjectPermissions([Permissions.RoleCreate])
+  @ProjectPermissions([ProjectPermissionsEnum.RoleCreate])
   public create(@Args('input') input: ProjectRoleCreateInput) {
     return this._roleService.create(input);
   }
@@ -98,7 +98,7 @@ export class ProjectRoleResolver {
     description: 'Delete a project role.',
     name: 'projectRoleRemove',
   })
-  @ProjectPermissions([Permissions.RoleDelete])
+  @ProjectPermissions([ProjectPermissionsEnum.RoleDelete])
   public remove(@Args('roleId') roleId: string) {
     return this._roleService.remove(roleId);
   }
@@ -115,7 +115,7 @@ export class ProjectRoleResolver {
     description: 'Unassign a role from a project member.',
     name: 'ProjectRoleUnassign',
   })
-  @ProjectPermissions([Permissions.RoleUnassign])
+  @ProjectPermissions([ProjectPermissionsEnum.RoleUnassign])
   public unassign(@Args('input') input: ProjectRoleUnassignInput) {
     return this._roleService.unassign(input);
   }
@@ -132,7 +132,7 @@ export class ProjectRoleResolver {
     description: 'Update the details of a project role.',
     name: 'ProjectRoleUpdate',
   })
-  @ProjectPermissions([Permissions.RoleUpdate])
+  @ProjectPermissions([ProjectPermissionsEnum.RoleUpdate])
   public update(@Args('input') input: ProjectRoleUpdateInput) {
     return this._roleService.update(input);
   }

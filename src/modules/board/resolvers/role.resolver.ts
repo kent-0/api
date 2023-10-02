@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/board.enum';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 
 import { BoardPermissionsGuard } from '../guards/permissions.guard';
 import {
@@ -49,7 +49,7 @@ export class BoardRoleResolver {
     description: 'Assign board role to members.',
     name: 'boardRoleAssign',
   })
-  @BoardPermissions([Permissions.RoleAssign])
+  @BoardPermissions([BoardPermissionsEnum.RoleAssign])
   public assign(@Args('input') input: BoardRoleAssignInput) {
     return this._roleService.assign(input);
   }
@@ -66,7 +66,7 @@ export class BoardRoleResolver {
     description: 'Create a new board role.',
     name: 'boardCreateRole',
   })
-  @BoardPermissions([Permissions.RoleCreate])
+  @BoardPermissions([BoardPermissionsEnum.RoleCreate])
   public create(@Args('input') input: BoardRoleCreateInput) {
     return this._roleService.create(input);
   }
@@ -84,7 +84,7 @@ export class BoardRoleResolver {
     description: 'Delete a board role.',
     name: 'boardRemoveRole',
   })
-  @BoardPermissions([Permissions.RoleDelete])
+  @BoardPermissions([BoardPermissionsEnum.RoleDelete])
   public delete(@Args('input') input: BoardRoleRemoveInput) {
     return this._roleService.remove(input);
   }
@@ -117,7 +117,7 @@ export class BoardRoleResolver {
     description: 'Unassign a role from a board member.',
     name: 'unassignBoardRole',
   })
-  @BoardPermissions([Permissions.RoleUnassign])
+  @BoardPermissions([BoardPermissionsEnum.RoleUnassign])
   public unassign(@Args('input') input: BoardRoleUnassignInput) {
     return this._roleService.unassign(input);
   }
@@ -134,7 +134,7 @@ export class BoardRoleResolver {
     description: 'Update the details of a board role.',
     name: 'updateBoardRole',
   })
-  @BoardPermissions([Permissions.RoleUpdate])
+  @BoardPermissions([BoardPermissionsEnum.RoleUpdate])
   public update(@Args('input') input: BoardRoleUpdateInput) {
     return this._roleService.update(input);
   }
