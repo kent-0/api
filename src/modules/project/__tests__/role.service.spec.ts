@@ -503,7 +503,7 @@ describe('Role management unsuccessfully cases', async () => {
       });
 
       expect(assignedRole).toBeDefined();
-      expect(assignedRole.user.id).toBe(userMember.id);
+      expect(assignedRole.user.id).toBe(userMember.user.id);
       expect(assignedRole.project.id).toBe(project.id);
 
       const rolesAssigned = await assignedRole.roles.getItems();
@@ -546,7 +546,7 @@ describe('Role management unsuccessfully cases', async () => {
       });
 
       expect(assignedRole).toBeDefined();
-      expect(assignedRole.user.id).toBe(userMember.id);
+      expect(assignedRole.user.id).toBe(userMember.user.id);
       expect(assignedRole.project.id).toBe(project.id);
 
       const rolesAssigned = await assignedRole.roles.getItems();
@@ -562,7 +562,7 @@ describe('Role management unsuccessfully cases', async () => {
           roleId: role.id,
         }),
       ).rejects.toThrowError(
-        'The member does not have the role you are trying to remove.',
+        'No information about the project member was found.',
       );
     });
   });

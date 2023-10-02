@@ -168,7 +168,7 @@ describe('Member successfuly cases', () => {
       });
 
       expect(result).toBe(
-        'The userProjectOwner was successfully removed from the project members.',
+        'The user was successfully removed from the project members.',
       );
     });
   });
