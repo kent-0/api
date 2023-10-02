@@ -21,8 +21,6 @@ import { ProjectService } from '~/modules/project/services/project.service';
 import { ProjectRoleService } from '~/modules/project/services/role.service';
 import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 
-import { expect } from 'vitest';
-
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
 /**
