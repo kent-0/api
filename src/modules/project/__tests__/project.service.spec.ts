@@ -38,7 +38,7 @@ describe('Project Managment', () => {
   let user: AuthUserEntity;
 
   /**
-   * Setup for each tests.
+   * Setup for each test.
    * Initializes the necessary modules, services, and database configuration.
    * Refreshes the database to ensure each tests starts with a clean state.
    */

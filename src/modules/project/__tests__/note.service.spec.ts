@@ -107,7 +107,7 @@ describe('Notes successfully cases', async () => {
    * This hook is executed after all the test cases in the suite. Its primary responsibilities include:
    */
   afterAll(async () => {
-    await orm.close(true);
+    await module.close();
   });
 
   /**

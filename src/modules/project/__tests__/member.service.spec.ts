@@ -125,7 +125,6 @@ describe('Member successfuly cases', () => {
    * such as closing the database connections.
    */
   afterAll(async () => {
-    await orm.close();
     await module.close();
   });
 
@@ -276,7 +275,6 @@ describe('Member unsuccessfully cases', () => {
    * like closing connections, freeing resources, etc.
    */
   afterAll(async () => {
-    await orm.close();
     await module.close();
   });
 

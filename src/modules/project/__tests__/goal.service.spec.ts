@@ -122,7 +122,7 @@ describe('Goals successfully cases', async () => {
    * This hook is executed after all the test cases in the suite. Its primary responsibilities include:
    */
   afterAll(async () => {
-    await orm.close(true);
+    await module.close();
   });
 
   /**
@@ -297,7 +297,7 @@ describe('Goals unsuccessfully cases', async () => {
    * This hook is executed after all the test cases in the suite. Its primary responsibilities include:
    */
   afterAll(async () => {
-    await orm.close(true);
+    await module.close();
   });
 
   /**
@@ -331,7 +331,7 @@ describe('Goals unsuccessfully cases', async () => {
           projectId: project.id,
         }),
       ).rejects.toThrowError(
-        'The project goal you are trying to delete could not be found.',
+        'The project goal you are trying to delete was not found.',
       );
     });
   });

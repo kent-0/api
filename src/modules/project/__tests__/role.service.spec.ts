@@ -129,7 +129,6 @@ describe('Role management successfully cases', () => {
    * connections are closed to avoid any memory leaks or open connections.
    */
   afterAll(async () => {
-    await orm.close();
     await module.close();
   });
 
@@ -398,7 +397,6 @@ describe('Role management unsuccessfully cases', async () => {
    * This hook is executed after all the test cases. It ensures that resources are cleaned up and
    */
   afterAll(async () => {
-    await orm.close();
     await module.close();
   });
 
