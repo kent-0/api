@@ -566,7 +566,7 @@ describe('Role management unsuccessfully cases', async () => {
   });
 
   /**
-   * Test Case: Unassigning Non-existent Role:
+   * Test Case: Unassigned Non-existent Role:
    * Ensures that the system rejects an attempt to unassign a role that doesn't exist from a member.
    */
   it('should not unassigned a role that does not exist', async () => {
