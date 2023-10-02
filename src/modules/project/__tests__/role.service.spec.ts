@@ -21,10 +21,14 @@ import { ProjectService } from '~/modules/project/services/project.service';
 import { ProjectRoleService } from '~/modules/project/services/role.service';
 import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 
-import { expect } from 'vitest';
-
 import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
 
+/**
+ * `Role Management Successfully Cases` Test Suite:
+ * This test suite focuses on validating successful scenarios related to project roles.
+ * The primary goal is to ensure that the system correctly handles role-related operations and
+ * gives the desired results under valid conditions.
+ */
 describe('Role management successfully cases', () => {
   let service: ProjectRoleService;
   let accountService: AuthAccountService;
@@ -36,6 +40,13 @@ describe('Role management successfully cases', () => {
   let project: ProjectEntity;
   let userMember: ProjectMembersEntity;
 
+  /**
+   * Before All Setup:
+   * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
+   * 1. Compiling and initializing the testing module.
+   * 2. Instantiating services for testing.
+   * 3. Setting up a clean database state and generating test data.
+   */
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
@@ -112,11 +123,21 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * After All Cleanup:
+   * This hook is executed after all the test cases. It ensures that resources are cleaned up and
+   * connections are closed to avoid any memory leaks or open connections.
+   */
   afterAll(async () => {
     await orm.close();
     await module.close();
   });
 
+  /**
+   * Test Case: Creating a Role:
+   * This test case focuses on the scenario where a new role is created for a project.
+   * It ensures that the system correctly creates the role and returns the appropriate details.
+   */
   it('should be able to create a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
@@ -131,6 +152,11 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * Test Case: Updating a Role:
+   * Validates the scenario where an existing role's attributes are updated.
+   * It ensures that the updated attributes are correctly reflected in the system.
+   */
   it('should be able to update a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
@@ -151,6 +177,11 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * Test Case: Deleting a Role:
+   * This test case ensures that a role can be successfully deleted from the system
+   * and that it no longer exists after the deletion process.
+   */
   it('should be able to delete a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
@@ -165,6 +196,11 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * Test Case: Fetching Roles:
+   * Validates that the system can fetch a list of roles associated with a project.
+   * It ensures the list is accurate and paginated correctly.
+   */
   it('should be able to get all roles', async () => {
     await RequestContext.createAsync(em, async () => {
       const roles = await service.paginate({
@@ -180,6 +216,11 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * Test Case: Assigning a Role to a Member:
+   * This test focuses on the scenario where a role is assigned to a member of a project.
+   * The system should correctly associate the member with the role and reflect it in the returned results.
+   */
   it('should be able to assign a role to project member', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
@@ -208,6 +249,11 @@ describe('Role management successfully cases', () => {
     });
   });
 
+  /**
+   * Test Case: Removing a Role from a Member:
+   * Validates the scenario where a role is unassigned or removed from a member.
+   * The system should correctly dissociate the role from the member and ensure the member no longer holds that role.
+   */
   it('should be able to remove a role from project member', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
