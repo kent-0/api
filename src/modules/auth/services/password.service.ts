@@ -87,6 +87,7 @@ export class AuthPasswordService {
     }
 
     // Compare the provided current password against the stored hashed password using bcrypt.
+    // noinspection ES6RedundantAwait
     const comparePassword = await bcrypt.compare(
       currentPassword,
       password.password_hash,

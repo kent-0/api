@@ -5,8 +5,8 @@
  * preserving the specific order and number of elements.
  *
  * @function tuple
- * @param {...T} args - A variadic number of string arguments.
- * @returns {(typeof args)[number]} - A tuple type of the passed strings.
+ * @param {...any} args - A variadic number of string arguments.
+ * @returns A tuple type of the passed strings.
  *
  * @example
  * const exampleTuple = tuple('a', 'b', 'c'); // Returns a tuple ['a', 'b', 'c']

@@ -306,6 +306,7 @@ export class AuthAccountService {
     }
 
     // Compare the provided password with the stored password hash.
+    // noinspection ES6RedundantAwait
     const isMatchPassword = await bcrypt.compare(
       password,
       user.password!.password_hash,

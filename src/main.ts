@@ -22,4 +22,5 @@ async function bootstrap() {
 }
 
 // Call the bootstrap function to start the application
+// noinspection JSIgnoredPromiseFromCall
 bootstrap();
