@@ -207,7 +207,7 @@ describe('Project - Role unsuccessfully cases', async () => {
   });
 
   /**
-   * Test Case: Redundant Role Assignment:
+   * Test Case: Assign role to member that already has the role:
    * Ensures that the system correctly detects and rejects an attempt to assign a role to a member
    * who already has that role.
    */
@@ -246,6 +246,34 @@ describe('Project - Role unsuccessfully cases', async () => {
         }),
       ).rejects.toThrowError(
         'The member you want to assign the role to already has it.',
+      );
+    });
+  });
+
+  /**
+   * Test Case: Unassigning role to member that not has the role:
+   * Ensures that the system correctly detects and rejects an attempt to assign a role to a member
+   * who already has that role.
+   */
+  it('should not unassign a role to a member that not has the role', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const role = await service.create({
+        name: 'Testing role',
+        permissions: ProjectPermissionsEnum.RoleCreate,
+        projectId: project.id,
+      });
+
+      expect(role).toBeDefined();
+      expect(role.name).toEqual('Testing role');
+
+      expect(
+        service.unassign({
+          memberId: userMember.id,
+          projectId: project.id,
+          roleId: role.id,
+        }),
+      ).rejects.toThrowError(
+        'The member does not have the role you are trying to remove.',
       );
     });
   });
