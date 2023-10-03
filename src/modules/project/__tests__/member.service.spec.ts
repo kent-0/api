@@ -38,13 +38,13 @@ describe('Member successfuly cases', () => {
   let userMember: AuthUserEntity;
 
   /**
-   * Before All Setup:
+   * Before Each Setup:
    * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
    * 1. Compiling and initializing the testing module.
    * 2. Instantiating services for testing.
    * 3. Setting up a clean database state and generating test data.
    */
-  beforeAll(async () => {
+  beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
@@ -188,13 +188,13 @@ describe('Member unsuccessfully cases', () => {
   let user2: AuthUserEntity;
 
   /**
-   * Before All Setup:
+   * Before Each Setup:
    * This hook runs before all test cases in this suite. It's responsible for:
    * 1. Setting up the testing module.
    * 2. Initializing service instances.
    * 3. Setting up the test data.
    */
-  beforeAll(async () => {
+  beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),

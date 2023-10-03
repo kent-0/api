@@ -41,13 +41,13 @@ describe('Role management successfully cases', () => {
   let userMember: ProjectMembersEntity;
 
   /**
-   * Before All Setup:
+   * Before Each Setup:
    * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
    * 1. Compiling and initializing the testing module.
    * 2. Instantiating services for testing.
    * 3. Setting up a clean database state and generating test data.
    */
-  beforeAll(async () => {
+  beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
@@ -308,13 +308,13 @@ describe('Role management unsuccessfully cases', async () => {
   let userMember: ProjectMembersEntity;
 
   /**
-   * Before All Setup:
+   * Before Each Setup:
    * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
    * 1. Compiling and initializing the testing module.
    * 2. Instantiating services for testing.
    * 3. Setting up a clean database state and generating test data.
    */
-  beforeAll(async () => {
+  beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
