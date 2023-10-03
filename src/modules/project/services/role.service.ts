@@ -384,11 +384,11 @@ export class ProjectRoleService {
     // Update the role's name and permissions if provided.
     role.name = name ?? role.name;
 
-    if (permissions) {
+    if (permissions !== undefined) {
       // Check if the permissions are valid for the type of role.
       if (!checkValidPermissions(permissions)) {
         throw new ConflictException(
-          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
+          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
         );
       }
 

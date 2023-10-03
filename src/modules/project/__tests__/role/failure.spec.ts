@@ -150,6 +150,34 @@ describe('Project - Role unsuccessfully cases', async () => {
   });
 
   /**
+   * Test Case: Invalid Role Update:
+   * Validates the scenario where a role is attempted to be updated with an invalid permissions bit.
+   * The system should detect this invalid input and respond with an appropriate error message.
+   */
+  it('should not update a role with invalid permissions bit', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const role = await service.create({
+        name: 'Testing role',
+        permissions: ProjectPermissionsEnum.RoleCreate,
+        projectId: project.id,
+      });
+
+      expect(role).toBeDefined();
+      expect(role.name).toEqual('Testing role');
+
+      expect(
+        service.update({
+          permissions: 0,
+          projectId: project.id,
+          roleId: role.id,
+        }),
+      ).rejects.toThrowError(
+        'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+      );
+    });
+  });
+
+  /**
    * Test Case: Deleting Non-existent Role:
    * Ensures that the system detects and rejects attempts to delete a role that does not exist.
    */
