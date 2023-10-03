@@ -93,7 +93,7 @@ describe('Project Managment', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -296,7 +296,7 @@ describe('Project Managment - Fail cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();

@@ -89,7 +89,7 @@ describe('Account - Successful use cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -407,7 +407,7 @@ describe('Account - Cases of unsatisfactory uses', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();

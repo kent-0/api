@@ -124,7 +124,7 @@ describe('Role management successfully cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -391,7 +391,7 @@ describe('Role management unsuccessfully cases', async () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();

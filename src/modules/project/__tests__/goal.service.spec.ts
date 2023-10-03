@@ -118,7 +118,7 @@ describe('Goals successfully cases', async () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -292,7 +292,7 @@ describe('Goals unsuccessfully cases', async () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();

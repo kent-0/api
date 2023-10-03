@@ -120,7 +120,7 @@ describe('Member successfuly cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -268,7 +268,7 @@ describe('Member unsuccessfully cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();

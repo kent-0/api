@@ -90,7 +90,7 @@ describe('Passsword - Successful use cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
@@ -195,7 +195,7 @@ describe('Password - Cases of unsatisfactory uses.', async () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * Cleanup after test are finished.
    */
   afterEach(async () => {
     await module.close();
