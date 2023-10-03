@@ -79,11 +79,13 @@ export class ProjectRoleService {
     const member = await this.membersRepository.findOne(
       {
         id: memberId,
+        project: projectId,
       },
       {
         fields: [
           ...ProjectMembersMinimalProperties,
           ...createFieldPaths('project', ...ProjectMinimalProperties),
+          ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
         ],
       },
     );

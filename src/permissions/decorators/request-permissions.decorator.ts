@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core';
 
-import { Permissions as BoardPermissionsEnum } from '../enums/board.enum';
-import { Permissions as ProjectPermissionsEnum } from '../enums/project.enum';
+import { BoardPermissionsEnum as BoardPermissionsEnum } from '../enums/board.enum';
+import { ProjectPermissionsEnum as ProjectPermissionsEnum } from '../enums/project.enum';
 
 /**
  * Create a custom decorator for project permissions using Reflector.

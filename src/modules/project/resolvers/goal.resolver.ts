@@ -3,7 +3,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { ProjectPermissions } from '~/permissions/decorators/request-permissions.decorator';
-import { Permissions } from '~/permissions/enums/project.enum';
+import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
 
 import { ProjectPermissionsGuard } from '../guards/permissions.guard';
 import {
@@ -44,7 +44,7 @@ export class ProjectGoalResolver {
     description: 'Create a new project goal.',
     name: 'projectGoalCreate',
   })
-  @ProjectPermissions([Permissions.GoalCreate])
+  @ProjectPermissions([ProjectPermissionsEnum.GoalCreate])
   public create(@Args('input') input: ProjectGoalCreateInput) {
     return this._projectGoalsService.create(input);
   }
@@ -59,7 +59,7 @@ export class ProjectGoalResolver {
     description: 'Delete a project goal.',
     name: 'projectGoalDelete',
   })
-  @ProjectPermissions([Permissions.GoalRemove])
+  @ProjectPermissions([ProjectPermissionsEnum.GoalRemove])
   public delete(@Args('input') input: ProjectGoalRemoveInput) {
     return this._projectGoalsService.delete(input);
   }
@@ -74,7 +74,7 @@ export class ProjectGoalResolver {
     description: 'Update a project goal.',
     name: 'projectGoalUpdate',
   })
-  @ProjectPermissions([Permissions.GoalUpdate])
+  @ProjectPermissions([ProjectPermissionsEnum.GoalUpdate])
   public update(@Args('input') input: ProjectGoalUpdateInput) {
     return this._projectGoalsService.update(input);
   }
