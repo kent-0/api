@@ -120,11 +120,11 @@ describe('Member successfuly cases', () => {
   });
 
   /**
-   * After All Cleanup:
-   * This hook is executed after all the test cases. It is responsible for cleaning up resources,
-   * such as closing the database connections.
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 
@@ -270,11 +270,11 @@ describe('Member unsuccessfully cases', () => {
   });
 
   /**
-   * After All Cleanup:
-   * This hook runs after all test cases have been executed. It performs cleanup operations
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
    * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 

@@ -93,7 +93,9 @@ describe('Project Managment', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
   afterEach(async () => {
     await module.close();
@@ -296,7 +298,9 @@ describe('Project Managment - Fail cases', () => {
   });
 
   /**
-   * Cleanup after tests are finished.
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
   afterEach(async () => {
     await module.close();

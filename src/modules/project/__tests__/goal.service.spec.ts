@@ -118,10 +118,11 @@ describe('Goals successfully cases', async () => {
   });
 
   /**
-   * After All Setup:
-   * This hook is executed after all the test cases in the suite. Its primary responsibilities include:
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 
@@ -293,10 +294,11 @@ describe('Goals unsuccessfully cases', async () => {
   });
 
   /**
-   * After All Setup:
-   * This hook is executed after all the test cases in the suite. Its primary responsibilities include:
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 

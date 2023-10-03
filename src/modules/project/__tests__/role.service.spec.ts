@@ -124,11 +124,11 @@ describe('Role management successfully cases', () => {
   });
 
   /**
-   * After All Cleanup:
-   * This hook is executed after all the test cases. It ensures that resources are cleaned up and
-   * connections are closed to avoid any memory leaks or open connections.
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 
@@ -393,10 +393,11 @@ describe('Role management unsuccessfully cases', async () => {
   });
 
   /**
-   * After All Cleanup:
-   * This hook is executed after all the test cases. It ensures that resources are cleaned up and
+   * After Each Cleanup:
+   * This hook runs after each test cases have been executed. It performs cleanup operations
+   * like closing connections, freeing resources, etc.
    */
-  afterAll(async () => {
+  afterEach(async () => {
     await module.close();
   });
 
