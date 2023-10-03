@@ -23,7 +23,8 @@
       "~/auth/guard": ["./src/auth/guards/jwt.guard"],
       "~/auth/decorator": ["./src/auth/decorators/user.decorator"],
       "~/permissions": ["./src/permissions/services/manager.service"],
-      "~/permissions/list": ["./src/permissions/enums/index"]
+      "~/permissions/list": ["./src/permissions/enums/index"],
+      "../../../../../mikro-orm.config": ["./mikro-orm.config"],
     },
     "types": ["vitest/globals"]
   }
