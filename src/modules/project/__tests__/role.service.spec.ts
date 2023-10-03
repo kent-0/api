@@ -29,7 +29,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * The primary goal is to ensure that the system correctly handles role-related operations and
  * gives the desired results under valid conditions.
  */
-describe('Role management successfully cases', () => {
+describe('Project - Role successfully cases', () => {
   let service: ProjectRoleService;
   let accountService: AuthAccountService;
   let projectMemberService: ProjectMemberService;
@@ -200,6 +200,14 @@ describe('Role management successfully cases', () => {
    */
   it('should be able to get all roles', async () => {
     await RequestContext.createAsync(em, async () => {
+      const role = await service.create({
+        name: 'Testing role',
+        permissions: ProjectPermissionsEnum.RoleCreate,
+        projectId: project.id,
+      });
+
+      expect(role).toBeDefined();
+
       const roles = await service.paginate({
         page: 1,
         projectId: project.id,
@@ -207,7 +215,7 @@ describe('Role management successfully cases', () => {
       });
 
       expect(roles).toBeDefined();
-      expect(roles.totalItems).toEqual(2);
+      expect(roles.totalItems).toEqual(1);
       expect(roles.hasNextPage).toBe(false);
       expect(roles.hasPreviousPage).toBe(false);
     });
@@ -296,7 +304,7 @@ describe('Role management successfully cases', () => {
  * The primary goal is to ensure that the system correctly handles invalid operations or data related
  * to roles and provides appropriate error messages or responses.
  */
-describe('Role management unsuccessfully cases', async () => {
+describe('Project - Role unsuccessfully cases', async () => {
   let service: ProjectRoleService;
   let accountService: AuthAccountService;
   let projectMemberService: ProjectMemberService;

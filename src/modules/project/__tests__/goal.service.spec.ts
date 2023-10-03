@@ -28,7 +28,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * The primary goal is to ensure that the system correctly handles valid operations or data
  * related to goals and provides expected outcomes.
  */
-describe('Goals successfully cases', async () => {
+describe('Project - Goals successfully cases', async () => {
   let service: ProjectGoalService;
   let accountService: AuthAccountService;
   let projectMemberService: ProjectMemberService;
@@ -202,7 +202,7 @@ describe('Goals successfully cases', async () => {
  * The primary goal is to ensure that the system correctly handles invalid operations or data
  * related to goals and provides expected outcomes.
  */
-describe('Goals unsuccessfully cases', async () => {
+describe('Project - Goals unsuccessfully cases', async () => {
   let service: ProjectGoalService;
   let accountService: AuthAccountService;
   let projectMemberService: ProjectMemberService;

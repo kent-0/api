@@ -29,7 +29,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * This suite ensures that the core project management operations are functioning as expected,
  * covering operations like creation, retrieval, update, and deletion of projects.
  */
-describe('Project Managment', () => {
+describe('Project successfully cases', () => {
   let service: ProjectService;
   let accountService: AuthAccountService;
   let em: EntityManager;
@@ -232,7 +232,7 @@ describe('Project Managment', () => {
  * This suite is designed to ensure that the system appropriately handles and reports errors
  * during various operations like project creation, retrieval, update, and deletion.
  */
-describe('Project Managment - Fail cases', () => {
+describe('Project unsuccessfully cases', () => {
   let service: ProjectService;
   let accountService: AuthAccountService;
   let em: EntityManager;

@@ -31,7 +31,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * 2. Setting up a mock database environment for isolated testing.
  * 3. Creating a sample user to be used throughout the test cases.
  */
-describe('Passsword - Successful use cases', () => {
+describe('Auth - Passsword - Successful use cases', () => {
   let passwordService: AuthPasswordService;
   let accountService: AuthAccountService;
   let em: EntityManager;
@@ -136,7 +136,7 @@ describe('Passsword - Successful use cases', () => {
  * Each test case within this suite is designed to simulate a specific unsatisfactory
  * scenario and validate the system's response to it.
  */
-describe('Password - Cases of unsatisfactory uses.', async () => {
+describe('Auth - Password - Cases of unsatisfactory uses.', async () => {
   let passwordService: AuthPasswordService;
   let accountService: AuthAccountService;
   let em: EntityManager;

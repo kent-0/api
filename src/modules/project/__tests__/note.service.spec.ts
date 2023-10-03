@@ -27,7 +27,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * The primary note is to ensure that the system correctly handles valid operations or data
  * related to notes and provides expected outcomes.
  */
-describe('Notes successfully cases', async () => {
+describe('Project - Notes successfully cases', async () => {
   let service: ProjectNoteService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;
@@ -204,7 +204,7 @@ describe('Notes successfully cases', async () => {
  * The primary note is to ensure that the system correctly handles invalid operations or data
  * related to notes and provides expected outcomes.
  */
-describe('Notes unsuccessfully cases', async () => {
+describe('Project - Notes unsuccessfully cases', async () => {
   let service: ProjectNoteService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;

@@ -34,7 +34,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * After all tests:
  * - The database connection is closed.
  */
-describe('Account - Successful use cases', () => {
+describe('Auth - Account - Successful use cases', () => {
   let accountService: AuthAccountService;
   let em: EntityManager;
   let orm: MikroORM;
@@ -320,7 +320,7 @@ describe('Account - Successful use cases', () => {
  * 2. Refreshing the database to start from a clean state.
  * 3. Creating a sample user and capturing its session details.
  */
-describe('Account - Cases of unsatisfactory uses', () => {
+describe('Auth - Account - Cases of unsatisfactory uses', () => {
   let accountService: AuthAccountService;
   let em: EntityManager;
   let orm: MikroORM;

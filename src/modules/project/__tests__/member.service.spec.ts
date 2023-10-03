@@ -26,7 +26,7 @@ import { TestingMikroORMConfig } from '../../../../mikro-orm.config';
  * The primary goal is to ensure that the system correctly handles member-related operations and
  * gives the desired results under valid conditions.
  */
-describe('Member successfuly cases', () => {
+describe('Project - Member successfuly cases', () => {
   let service: ProjectMemberService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;
@@ -159,6 +159,14 @@ describe('Member successfuly cases', () => {
    */
   it('should remove a member to a project', async () => {
     await RequestContext.createAsync(orm.em, async () => {
+      const member = await service.add({
+        projectId: project.id,
+        userId: userMember.id,
+      });
+
+      expect(member.user.id).toBe(userMember.id);
+      expect(member.project.id).toEqual(project.id);
+
       const result = await service.remove({
         projectId: project.id,
         userId: userMember.id,
@@ -176,7 +184,7 @@ describe('Member successfuly cases', () => {
  * This test suite is focused on scenarios where operations related to project members are expected to fail.
  * The purpose is to ensure that the system correctly handles and responds to incorrect or invalid operations.
  */
-describe('Member unsuccessfully cases', () => {
+describe('Project - Member unsuccessfully cases', () => {
   let service: ProjectMemberService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;
