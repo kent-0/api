@@ -1,3 +1,4 @@
+import { LoadStrategy } from '@mikro-orm/core';
 import { PostgreSqlDriver, defineConfig } from '@mikro-orm/postgresql';
 
 /**
@@ -59,6 +60,7 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     // @ts-expect-error - This is a valid option, but the type definition is missing it.
     autoLoadEntities: true,
     clientUrl,
+    debug: true,
     discovery: {
       // Disable entity discovery to prevent the test suite from trying to load
       checkDuplicateEntities: false,
@@ -66,4 +68,5 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     driver: PostgreSqlDriver,
     ensureDatabase: true,
     forceEntityConstructor: true,
+    loadStrategy: LoadStrategy.JOINED,
   });

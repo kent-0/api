@@ -220,6 +220,9 @@ describe('Board - Successfully cases', () => {
         projectId: project.id,
       });
 
+      const members = await foundBoard.members.loadItems();
+      expect(members).toBeDefined();
+
       expect(foundBoard).toBeDefined();
       expect(foundBoard.name).toBe('Kento');
       expect(foundBoard.description).toBe('Kento testing board');
