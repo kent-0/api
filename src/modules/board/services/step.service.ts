@@ -199,6 +199,12 @@ export class BoardStepService {
       );
     }
 
+    if (positionReplaceStep.finish_step) {
+      throw new NotFoundException(
+        'You are trying to move a column to the position of the finished column. This column cannot be moved.',
+      );
+    }
+
     // Swap positions between the targeted step and the replacement step.
     const tempPosition = step.position;
 
