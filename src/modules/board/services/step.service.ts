@@ -186,6 +186,17 @@ export class BoardStepService {
     position,
     stepId,
   }: BoardStepMoveInput): Promise<ToCollections<BoardStepObject>> {
+    const boardStepsCount = await this.stepRepository.count({
+      board: boardId,
+    });
+
+    // If the board has no steps, throw an exception.
+    if (boardStepsCount === 1) {
+      throw new NotFoundException(
+        'The board has no other steps to move positions.',
+      );
+    }
+
     // Retrieve the step intended to be moved.
     const step = await this.stepRepository.findOne(
       {

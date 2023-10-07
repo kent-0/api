@@ -237,4 +237,41 @@ describe('Board - Step Unsuccessfully cases', async () => {
       );
     });
   });
+
+  it('should has an error because you are trying to move columns to other positions but there is only one column on the server.', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+      });
+
+      expect(async () =>
+        service.move({
+          boardId: board.id,
+          position: 2,
+          stepId: step.id,
+        }),
+      ).rejects.toThrowError('The board has no other steps to move positions.');
+    });
+  });
+
+  it('should has an error because you are trying to mark a column as a finished column but there is only one on the board.', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+      });
+
+      expect(async () =>
+        service.markAsFinished({
+          boardId: board.id,
+          stepId: step.id,
+        }),
+      ).rejects.toThrowError(
+        'The board has no other steps to mark as finished.',
+      );
+    });
+  });
 });
