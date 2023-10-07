@@ -183,21 +183,58 @@ describe('Board - Step Unsuccessfully cases', async () => {
 
   it('should has error because the finished step cannot be moved', async () => {
     await RequestContext.createAsync(em, async () => {
-      const step = await service.create({
+      const stepFinished = await service.create({
         boardId: board.id,
-        description: 'Kento testing step',
+        description: 'Kento testing finished step',
         name: 'Kento',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
       });
 
       await service.markAsFinished({
         boardId: board.id,
-        stepId: step.id,
+        stepId: stepFinished.id,
       });
 
       expect(async () =>
         service.move({
           boardId: board.id,
           position: 1,
+          stepId: stepFinished.id,
+        }),
+      ).rejects.toThrowError(
+        'You are trying to move a column that is marked as finished. This column cannot be moved.',
+      );
+    });
+  });
+
+  it('should has error because you are trying to move a column to the finished column.', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+      });
+
+      const stepFinished = await service.create({
+        boardId: board.id,
+        description: 'Kento testing finished step',
+        name: 'Test Step',
+      });
+
+      await service.markAsFinished({
+        boardId: board.id,
+        stepId: stepFinished.id,
+      });
+
+      expect(async () =>
+        service.move({
+          boardId: board.id,
+          position: stepFinished.position,
           stepId: step.id,
         }),
       ).rejects.toThrowError(
@@ -224,6 +261,12 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
       });
 
       expect(async () =>

@@ -212,6 +212,12 @@ describe('Board - Step Successfully cases', async () => {
         name: 'Test Step',
       });
 
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
       const finishedStep = await service.markAsFinished({
         boardId: board.id,
         stepId: step.id,
@@ -341,6 +347,119 @@ describe('Board - Step Successfully cases', async () => {
       expect(stepMoved!.position).toBe(3);
 
       const stepMoved2 = stepsAfterMove.find((step) => step.id === steps[2].id);
+      expect(stepMoved2).toBeDefined();
+      expect(stepMoved2!.position).toBe(1);
+    });
+  });
+
+  /**
+   * Test Case: Moving Step to Last Position Upon Finishing:
+   * Validates that when a step is marked as finished, it is automatically moved to the last position in the order of steps.
+   * This ensures that the UI or logical flow that leverages the step order will present or handle finished steps accurately.
+   */
+  it('should move the step to the last position if the step is marked as finished', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const stepFinished = await service.create({
+        boardId: board.id,
+        description: 'This step should be moved to the last position',
+        name: 'Test Step finished',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      const steps = await em.find(BoardStepEntity, { board: board.id });
+      expect(steps).toBeDefined();
+      expect(steps.length).toBe(4);
+      expect(steps[0].position).toBe(1);
+      expect(steps[1].position).toBe(2);
+      expect(steps[2].position).toBe(3);
+      expect(steps[3].position).toBe(4);
+
+      await service.markAsFinished({
+        boardId: board.id,
+        stepId: stepFinished.id,
+      });
+
+      const stepsAfterMove = await em.find(BoardStepEntity, {
+        board: board.id,
+      });
+
+      expect(stepsAfterMove).toBeDefined();
+
+      const stepMoved = stepsAfterMove.find(
+        (step) => step.id === stepFinished.id,
+      );
+
+      expect(stepMoved).toBeDefined();
+      expect(stepMoved!.position).toBe(4);
+
+      const stepMoved2 = stepsAfterMove.find((step) => step.id === steps[3].id);
+      expect(stepMoved2).toBeDefined();
+      expect(stepMoved2!.position).toBe(1);
+    });
+  });
+
+  /**
+   * Test Case: Avoiding Unnecessary Movement Upon Finishing:
+   * Ensures that marking a step as finished does not change its position if it is already in the last position.
+   * This test case is crucial to avoid unnecessary database writes and ensure efficient operation,
+   * especially in scenarios where the steps may not need to be re-ordered upon finishing.
+   */
+  it('should not move positions if the step marked as finished is already in the last position', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'This step should be moved to the last position',
+        name: 'Test Step finished',
+      });
+
+      const stepFinished = await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      const steps = await em.find(BoardStepEntity, { board: board.id });
+      expect(steps).toBeDefined();
+      expect(steps.length).toBe(2);
+      expect(steps[0].position).toBe(1);
+      expect(steps[1].position).toBe(2);
+
+      await service.markAsFinished({
+        boardId: board.id,
+        stepId: stepFinished.id,
+      });
+
+      const stepsAfterMove = await em.find(BoardStepEntity, {
+        board: board.id,
+      });
+
+      expect(stepsAfterMove).toBeDefined();
+
+      const stepMoved = stepsAfterMove.find(
+        (step) => step.id === stepFinished.id,
+      );
+
+      expect(stepMoved).toBeDefined();
+      expect(stepMoved!.position).toBe(2);
+
+      const stepMoved2 = stepsAfterMove.find((step) => step.id === steps[0].id);
       expect(stepMoved2).toBeDefined();
       expect(stepMoved2!.position).toBe(1);
     });
