@@ -101,6 +101,9 @@ describe('Board - Successfully cases', () => {
     });
   });
 
+  /**
+   * Cleanup after test are finished.
+   */
   afterEach(async () => {
     await module.close();
   });
