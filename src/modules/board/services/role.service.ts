@@ -217,7 +217,7 @@ export class BoardRoleService {
     // Returns the paginated roles, along with metadata about the pagination.
     return {
       hasNextPage: page < totalPages,
-      hasPreviousPage: page !== 0,
+      hasPreviousPage: page > 1 && page <= totalPages,
       items: boardRolesPaginated,
       totalItems: total,
       totalPages,
@@ -379,6 +379,17 @@ export class BoardRoleService {
 
     // If the role does not exist, throw an exception.
     if (!role) throw new NotFoundException('Could not find role to update.');
+
+    if (permissions !== undefined) {
+      // Check if the permissions are valid for the type of role.
+      if (!checkValidPermissions(permissions)) {
+        throw new ConflictException(
+          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+        );
+      }
+
+      role.permissions = permissions ?? role.permissions;
+    }
 
     // Update the role's name and permissions if provided.
     role.name = name ?? role.name;
