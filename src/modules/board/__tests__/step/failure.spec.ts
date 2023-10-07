@@ -27,6 +27,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
+/**
+ * `Board - Step Unsuccessfully cases` Test Suite:
+ * This test suite verifies the system's robustness by probing various failure scenarios related to managing board steps.
+ * It aims to ensure that the system can handle unexpected or invalid inputs gracefully,
+ * providing clear error messages and maintaining data integrity.
+ */
 describe('Board - Step Unsuccessfully cases', async () => {
   let module: TestingModule;
   let service: BoardStepService;
@@ -129,6 +135,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     await module.close();
   });
 
+  /**
+   * Test Case: Removing Non-Existent Step:
+   * Ensures that attempting to remove a non-existent step triggers an appropriate error message without affecting other data.
+   */
   it('should has error because the step to remove it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
@@ -142,6 +152,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Updating Non-Existent Step:
+   * Validates that attempting to update a non-existent step returns an error, ensuring the system's stability.
+   */
   it('should has error because the step to update it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
@@ -156,6 +170,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Marking Non-Existent Step as Finished:
+   * Validates that attempts to mark a non-existent step as finished will trigger a suitable error message.
+   */
   it('should has error because the step to mark as finished it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
@@ -169,6 +187,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Moving Non-Existent Step:
+   * Validates that an attempt to move a non-existent step triggers an error, preserving the remaining steps’ order.
+   */
   it('should has error because not exist a column with this id', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
@@ -181,6 +203,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Preventing Move of Finished Step:
+   * Ensures that the system prevents the movement of a step that is marked as finished, preserving the integrity of step order.
+   */
   it('should has error because the finished step cannot be moved', async () => {
     await RequestContext.createAsync(em, async () => {
       const stepFinished = await service.create({
@@ -212,6 +238,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Preventing Move to Position of Finished Step:
+   * Ensures that the system prevents moving a step to the position of a finished step, maintaining the finished step’s position.
+   */
   it('should has error because you are trying to move a column to the finished column.', async () => {
     await RequestContext.createAsync(em, async () => {
       const step = await service.create({
@@ -243,6 +273,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Moving Non-Existent Step:
+   * Ensures that attempting to move a non-existent step triggers an error, maintaining the current step order.
+   */
   it('should has error because the step to move it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
@@ -255,6 +289,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Moving Step to Non-Existent Position:
+   * Validates that attempting to move a step to a non-existent position triggers an appropriate error, maintaining the current step order.
+   */
   it('should has error because not exist a column in the position to be replaced', async () => {
     await RequestContext.createAsync(em, async () => {
       const step = await service.create({
@@ -281,6 +319,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Moving Step in Single-Column Board:
+   * Ensures that the system prevents moving a step when there's only one column on the board, returning a suitable error message.
+   */
   it('should has an error because you are trying to move columns to other positions but there is only one column on the server.', async () => {
     await RequestContext.createAsync(em, async () => {
       const step = await service.create({
@@ -299,6 +341,10 @@ describe('Board - Step Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Marking Single Step as Finished:
+   * Validates that when there's only one step on the board, the system prevents marking it as finished and returns an error.
+   */
   it('should has an error because you are trying to mark a column as a finished column but there is only one on the board.', async () => {
     await RequestContext.createAsync(em, async () => {
       const step = await service.create({
@@ -315,6 +361,32 @@ describe('Board - Step Unsuccessfully cases', async () => {
       ).rejects.toThrowError(
         'The board has no other steps to mark as finished.',
       );
+    });
+  });
+
+  /**
+   * Test Case: Re-Marking Finished Step:
+   * Ensures that the system throws an error when trying to mark a step that is already marked as finished, preserving the current state.
+   */
+  it('should has error because the step is already marked as finished', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+      });
+
+      await service.markAsFinished({
+        boardId: board.id,
+        stepId: step.id,
+      });
+
+      expect(async () =>
+        service.markAsFinished({
+          boardId: board.id,
+          stepId: step.id,
+        }),
+      ).rejects.toThrowError('The step is already marked as finished.');
     });
   });
 });
