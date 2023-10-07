@@ -56,7 +56,6 @@ export default defineConfig({
         'app.module.ts',
       ],
     },
-    globals: true,
     root: './',
     singleThread: true,
   },

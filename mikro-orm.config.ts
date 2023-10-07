@@ -60,7 +60,6 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     // @ts-expect-error - This is a valid option, but the type definition is missing it.
     autoLoadEntities: true,
     clientUrl,
-    debug: true,
     discovery: {
       // Disable entity discovery to prevent the test suite from trying to load
       checkDuplicateEntities: false,
