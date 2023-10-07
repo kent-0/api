@@ -116,7 +116,7 @@ export class BoardStepService {
     });
 
     // If the board has no steps, throw an exception.
-    if (boardStepsCount < 1) {
+    if (boardStepsCount <= 1) {
       throw new NotFoundException(
         'The board has no other steps to mark as finished.',
       );
@@ -212,7 +212,7 @@ export class BoardStepService {
     });
 
     // If the board has no steps, throw an exception.
-    if (boardStepsCount < 1) {
+    if (boardStepsCount <= 1) {
       throw new NotFoundException(
         'The board has no other steps to move positions.',
       );

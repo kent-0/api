@@ -176,6 +176,18 @@ describe('Board - Step Unsuccessfully cases', async () => {
    */
   it('should has error because the step to mark as finished it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
       expect(async () =>
         service.markAsFinished({
           boardId: board.id,
@@ -193,6 +205,18 @@ describe('Board - Step Unsuccessfully cases', async () => {
    */
   it('should has error because not exist a column with this id', async () => {
     await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
       expect(async () =>
         service.move({
           boardId: board.id,
@@ -279,10 +303,22 @@ describe('Board - Step Unsuccessfully cases', async () => {
    */
   it('should has error because the step to move it doest not exist', async () => {
     await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
       expect(async () =>
         service.move({
           boardId: board.id,
-          position: 1,
+          position: 3,
           stepId: '8054de11-b6dc-481e-a8c2-90cef8169914',
         }),
       ).rejects.toThrowError('Could not find the step to move from the board.');
@@ -334,7 +370,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
       expect(async () =>
         service.move({
           boardId: board.id,
-          position: 2,
+          position: 1,
           stepId: step.id,
         }),
       ).rejects.toThrowError('The board has no other steps to move positions.');
@@ -370,12 +406,17 @@ describe('Board - Step Unsuccessfully cases', async () => {
    */
   it('should has error because the step is already marked as finished', async () => {
     await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+      });
+
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
       });
-
       await service.markAsFinished({
         boardId: board.id,
         stepId: step.id,
