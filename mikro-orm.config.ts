@@ -1,3 +1,4 @@
+import { LoadStrategy } from '@mikro-orm/core';
 import { PostgreSqlDriver, defineConfig } from '@mikro-orm/postgresql';
 
 /**
@@ -66,4 +67,5 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     driver: PostgreSqlDriver,
     ensureDatabase: true,
     forceEntityConstructor: true,
+    loadStrategy: LoadStrategy.JOINED,
   });

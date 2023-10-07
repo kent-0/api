@@ -10,16 +10,19 @@ import {
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
+  BoardEntity,
+  BoardMembersEntity,
+  BoardRolesEntity,
   ProjectEntity,
   ProjectMembersEntity,
-  ProjectRolesEntity,
 } from '~/database/entities';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
-import { ProjectMemberService } from '~/modules/project/services/member.service';
+import { BoardService } from '~/modules/board/services/board.service';
+import { BoardMemberService } from '~/modules/board/services/member.service';
+import { BoardRoleService } from '~/modules/board/services/role.service';
 import { ProjectService } from '~/modules/project/services/project.service';
-import { ProjectRoleService } from '~/modules/project/services/role.service';
-import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -27,28 +30,27 @@ import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
 /**
  * `Role Management Unsuccessful Cases` Test Suite:
- * This test suite focuses on validating the unsuccessful scenarios related to project roles.
+ * This test suite focuses on validating the unsuccessful scenarios related to board roles.
  * The primary goal is to ensure that the system correctly handles invalid operations or data related
  * to roles and provides appropriate error messages or responses.
  */
-describe('Project - Role unsuccessfully cases', async () => {
-  let service: ProjectRoleService;
-  let accountService: AuthAccountService;
-  let projectMemberService: ProjectMemberService;
-  let projectService: ProjectService;
+describe('Board - Role unsuccessfully cases', async () => {
   let module: TestingModule;
-  let em: EntityManager;
-  let orm: MikroORM;
-  let project: ProjectEntity;
-  let userMember: ProjectMembersEntity;
+  let service: BoardRoleService;
+  let boardService: BoardService;
+  let boardMemberService: BoardMemberService;
+  let accountService: AuthAccountService;
+  let projectService: ProjectService;
 
-  /**
-   * Before Each Setup:
-   * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
-   * 1. Compiling and initializing the testing module.
-   * 2. Instantiating services for testing.
-   * 3. Setting up a clean database state and generating test data.
-   */
+  let orm: MikroORM;
+  let em: EntityManager;
+
+  let project: ProjectEntity;
+  let board: BoardEntity;
+  let user: AuthUserEntity;
+  let user2: AuthUserEntity;
+  let member: BoardMembersEntity;
+
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
@@ -63,32 +65,42 @@ describe('Project - Role unsuccessfully cases', async () => {
         }),
         MikroOrmModule.forFeature({
           entities: [
-            ProjectMembersEntity,
+            BoardEntity,
+            BoardMembersEntity,
+            BoardEntity,
             AuthUserEntity,
             AuthPasswordEntity,
             AuthTokensEntity,
             AuthEmailsEntity,
             ProjectEntity,
-            ProjectRolesEntity,
+            ProjectMembersEntity,
+            BoardRolesEntity,
           ],
         }),
         AuthModule,
       ],
-      providers: [ProjectRoleService, ProjectMemberService, ProjectService],
+      providers: [
+        BoardService,
+        BoardService,
+        BoardRoleService,
+        ProjectService,
+        BoardMemberService,
+      ],
     }).compile();
 
-    service = module.get<ProjectRoleService>(ProjectRoleService);
+    service = module.get<BoardRoleService>(BoardRoleService);
+    accountService = module.get<AuthAccountService>(AuthAccountService);
+    boardService = module.get<BoardService>(BoardService);
+    boardMemberService = module.get<BoardMemberService>(BoardMemberService);
+    projectService = module.get<ProjectService>(ProjectService);
+
     orm = module.get<MikroORM>(MikroORM);
     em = module.get<EntityManager>(EntityManager);
-    accountService = module.get<AuthAccountService>(AuthAccountService);
-    projectService = module.get<ProjectService>(ProjectService);
-    projectMemberService =
-      module.get<ProjectMemberService>(ProjectMemberService);
 
     await orm.getSchemaGenerator().refreshDatabase();
 
     await RequestContext.createAsync(em, async () => {
-      const userProjectOwner = await accountService.signUp({
+      const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -96,7 +108,7 @@ describe('Project - Role unsuccessfully cases', async () => {
         username: 'sawako',
       });
 
-      const userMemberTest = await accountService.signUp({
+      const boardUser2 = await accountService.signUp({
         email: 'sawa2@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -104,23 +116,36 @@ describe('Project - Role unsuccessfully cases', async () => {
         username: 'sawako2',
       });
 
+      user = await em.findOneOrFail(AuthUserEntity, { id: boardUser.id });
+      user2 = await em.findOneOrFail(AuthUserEntity, { id: boardUser2.id });
+
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
           name: 'Kento',
         },
-        userProjectOwner.id,
+        user.id,
       );
 
       project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
 
-      await projectMemberService.add({
-        projectId: project.id,
-        userId: userMemberTest.id,
+      const boardTest = await boardService.create(
+        {
+          description: 'Kento testing board',
+          name: 'Kento',
+          projectId: project.id,
+        },
+        boardUser.id,
+      );
+
+      const boardMember = await boardMemberService.add({
+        boardId: boardTest.id,
+        userId: user2.id,
       });
 
-      userMember = await em.findOneOrFail(ProjectMembersEntity, {
-        user: userMemberTest.id,
+      board = await em.findOneOrFail(BoardEntity, { id: boardTest.id });
+      member = await em.findOneOrFail(BoardMembersEntity, {
+        id: boardMember.id,
       });
     });
   });
@@ -141,9 +166,9 @@ describe('Project - Role unsuccessfully cases', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
         service.create({
+          boardId: board.id,
           name: 'Testing role',
           permissions: 0,
-          projectId: project.id,
         }),
       ).rejects.toThrowError(
         'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
@@ -159,9 +184,9 @@ describe('Project - Role unsuccessfully cases', async () => {
   it('should not update a role with invalid permissions bit', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -169,8 +194,8 @@ describe('Project - Role unsuccessfully cases', async () => {
 
       expect(
         service.update({
+          boardId: board.id,
           permissions: 0,
-          projectId: project.id,
           roleId: role.id,
         }),
       ).rejects.toThrowError(
@@ -185,9 +210,12 @@ describe('Project - Role unsuccessfully cases', async () => {
    */
   it('should not delete a role that does not exist', async () => {
     await RequestContext.createAsync(em, async () => {
-      expect(service.remove(project.id)).rejects.toThrowError(
-        'Could not find role to delete.',
-      );
+      expect(
+        service.remove({
+          boardId: board.id,
+          roleId: '8054de11-b6dc-481e-a8c2-90cef8169914',
+        }),
+      ).rejects.toThrowError('Could not find role to delete.');
     });
   });
 
@@ -198,9 +226,9 @@ describe('Project - Role unsuccessfully cases', async () => {
   it('should not assign a role to a member that does not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -208,12 +236,12 @@ describe('Project - Role unsuccessfully cases', async () => {
 
       expect(
         service.assign({
+          boardId: board.id,
           memberId: '8054de11-b6dc-481e-a8c2-90cef8169914',
-          projectId: project.id,
           roleId: role.id,
         }),
       ).rejects.toThrowError(
-        'No information about the project member was found.',
+        'No information about the board member was found.',
       );
     });
   });
@@ -226,12 +254,12 @@ describe('Project - Role unsuccessfully cases', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
         service.assign({
-          memberId: userMember.id,
-          projectId: project.id,
+          boardId: board.id,
+          memberId: member.id,
           roleId: '8054de11-b6dc-481e-a8c2-90cef8169914',
         }),
       ).rejects.toThrowError(
-        'No information was found about the project role to be assigned.',
+        'No information was found about the board role to be assigned.',
       );
     });
   });
@@ -244,23 +272,23 @@ describe('Project - Role unsuccessfully cases', async () => {
   it('should not assign a role to a member that already has the role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
       expect(role.name).toEqual('Testing role');
 
       const assignedRole = await service.assign({
-        memberId: userMember.id,
-        projectId: project.id,
+        boardId: board.id,
+        memberId: member.id,
         roleId: role.id,
       });
 
       expect(assignedRole).toBeDefined();
-      expect(assignedRole.user.id).toBe(userMember.user.id);
-      expect(assignedRole.project.id).toBe(project.id);
+      expect(assignedRole.user.id).toBe(member.user.id);
+      expect(assignedRole.board.id).toBe(board.id);
 
       const rolesAssigned = await assignedRole.roles.getItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
@@ -270,8 +298,8 @@ describe('Project - Role unsuccessfully cases', async () => {
 
       expect(
         service.assign({
-          memberId: userMember.id,
-          projectId: project.id,
+          boardId: board.id,
+          memberId: member.id,
           roleId: role.id,
         }),
       ).rejects.toThrowError(
@@ -288,9 +316,9 @@ describe('Project - Role unsuccessfully cases', async () => {
   it('should not unassign a role to a member that not has the role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -298,8 +326,8 @@ describe('Project - Role unsuccessfully cases', async () => {
 
       expect(
         service.unassign({
-          memberId: userMember.id,
-          projectId: project.id,
+          boardId: board.id,
+          memberId: member.id,
           roleId: role.id,
         }),
       ).rejects.toThrowError(
@@ -315,23 +343,23 @@ describe('Project - Role unsuccessfully cases', async () => {
   it('should not unassigned a role from a member that dont have the role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
       expect(role.name).toEqual('Testing role');
 
       const assignedRole = await service.assign({
-        memberId: userMember.id,
-        projectId: project.id,
+        boardId: board.id,
+        memberId: member.id,
         roleId: role.id,
       });
 
       expect(assignedRole).toBeDefined();
-      expect(assignedRole.user.id).toBe(userMember.user.id);
-      expect(assignedRole.project.id).toBe(project.id);
+      expect(assignedRole.user.id).toBe(member.user.id);
+      expect(assignedRole.board.id).toBe(board.id);
 
       const rolesAssigned = await assignedRole.roles.getItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
@@ -341,12 +369,12 @@ describe('Project - Role unsuccessfully cases', async () => {
 
       expect(
         service.unassign({
-          memberId: project.id,
-          projectId: project.id,
+          boardId: board.id,
+          memberId: board.id,
           roleId: role.id,
         }),
       ).rejects.toThrowError(
-        'No information about the project member was found.',
+        'No information about the board member was found.',
       );
     });
   });
@@ -359,12 +387,12 @@ describe('Project - Role unsuccessfully cases', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
         service.unassign({
-          memberId: userMember.id,
-          projectId: project.id,
+          boardId: board.id,
+          memberId: member.id,
           roleId: '8054de11-b6dc-481e-a8c2-90cef8169914',
         }),
       ).rejects.toThrowError(
-        'No information was found about the project role to be assigned.',
+        'No information was found about the board role to be assigned.',
       );
     });
   });

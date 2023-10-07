@@ -10,12 +10,15 @@ import {
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
+  BoardEntity,
+  BoardMembersEntity,
   ProjectEntity,
   ProjectMembersEntity,
 } from '~/database/entities';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
-import { ProjectMemberService } from '~/modules/project/services/member.service';
+import { BoardService } from '~/modules/board/services/board.service';
+import { BoardMemberService } from '~/modules/board/services/member.service';
 import { ProjectService } from '~/modules/project/services/project.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -24,28 +27,25 @@ import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
 /**
  * `Member successfully cases` Test Suite:
- * This test suite focuses on validating successful scenarios related to project members.
+ * This test suite focuses on validating successful scenarios related to board members.
  * The primary goal is to ensure that the system correctly handles member-related operations and
  * gives the desired results under valid conditions.
  */
-describe('Project - Member successfuly cases', () => {
-  let service: ProjectMemberService;
+describe('Board - Member successfuly cases', () => {
+  let module: TestingModule;
+  let service: BoardMemberService;
+  let boardService: BoardService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;
-  let module: TestingModule;
-  let em: EntityManager;
-  let orm: MikroORM;
-  let project: ProjectEntity;
-  let userProjectOwner: AuthUserEntity;
-  let userMember: AuthUserEntity;
 
-  /**
-   * Before Each Setup:
-   * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
-   * 1. Compiling and initializing the testing module.
-   * 2. Instantiating services for testing.
-   * 3. Setting up a clean database state and generating test data.
-   */
+  let orm: MikroORM;
+  let em: EntityManager;
+
+  let project: ProjectEntity;
+  let board: BoardEntity;
+  let user: AuthUserEntity;
+  let user2: AuthUserEntity;
+
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
@@ -60,32 +60,39 @@ describe('Project - Member successfuly cases', () => {
         }),
         MikroOrmModule.forFeature({
           entities: [
-            ProjectMembersEntity,
+            BoardEntity,
+            BoardMembersEntity,
+            BoardEntity,
             AuthUserEntity,
             AuthPasswordEntity,
             AuthTokensEntity,
             AuthEmailsEntity,
             ProjectEntity,
+            ProjectMembersEntity,
           ],
         }),
         AuthModule,
       ],
-      providers: [ProjectMemberService, ProjectService],
+      providers: [
+        BoardService,
+        BoardService,
+        BoardMemberService,
+        ProjectService,
+      ],
     }).compile();
 
-    // After the module is compiled, retrieve and initialize the required services and modules.
-    service = module.get<ProjectMemberService>(ProjectMemberService);
-    orm = module.get<MikroORM>(MikroORM);
-    em = module.get<EntityManager>(EntityManager);
+    service = module.get<BoardMemberService>(BoardMemberService);
     accountService = module.get<AuthAccountService>(AuthAccountService);
+    boardService = module.get<BoardService>(BoardService);
     projectService = module.get<ProjectService>(ProjectService);
 
-    // Database setup: Refresh the database to ensure a clean state before tests.
+    orm = module.get<MikroORM>(MikroORM);
+    em = module.get<EntityManager>(EntityManager);
+
     await orm.getSchemaGenerator().refreshDatabase();
 
-    // Create test users and a project, which will be used in the subsequent tests.
     await RequestContext.createAsync(em, async () => {
-      const userTest = await accountService.signUp({
+      const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -93,11 +100,7 @@ describe('Project - Member successfuly cases', () => {
         username: 'sawako',
       });
 
-      userProjectOwner = await em.findOneOrFail(AuthUserEntity, {
-        id: userTest.id,
-      });
-
-      const userTest2 = await accountService.signUp({
+      const boardUser2 = await accountService.signUp({
         email: 'sawa2@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -105,19 +108,29 @@ describe('Project - Member successfuly cases', () => {
         username: 'sawako2',
       });
 
-      userMember = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
-    });
+      user = await em.findOneOrFail(AuthUserEntity, { id: boardUser.id });
+      user2 = await em.findOneOrFail(AuthUserEntity, { id: boardUser2.id });
 
-    await RequestContext.createAsync(em, async () => {
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
           name: 'Kento',
         },
-        userProjectOwner.id,
+        user.id,
       );
 
       project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+
+      const boardTest = await boardService.create(
+        {
+          description: 'Kento testing board',
+          name: 'Kento',
+          projectId: project.id,
+        },
+        boardUser.id,
+      );
+
+      board = await em.findOneOrFail(BoardEntity, { id: boardTest.id });
     });
   });
 
@@ -139,43 +152,43 @@ describe('Project - Member successfuly cases', () => {
 
   /**
    * Test Case: Adding a Member:
-   * Validates that a userProjectOwner can be successfully added as a member to a project.
+   * Validates that a userBoardOwner can be successfully added as a member to a board.
    * The system should acknowledge the addition and reflect it in the returned results.
    */
-  it('should add a member to a project', async () => {
+  it('should add a member to a board', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       const member = await service.add({
-        projectId: project.id,
-        userId: userMember.id,
+        boardId: board.id,
+        userId: user2.id,
       });
 
-      expect(member.user.id).toBe(userMember.id);
-      expect(member.project.id).toEqual(project.id);
+      expect(member.user.id).toBe(user2.id);
+      expect(member.board.id).toEqual(board.id);
     });
   });
 
   /**
    * Test Case: Removing a Member:
-   * Checks that a userProjectOwner, who is a member of a project, can be removed successfully.
+   * Checks that a userBoardOwner, who is a member of a board, can be removed successfully.
    * The system should acknowledge the removal and provide a confirmation message.
    */
-  it('should remove a member to a project', async () => {
+  it('should remove a member to a board', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       const member = await service.add({
-        projectId: project.id,
-        userId: userMember.id,
+        boardId: board.id,
+        userId: user2.id,
       });
 
-      expect(member.user.id).toBe(userMember.id);
-      expect(member.project.id).toEqual(project.id);
+      expect(member.user.id).toBe(user2.id);
+      expect(member.board.id).toEqual(board.id);
 
       const result = await service.remove({
-        projectId: project.id,
-        userId: userMember.id,
+        boardId: board.id,
+        userId: user2.id,
       });
 
       expect(result).toBe(
-        'The user was successfully removed from the project members.',
+        'The user was successfully removed from the board members.',
       );
     });
   });

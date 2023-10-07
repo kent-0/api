@@ -10,16 +10,19 @@ import {
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
+  BoardEntity,
+  BoardMembersEntity,
+  BoardRolesEntity,
   ProjectEntity,
   ProjectMembersEntity,
-  ProjectRolesEntity,
 } from '~/database/entities';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
-import { ProjectMemberService } from '~/modules/project/services/member.service';
+import { BoardService } from '~/modules/board/services/board.service';
+import { BoardMemberService } from '~/modules/board/services/member.service';
+import { BoardRoleService } from '~/modules/board/services/role.service';
 import { ProjectService } from '~/modules/project/services/project.service';
-import { ProjectRoleService } from '~/modules/project/services/role.service';
-import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -27,28 +30,27 @@ import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
 /**
  * `Role Management Successfully Cases` Test Suite:
- * This test suite focuses on validating successful scenarios related to project roles.
+ * This test suite focuses on validating successful scenarios related to board roles.
  * The primary goal is to ensure that the system correctly handles role-related operations and
  * gives the desired results under valid conditions.
  */
-describe('Project - Role successfully cases', () => {
-  let service: ProjectRoleService;
-  let accountService: AuthAccountService;
-  let projectMemberService: ProjectMemberService;
-  let projectService: ProjectService;
+describe('Board - Role successfully cases', () => {
   let module: TestingModule;
-  let em: EntityManager;
-  let orm: MikroORM;
-  let project: ProjectEntity;
-  let userMember: ProjectMembersEntity;
+  let service: BoardRoleService;
+  let boardService: BoardService;
+  let boardMemberService: BoardMemberService;
+  let accountService: AuthAccountService;
+  let projectService: ProjectService;
 
-  /**
-   * Before Each Setup:
-   * This hook is executed before all the test cases in the suite. Its primary responsibilities include:
-   * 1. Compiling and initializing the testing module.
-   * 2. Instantiating services for testing.
-   * 3. Setting up a clean database state and generating test data.
-   */
+  let orm: MikroORM;
+  let em: EntityManager;
+
+  let project: ProjectEntity;
+  let board: BoardEntity;
+  let user: AuthUserEntity;
+  let user2: AuthUserEntity;
+  let member: BoardMembersEntity;
+
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
@@ -63,32 +65,42 @@ describe('Project - Role successfully cases', () => {
         }),
         MikroOrmModule.forFeature({
           entities: [
-            ProjectMembersEntity,
+            BoardEntity,
+            BoardMembersEntity,
+            BoardEntity,
             AuthUserEntity,
             AuthPasswordEntity,
             AuthTokensEntity,
             AuthEmailsEntity,
             ProjectEntity,
-            ProjectRolesEntity,
+            ProjectMembersEntity,
+            BoardRolesEntity,
           ],
         }),
         AuthModule,
       ],
-      providers: [ProjectRoleService, ProjectMemberService, ProjectService],
+      providers: [
+        BoardService,
+        BoardService,
+        BoardRoleService,
+        ProjectService,
+        BoardMemberService,
+      ],
     }).compile();
 
-    service = module.get<ProjectRoleService>(ProjectRoleService);
+    service = module.get<BoardRoleService>(BoardRoleService);
+    accountService = module.get<AuthAccountService>(AuthAccountService);
+    boardService = module.get<BoardService>(BoardService);
+    boardMemberService = module.get<BoardMemberService>(BoardMemberService);
+    projectService = module.get<ProjectService>(ProjectService);
+
     orm = module.get<MikroORM>(MikroORM);
     em = module.get<EntityManager>(EntityManager);
-    accountService = module.get<AuthAccountService>(AuthAccountService);
-    projectService = module.get<ProjectService>(ProjectService);
-    projectMemberService =
-      module.get<ProjectMemberService>(ProjectMemberService);
 
     await orm.getSchemaGenerator().refreshDatabase();
 
     await RequestContext.createAsync(em, async () => {
-      const userProjectOwner = await accountService.signUp({
+      const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -96,7 +108,7 @@ describe('Project - Role successfully cases', () => {
         username: 'sawako',
       });
 
-      const userMemberTest = await accountService.signUp({
+      const boardUser2 = await accountService.signUp({
         email: 'sawa2@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -104,23 +116,36 @@ describe('Project - Role successfully cases', () => {
         username: 'sawako2',
       });
 
+      user = await em.findOneOrFail(AuthUserEntity, { id: boardUser.id });
+      user2 = await em.findOneOrFail(AuthUserEntity, { id: boardUser2.id });
+
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
           name: 'Kento',
         },
-        userProjectOwner.id,
+        user.id,
       );
 
       project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
 
-      await projectMemberService.add({
-        projectId: project.id,
-        userId: userMemberTest.id,
+      const boardTest = await boardService.create(
+        {
+          description: 'Kento testing board',
+          name: 'Kento',
+          projectId: project.id,
+        },
+        boardUser.id,
+      );
+
+      const boardMember = await boardMemberService.add({
+        boardId: boardTest.id,
+        userId: user2.id,
       });
 
-      userMember = await em.findOneOrFail(ProjectMembersEntity, {
-        user: userMemberTest.id,
+      board = await em.findOneOrFail(BoardEntity, { id: boardTest.id });
+      member = await em.findOneOrFail(BoardMembersEntity, {
+        id: boardMember.id,
       });
     });
   });
@@ -134,20 +159,20 @@ describe('Project - Role successfully cases', () => {
 
   /**
    * Test Case: Creating a Role:
-   * This test case focuses on the scenario where a new role is created for a project.
+   * This test case focuses on the scenario where a new role is created for a board.
    * It ensures that the system correctly creates the role and returns the appropriate details.
    */
   it('should be able to create a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
       expect(role.name).toEqual('Testing role');
-      expect(role.project.id).toEqual(project.id);
+      expect(role.board.id).toEqual(board.id);
     });
   });
 
@@ -159,15 +184,15 @@ describe('Project - Role successfully cases', () => {
   it('should be able to update a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       const updatedRole = await service.update({
+        boardId: board.id,
         name: 'Testing role updated',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
         roleId: role.id,
       });
 
@@ -184,35 +209,38 @@ describe('Project - Role successfully cases', () => {
   it('should be able to delete a role', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
-      const deletedRole = await service.remove(role.id);
+      const deletedRole = await service.remove({
+        boardId: board.id,
+        roleId: role.id,
+      });
 
-      expect(deletedRole).toBe('The role for project has been removed.');
+      expect(deletedRole).toBe('The role for board has been removed.');
     });
   });
 
   /**
    * Test Case: Fetching Roles:
-   * Validates that the system can fetch a list of roles associated with a project.
+   * Validates that the system can fetch a list of roles associated with a board.
    * It ensures the list is accurate and paginated correctly.
    */
   it('should be able to get all roles', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
 
       const roles = await service.paginate({
+        boardId: board.id,
         page: 1,
-        projectId: project.id,
         size: 10,
       });
 
@@ -225,23 +253,23 @@ describe('Project - Role successfully cases', () => {
 
   /**
    * Test Case: Assigning a Role to a Member:
-   * This test focuses on the scenario where a role is assigned to a member of a project.
+   * This test focuses on the scenario where a role is assigned to a member of a board.
    * The system should correctly associate the member with the role and reflect it in the returned results.
    */
-  it('should be able to assign a role to project member', async () => {
+  it('should be able to assign a role to board member', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
       expect(role.name).toEqual('Testing role');
 
       const assignedRole = await service.assign({
-        memberId: userMember.id,
-        projectId: project.id,
+        boardId: board.id,
+        memberId: member.id,
         roleId: role.id,
       });
 
@@ -261,20 +289,20 @@ describe('Project - Role successfully cases', () => {
    * Validates the scenario where a role is unassigned or removed from a member.
    * The system should correctly dissociate the role from the member and ensure the member no longer holds that role.
    */
-  it('should be able to remove a role from project member', async () => {
+  it('should be able to remove a role from board member', async () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
+        boardId: board.id,
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
-        projectId: project.id,
+        permissions: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
       expect(role.name).toEqual('Testing role');
 
       const assignedRole = await service.assign({
-        memberId: userMember.id,
-        projectId: project.id,
+        boardId: board.id,
+        memberId: member.id,
         roleId: role.id,
       });
 
@@ -287,8 +315,8 @@ describe('Project - Role successfully cases', () => {
       expect(roleAssigned.name).toEqual('Testing role');
 
       const removedRole = await service.unassign({
-        memberId: userMember.id,
-        projectId: project.id,
+        boardId: board.id,
+        memberId: member.id,
         roleId: role.id,
       });
 

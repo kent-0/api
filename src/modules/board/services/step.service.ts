@@ -88,7 +88,7 @@ export class BoardStepService {
    *
    * The function serves to indicate that a particular step represents the final stage
    * in a task's lifecycle on the specified board. If a step was previously marked as
-   * "finished", it will be reverted to its normal state, ensuring that only one step
+   * "finished", it will be reverted to its normal state, ensuring that only one-step
    * remains marked as "finished" at any given time.
    *
    * @param {BoardStepFinishedInput} params - Input parameters for this function.
@@ -110,8 +110,11 @@ export class BoardStepService {
       finish_step: true,
     });
 
-    // If such a step exists, revert its "finished" status.
-    if (previousFinishedStep) previousFinishedStep.finish_step = false;
+    // If such a step exists, revert its "finished" status and save the changes.
+    if (previousFinishedStep) {
+      previousFinishedStep.finish_step = false;
+      await this.em.persistAndFlush(previousFinishedStep);
+    }
 
     // Fetch the step that is intended to be marked as "finished."
     const newFinishedStep = await this.stepRepository.findOne(
@@ -137,8 +140,9 @@ export class BoardStepService {
     // Mark the retrieved step as "finished."
     newFinishedStep.finish_step = true;
 
-    // Save the changes to both steps (if applicable) in the database.
-    await this.em.persistAndFlush([previousFinishedStep, newFinishedStep]);
+    // Save the changes in the database.
+
+    await this.em.persistAndFlush(newFinishedStep);
 
     // Return the step that was marked as "finished."
     return newFinishedStep;
@@ -195,9 +199,17 @@ export class BoardStepService {
       );
     }
 
+    if (positionReplaceStep.finish_step) {
+      throw new NotFoundException(
+        'You are trying to move a column to the position of the finished column. This column cannot be moved.',
+      );
+    }
+
     // Swap positions between the targeted step and the replacement step.
-    positionReplaceStep.position = step.position;
+    const tempPosition = step.position;
+
     step.position = positionReplaceStep.position;
+    positionReplaceStep.position = tempPosition;
 
     // Persist the changes to the database.
     await this.em.persistAndFlush([positionReplaceStep, step]);

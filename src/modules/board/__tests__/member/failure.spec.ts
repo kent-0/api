@@ -10,12 +10,15 @@ import {
   AuthPasswordEntity,
   AuthTokensEntity,
   AuthUserEntity,
+  BoardEntity,
+  BoardMembersEntity,
   ProjectEntity,
   ProjectMembersEntity,
 } from '~/database/entities';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
-import { ProjectMemberService } from '~/modules/project/services/member.service';
+import { BoardService } from '~/modules/board/services/board.service';
+import { BoardMemberService } from '~/modules/board/services/member.service';
 import { ProjectService } from '~/modules/project/services/project.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -24,27 +27,24 @@ import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
 /**
  * `Member unsuccessfully cases` Test Suite:
- * This test suite is focused on scenarios where operations related to project members are expected to fail.
+ * This test suite is focused on scenarios where operations related to board members are expected to fail.
  * The purpose is to ensure that the system correctly handles and responds to incorrect or invalid operations.
  */
-describe('Project - Member unsuccessfully cases', () => {
-  let service: ProjectMemberService;
+describe('Board - Member unsuccessfully cases', () => {
+  let module: TestingModule;
+  let service: BoardMemberService;
+  let boardService: BoardService;
   let accountService: AuthAccountService;
   let projectService: ProjectService;
-  let module: TestingModule;
-  let em: EntityManager;
+
   let orm: MikroORM;
+  let em: EntityManager;
+
   let project: ProjectEntity;
+  let board: BoardEntity;
   let user: AuthUserEntity;
   let user2: AuthUserEntity;
 
-  /**
-   * Before Each Setup:
-   * This hook runs before all test cases in this suite. It's responsible for:
-   * 1. Setting up the testing module.
-   * 2. Initializing service instances.
-   * 3. Setting up the test data.
-   */
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
@@ -59,32 +59,39 @@ describe('Project - Member unsuccessfully cases', () => {
         }),
         MikroOrmModule.forFeature({
           entities: [
-            ProjectMembersEntity,
+            BoardEntity,
+            BoardMembersEntity,
+            BoardEntity,
             AuthUserEntity,
             AuthPasswordEntity,
             AuthTokensEntity,
             AuthEmailsEntity,
             ProjectEntity,
+            ProjectMembersEntity,
           ],
         }),
         AuthModule,
       ],
-      providers: [ProjectMemberService, ProjectService],
+      providers: [
+        BoardService,
+        BoardService,
+        BoardMemberService,
+        ProjectService,
+      ],
     }).compile();
 
-    // After the module is compiled, retrieve and initialize the required services and modules.
-    service = module.get<ProjectMemberService>(ProjectMemberService);
-    orm = module.get<MikroORM>(MikroORM);
-    em = module.get<EntityManager>(EntityManager);
+    service = module.get<BoardMemberService>(BoardMemberService);
     accountService = module.get<AuthAccountService>(AuthAccountService);
+    boardService = module.get<BoardService>(BoardService);
     projectService = module.get<ProjectService>(ProjectService);
 
-    // Database setup: Refresh the database to ensure a clean state before tests.
+    orm = module.get<MikroORM>(MikroORM);
+    em = module.get<EntityManager>(EntityManager);
+
     await orm.getSchemaGenerator().refreshDatabase();
 
-    // Create test users and a project, which will be used in the subsequent tests.
     await RequestContext.createAsync(em, async () => {
-      const userTest = await accountService.signUp({
+      const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -92,9 +99,7 @@ describe('Project - Member unsuccessfully cases', () => {
         username: 'sawako',
       });
 
-      user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
-
-      const userTest2 = await accountService.signUp({
+      const boardUser2 = await accountService.signUp({
         email: 'sawa2@acme.com',
         first_name: 'Sawa',
         last_name: 'Ko',
@@ -102,10 +107,9 @@ describe('Project - Member unsuccessfully cases', () => {
         username: 'sawako2',
       });
 
-      user2 = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
-    });
+      user = await em.findOneOrFail(AuthUserEntity, { id: boardUser.id });
+      user2 = await em.findOneOrFail(AuthUserEntity, { id: boardUser2.id });
 
-    await RequestContext.createAsync(em, async () => {
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
@@ -115,6 +119,17 @@ describe('Project - Member unsuccessfully cases', () => {
       );
 
       project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+
+      const boardTest = await boardService.create(
+        {
+          description: 'Kento testing board',
+          name: 'Kento',
+          projectId: project.id,
+        },
+        boardUser.id,
+      );
+
+      board = await em.findOneOrFail(BoardEntity, { id: boardTest.id });
     });
   });
 
@@ -136,54 +151,51 @@ describe('Project - Member unsuccessfully cases', () => {
 
   /**
    * Test Case: Adding an Existing Member:
-   * This test ensures that a user who is already a member of a project cannot be added again.
+   * This test ensures that a user who is already a member of a board cannot be added again.
    * The system should recognize this and throw an appropriate error.
    */
-  it('should not be able to add a user who is a member of the project', async () => {
+  it('should not be able to add a user who is a member of the board', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       expect(
         async () =>
           await service.add({
-            projectId: project.id,
+            boardId: board.id,
             userId: user.id,
           }),
-      ).rejects.toThrowError('This user is already a member of the project.');
+      ).rejects.toThrowError('This user is already a member of the board.');
     });
   });
 
   /**
    * Test Case: Removing a Non-member:
-   * This test checks the scenario where there's an attempt to remove a user who isn't a member of the project.
+   * This test checks the scenario where there's an attempt to remove a user who isn't a member of the board.
    * The system should recognize this situation and throw an appropriate error.
    */
-  it('should not be able to remove a user who is not a member of the project', async () => {
+  it('should not be able to remove a user who is not a member of the board', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       expect(
         async () =>
           await service.remove({
-            projectId: project.id,
+            boardId: board.id,
             userId: user2.id,
           }),
-      ).rejects.toThrowError('The user is not a member of the project.');
+      ).rejects.toThrowError('The user is not a member of the board.');
     });
   });
 
   /**
-   * Test Case: Removing Project Creator:
-   * A project's creator (or owner) should not be removable from the project.
-   * This test checks this constraint and ensures that the system throws an error if such an attempt is made.
+   * Test Case: Removing the Board member
+   * This test checks the scenario where there's an attempt to remove a user who is the board owner.
    */
-  it('should not be able to remove the creator of the project as a member of the project.', async () => {
+  it('should not be able to remove the board member because it does not exist', async () => {
     await RequestContext.createAsync(orm.em, async () => {
       expect(
         async () =>
           await service.remove({
-            projectId: project.id,
-            userId: user.id,
+            boardId: board.id,
+            userId: '8ae7dfea-c95e-42cb-b7e7-82798e484d54',
           }),
-      ).rejects.toThrowError(
-        'You cannot remove the project member who acts as the project owner.',
-      );
+      ).rejects.toThrowError('The user is not a member of the board.');
     });
   });
 });

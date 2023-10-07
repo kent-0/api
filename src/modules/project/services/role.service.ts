@@ -219,7 +219,7 @@ export class ProjectRoleService {
     // Returns the paginated roles, along with metadata about the pagination.
     return {
       hasNextPage: page < totalPages,
-      hasPreviousPage: page !== 1,
+      hasPreviousPage: page > 1 && page <= totalPages,
       items: projectRolesPaginated,
       totalItems: total,
       totalPages,

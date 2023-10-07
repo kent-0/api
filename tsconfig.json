@@ -26,6 +26,5 @@
       "~/permissions/list": ["./src/permissions/enums/index"],
       "../../../../../mikro-orm.config": ["./mikro-orm.config"],
     },
-    "types": ["vitest/globals"]
   }
 }
