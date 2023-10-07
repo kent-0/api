@@ -104,17 +104,23 @@ export class BoardStepService {
     boardId,
     stepId,
   }: BoardStepFinishedInput): Promise<ToCollections<BoardStepObject>> {
+    // Count the number of steps on the board.
+    const boardStepsCount = await this.stepRepository.count({
+      board: boardId,
+    });
+
+    // If the board has no steps, throw an exception.
+    if (boardStepsCount === 1) {
+      throw new NotFoundException(
+        'The board has no other steps to mark as finished.',
+      );
+    }
+
     // Retrieve any step currently marked as "finished" on the board.
     const previousFinishedStep = await this.stepRepository.findOne({
       board: boardId,
       finish_step: true,
     });
-
-    // If such a step exists, revert its "finished" status and save the changes.
-    if (previousFinishedStep) {
-      previousFinishedStep.finish_step = false;
-      await this.em.persistAndFlush(previousFinishedStep);
-    }
 
     // Fetch the step that is intended to be marked as "finished."
     const newFinishedStep = await this.stepRepository.findOne(
@@ -140,8 +146,23 @@ export class BoardStepService {
     // Mark the retrieved step as "finished."
     newFinishedStep.finish_step = true;
 
-    // Save the changes in the database.
+    // If such a step exists, revert its "finished" status and "position" and save the changes.
+    if (previousFinishedStep) {
+      previousFinishedStep.finish_step = false;
 
+      // Replace steps positions
+      const tempPosition = newFinishedStep.position;
+
+      newFinishedStep.position = previousFinishedStep.position;
+      previousFinishedStep.position = tempPosition;
+
+      await this.em.persistAndFlush(previousFinishedStep);
+    } else {
+      // Move the step to the last position on the board.
+      newFinishedStep.position = boardStepsCount;
+    }
+
+    // Save the changes in the database.
     await this.em.persistAndFlush(newFinishedStep);
 
     // Return the step that was marked as "finished."
