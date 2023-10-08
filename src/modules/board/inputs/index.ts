@@ -13,3 +13,5 @@ export * from './step/move.input';
 export * from './step/remove.update';
 export * from './step/step-finished.input';
 export * from './step/update.input';
+export * from './task/create.input';
+export * from './task/update.input';

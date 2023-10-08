@@ -5,6 +5,7 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { BoardStepEntity, BoardTaskEntity } from '~/database/entities';
+import { BoardTaskUpdateInput } from '~/modules/board/inputs';
 import { BoardTaskCreateInput } from '~/modules/board/inputs/task/create.input';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class BoardTaskService {
   ) {}
 
   public async create(
-    { boardId, description, name, tags }: BoardTaskCreateInput,
+    { boardId, description, name }: BoardTaskCreateInput,
     userId: string,
   ) {
     const step = await this.boardStepRepository.findOne({
@@ -40,8 +41,33 @@ export class BoardTaskService {
       name,
       position: stepsCount + 1,
       step,
-      tags,
     });
+
+    await this.em.persistAndFlush(task);
+    return task;
+  }
+
+  public async update({
+    boardId,
+    description,
+    expirationDate,
+    name,
+    taskId,
+  }: BoardTaskUpdateInput) {
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to update does not exist.',
+      );
+    }
+
+    task.description = description ?? task.description;
+    task.expiration_date = expirationDate ?? task.expiration_date;
+    task.name = name ?? task.name;
 
     await this.em.persistAndFlush(task);
     return task;
