@@ -15,3 +15,4 @@ export * from './step/step-finished.input';
 export * from './step/update.input';
 export * from './task/create.input';
 export * from './task/update.input';
+export * from './task/delete.input';

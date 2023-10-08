@@ -5,8 +5,11 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { BoardStepEntity, BoardTaskEntity } from '~/database/entities';
-import { BoardTaskUpdateInput } from '~/modules/board/inputs';
-import { BoardTaskCreateInput } from '~/modules/board/inputs/task/create.input';
+import {
+  BoardTaskCreateInput,
+  BoardTaskDeleteInput,
+  BoardTaskUpdateInput,
+} from '~/modules/board/inputs';
 
 @Injectable()
 export class BoardTaskService {
@@ -45,6 +48,22 @@ export class BoardTaskService {
 
     await this.em.persistAndFlush(task);
     return task;
+  }
+
+  public async delete({ boardId, taskId }: BoardTaskDeleteInput) {
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to delete does not exist.',
+      );
+    }
+
+    await this.em.removeAndFlush(task);
+    return 'The task has been deleted successfully.';
   }
 
   public async update({
