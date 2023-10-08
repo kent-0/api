@@ -4,6 +4,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
+import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
@@ -93,6 +94,7 @@ export class BoardService {
         ...createFieldPaths('members', ...BoardMembersMinimalProperties),
         ...createFieldPaths('steps', ...BoardStepMinimalProperties),
         ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+        ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
       ],
     });
 
@@ -134,6 +136,7 @@ export class BoardService {
           ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ...createFieldPaths('steps', ...BoardStepMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
         ],
       },
     );
@@ -236,6 +239,7 @@ export class BoardService {
           ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ...createFieldPaths('steps', ...BoardStepMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
         ],
       },
     );
