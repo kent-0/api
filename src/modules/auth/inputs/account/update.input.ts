@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { IsString, Matches, MaxLength } from 'class-validator';
+import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 /**
  * Represents the data required to update a user's account in a GraphQL mutation or query.
@@ -24,9 +24,11 @@ export class AuthUpdateAccountInput {
   @Field({
     description:
       "A brief description or biography of the user detailing their history or interests. It's a text with a maximum of 300 characters.",
+    nullable: true,
   })
   @MaxLength(300, { message: 'The biography cannot exceed 300 characters.' })
   @IsString({ message: 'This field can only be of text type.' })
+  @IsOptional()
   public biography?: string;
 
   /**
@@ -49,6 +51,7 @@ export class AuthUpdateAccountInput {
     message: 'The first name can only contain text characters.',
   })
   @IsString({ message: 'This field can only be of text type.' })
+  @IsOptional()
   public first_name?: string;
 
   /**
@@ -71,6 +74,7 @@ export class AuthUpdateAccountInput {
     message: 'The last name can only contain text characters.',
   })
   @IsString({ message: 'This field can only be of text type.' })
+  @IsOptional()
   public last_name?: string;
 
   /**
@@ -94,5 +98,6 @@ export class AuthUpdateAccountInput {
       'The username can only contain numbers, letters, and the symbols -_.',
   })
   @IsString({ message: 'This field can only be of text type.' })
+  @IsOptional()
   public username?: string;
 }

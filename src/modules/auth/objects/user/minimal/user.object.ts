@@ -52,8 +52,9 @@ export class AuthUserMinimalObject {
    */
   @Field({
     description: 'User biography',
+    nullable: true,
   })
-  public biography!: string;
+  public biography?: string;
 
   /**
    * The first name of the user. This is typically the given name of the user.
