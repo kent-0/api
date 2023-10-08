@@ -16,6 +16,7 @@ import {
   ProjectRoleAssignInput,
   ProjectRoleCreateInput,
   ProjectRolePaginationInput,
+  ProjectRoleRemoveInput,
   ProjectRoleUnassignInput,
   ProjectRoleUpdateInput,
 } from '../inputs';
@@ -203,9 +204,12 @@ export class ProjectRoleService {
         {
           fields: [
             ...ProjectRolesMinimalProperties,
-            ...createFieldPaths('project', ...ProjectMinimalProperties),
             ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
-            ...createFieldPaths('members.project', ...ProjectMinimalProperties),
+            ...createFieldPaths(
+              'members.roles',
+              ...ProjectRolesMinimalProperties,
+              ...createFieldPaths('project', ...ProjectMinimalProperties),
+            ),
           ],
           limit: size,
           offset: (page - 1) * size,
@@ -235,16 +239,20 @@ export class ProjectRoleService {
    * 3. Removes the role from the database.
    * 4. Returns a confirmation message indicating the role has been removed.
    *
-   * @param {string} roleId - The ID of the role to be deleted.
+   * @param {ProjectRoleRemoveInput} params - The parameters for removing a project role.
    *
    * @returns {Promise<string>} - Returns a confirmation message indicating successful deletion.
    *
    * @throws {NotFoundException} - Throws this exception if the specified role is not found.
    */
-  public async remove(roleId: string): Promise<string> {
+  public async remove({
+    projectId,
+    roleId,
+  }: ProjectRoleRemoveInput): Promise<string> {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne({
       id: roleId,
+      project: projectId,
     });
 
     // If the role does not exist, throw an exception.
