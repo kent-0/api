@@ -24,6 +24,17 @@ export class BoardTaskCreateInput {
   })
   public description!: string;
 
+  @IsString({
+    message: 'The name of the task must be a string.',
+  })
+  @MaxLength(150, {
+    message: 'The name of the task must be no more than 150 characters.',
+  })
+  @Field(() => String, {
+    description: 'The name of the task.',
+  })
+  public name!: string;
+
   @IsArray({
     message: 'The tags associated with this task must be an array of strings.',
   })
@@ -31,15 +42,4 @@ export class BoardTaskCreateInput {
     description: 'The tags associated with this task.',
   })
   public tags!: string[];
-
-  @IsString({
-    message: 'The title of the task must be a string.',
-  })
-  @MaxLength(150, {
-    message: 'The title of the task must be no more than 150 characters.',
-  })
-  @Field(() => String, {
-    description: 'The title of the task.',
-  })
-  public title!: string;
 }

@@ -1,4 +1,5 @@
 import {
+  Collection,
   Entity,
   ManyToOne,
   OneToMany,
@@ -105,5 +106,5 @@ export class BoardStepEntity extends ParentEntity {
   @OneToMany(() => BoardTaskEntity, (t) => t.step, {
     comment: 'Tasks assigned to the project step.',
   })
-  public tasks!: Rel<BoardTaskEntity>;
+  public tasks = new Collection<Rel<BoardTaskEntity>>(this);
 }

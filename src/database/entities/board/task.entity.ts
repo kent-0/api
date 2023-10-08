@@ -36,6 +36,7 @@ export class BoardTaskEntity extends ParentEntity {
    */
   public [OptionalProps]?:
     | 'assigned_to'
+    | 'comments'
     | 'expiration_date'
     | 'finish_date'
     | 'start_date'
