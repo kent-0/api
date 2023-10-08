@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsString, MinLength } from 'class-validator';
 
 /**
  * Represents the data required to confirm a user's email address in a GraphQL mutation or query.
@@ -22,6 +22,9 @@ export class AuthConfirmEmailInput {
       "Activation code sent to the user's email for verification. Must be of text type.",
   })
   @IsString({ message: 'This field can only be of text type.' })
+  @MinLength(9, {
+    message: 'The activation code must be at least 9 characters long.',
+  })
   public code!: string;
 
   /**
