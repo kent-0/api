@@ -120,6 +120,7 @@ export class BoardTaskEntity extends ParentEntity {
   @Property({
     columnType: 'varchar',
     comment: 'Name of the task.',
+    length: 150,
     type: 'string',
   })
   public name!: string;
