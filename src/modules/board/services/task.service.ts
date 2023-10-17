@@ -66,6 +66,8 @@ export class BoardTaskService {
     return 'The task has been deleted successfully.';
   }
 
+  public move() {}
+
   public async update({
     boardId,
     description,
