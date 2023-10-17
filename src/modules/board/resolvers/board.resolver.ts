@@ -4,6 +4,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserToken } from '~/modules/auth/decorators/user.decorator';
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { JWTPayload } from '~/modules/auth/interfaces/jwt.interface';
+import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
+import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 import { ExcludeGuards } from '~/utils/decorators/exclude-guards.decorator';
 
 import { BoardPermissionsGuard } from '../guards/permissions.guard';
@@ -76,6 +78,7 @@ export class BoardResolver {
     description: 'Remove an existing board of a project.',
     name: 'boardRemove',
   })
+  @BoardPermissions([BoardPermissionsEnum.BoardUpdate])
   public remove(@Args('input') input: BoardRemoveInput) {
     return this._boardService.remove(input);
   }
@@ -90,6 +93,7 @@ export class BoardResolver {
     description: 'Update an existing board of a project.',
     name: 'boardUpdate',
   })
+  @BoardPermissions([BoardPermissionsEnum.BoardUpdate])
   public update(@Args('input') input: BoardUpdateInput) {
     return this._boardService.update(input);
   }

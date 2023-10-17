@@ -65,7 +65,7 @@ export class BoardService {
   public async create(
     { description, name, projectId }: BoardCreateInput,
     userId: string,
-  ): Promise<ToCollections<BoardObject>> {
+  ) {
     // Step 1: Create a new board entity instance.
     const newBoard = this.boardRepository.create({
       created_by: userId,
@@ -87,18 +87,29 @@ export class BoardService {
     await this.em.persistAndFlush(newMember);
 
     // Step 5: Populate relations.
-    await newBoard.populate([], {
-      fields: [
-        ...BoardMinimalProperties,
-        ...createFieldPaths('project', ...ProjectMinimalProperties),
-        ...createFieldPaths('members', ...BoardMembersMinimalProperties),
-        ...createFieldPaths('steps', ...BoardStepMinimalProperties),
-        ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
-        ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
-      ],
-    });
+    const createdBoard = this.boardRepository.findOne(
+      {
+        id: newBoard.id,
+      },
+      {
+        fields: [
+          ...BoardMinimalProperties,
+          ...createFieldPaths('project', ...ProjectMinimalProperties),
+          ...createFieldPaths('members', ...BoardMembersMinimalProperties),
+          ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+          ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
 
-    return newBoard;
+    if (!createdBoard) {
+      throw new NotFoundException(
+        'The board you are trying to create could not be found.',
+      );
+    }
+
+    return createdBoard;
   }
 
   /**

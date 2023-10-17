@@ -64,7 +64,7 @@ export class BoardRoleResolver {
    */
   @Mutation(() => BoardRolesObject, {
     description: 'Create a new board role.',
-    name: 'boardCreateRole',
+    name: 'boardRoleCreate',
   })
   @BoardPermissions([BoardPermissionsEnum.RoleCreate])
   public create(@Args('input') input: BoardRoleCreateInput) {
@@ -82,7 +82,7 @@ export class BoardRoleResolver {
    */
   @Mutation(() => String, {
     description: 'Delete a board role.',
-    name: 'boardRemoveRole',
+    name: 'boardRoleRemove',
   })
   @BoardPermissions([BoardPermissionsEnum.RoleDelete])
   public delete(@Args('input') input: BoardRoleRemoveInput) {
@@ -99,7 +99,7 @@ export class BoardRoleResolver {
    */
   @Query(() => BoardRolesPaginated, {
     description: 'Paginate the roles of a board.',
-    name: 'paginateBoardRoles',
+    name: 'boardRolesPaginated',
   })
   public paginate(@Args('input') input: BoardRolePaginationInput) {
     return this._roleService.paginate(input);
@@ -115,7 +115,7 @@ export class BoardRoleResolver {
    */
   @Mutation(() => BoardMembersObject, {
     description: 'Unassign a role from a board member.',
-    name: 'unassignBoardRole',
+    name: 'boardRoleUnassign',
   })
   @BoardPermissions([BoardPermissionsEnum.RoleUnassign])
   public unassign(@Args('input') input: BoardRoleUnassignInput) {
@@ -132,7 +132,7 @@ export class BoardRoleResolver {
    */
   @Mutation(() => BoardRolesObject, {
     description: 'Update the details of a board role.',
-    name: 'updateBoardRole',
+    name: 'boardRoleUpdate',
   })
   @BoardPermissions([BoardPermissionsEnum.RoleUpdate])
   public update(@Args('input') input: BoardRoleUpdateInput) {

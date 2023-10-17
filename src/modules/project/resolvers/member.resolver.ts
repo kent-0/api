@@ -55,7 +55,7 @@ export class ProjectMemberResolver {
    * @param input - Data containing information about the user and project.
    * @returns The removed project member's details.
    */
-  @Mutation(() => ProjectMemberObject, {
+  @Mutation(() => String, {
     description: 'Remove a user from a project.',
     name: 'projectMemberRemove',
   })
