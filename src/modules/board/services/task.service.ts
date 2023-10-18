@@ -110,6 +110,7 @@ export class BoardTaskService {
     const taskPosition = task.position;
 
     task.position = taskToSwapPosition;
+    task.step = step;
     taskToSwap.position = taskPosition;
 
     await this.em.persistAndFlush([task, taskToSwap]);
