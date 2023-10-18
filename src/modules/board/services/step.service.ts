@@ -60,6 +60,7 @@ export class BoardStepService {
    */
   public async create({
     boardId,
+    description,
     max,
     name,
   }: BoardStepCreateInput): Promise<ToCollections<BoardStepObject>> {
@@ -71,6 +72,7 @@ export class BoardStepService {
     // Construct a new step object with the given parameters and the calculated position.
     const newStep = this.stepRepository.create({
       board: boardId,
+      description,
       max,
       name,
       position: boardStepsTotal + 1, // Determine the position by counting existing steps.

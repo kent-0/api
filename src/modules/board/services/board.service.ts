@@ -61,6 +61,8 @@ export class BoardService {
    * @param {BoardCreateInput} description, name, projectId - Input data to create a new board.
    * @param {string} userId - ID of the user creating the board.
    * @returns {Promise<ToCollections<BoardObject>>} The created board entity.
+   *
+   * TODO: check if project exists
    */
   public async create(
     { description, name, projectId }: BoardCreateInput,
@@ -179,6 +181,7 @@ export class BoardService {
    * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
    *
    * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
+   *
    */
   public async remove({
     boardId,

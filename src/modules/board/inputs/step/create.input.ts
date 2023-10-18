@@ -38,8 +38,9 @@ export class BoardStepCreateInput {
    */
   @Field(() => String, {
     description: 'Brief explanation of what the step is about.',
+    nullable: true,
   })
-  public description!: string;
+  public description?: string;
 
   /**
    * Specifies the maximum number of tasks that can be contained within this step. This

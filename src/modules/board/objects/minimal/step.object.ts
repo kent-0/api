@@ -38,6 +38,7 @@ export class BoardStepMinimalObject {
    */
   @Field(() => String, {
     description: 'Brief explanation of what the step is about.',
+    nullable: true,
   })
   public description?: string;
 
