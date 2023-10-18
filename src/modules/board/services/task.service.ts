@@ -10,7 +10,7 @@ import {
   BoardTaskDeleteInput,
   BoardTaskUpdateInput,
 } from '~/modules/board/inputs';
-import { BoardTaskMove } from '~/modules/board/inputs/task/move.input';
+import { BoardTaskMoveInput } from '~/modules/board/inputs/task/move.input';
 
 /**
  * `BoardTaskService`: A service class dedicated to the management of tasks within a board.
@@ -110,7 +110,7 @@ export class BoardTaskService {
    * @returns - The task entity after its position has been updated.
    * @throws {ConflictException} - If the target step doesn't exist, or if there are issues moving the task.
    */
-  public async move({ boardId, position, stepId, taskId }: BoardTaskMove) {
+  public async move({ boardId, position, stepId, taskId }: BoardTaskMoveInput) {
     const step = await this.boardStepRepository.findOne({
       board: boardId,
       id: stepId,

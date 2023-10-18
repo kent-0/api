@@ -17,6 +17,17 @@ export enum BoardPermissionsEnum {
   StepCreate = 2 << 9,
   StepRemove = 2 << 10,
   StepUpdate = 2 << 11,
+  TaskCreate = 2 << 12,
+  TaskRemove = 2 << 13,
+  TaskUpdate = 2 << 14,
+  TaskAssign = 2 << 15,
+  TaskUnassign = 2 << 16,
+  TaskMove = 2 << 17,
+  TaskCommentCreate = 2 << 18,
+  TaskCommentRemove = 2 << 19,
+  TaskCommentUpdate = 2 << 20,
+  TaskCommentPin = 2 << 21,
+  TaskCommentUnpin = 2 << 22,
 }
 
 /**

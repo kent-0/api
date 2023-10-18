@@ -10,7 +10,7 @@ import { IsUUID, Min } from 'class-validator';
 @InputType({
   description: 'The data required to move a task to another step.',
 })
-export class BoardTaskMove {
+export class BoardTaskMoveInput {
   /**
    * Represents the unique identifier of the board which houses the task targeted for deletion.
    * This ID ensures that the deletion operation is constrained within the correct board, thereby
