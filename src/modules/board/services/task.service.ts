@@ -79,10 +79,15 @@ export class BoardTaskService {
       );
     }
 
-    const task = await this.boardTaskRepository.findOne({
-      board: boardId,
-      id: taskId,
-    });
+    const task = await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: taskId,
+      },
+      {
+        populate: ['step', 'assigned_to'],
+      },
+    );
 
     if (!task) {
       throw new ConflictException(
@@ -90,10 +95,16 @@ export class BoardTaskService {
       );
     }
 
-    const tasks = await step.tasks.loadItems();
-    if (tasks.length === 1) {
+    if (step.finish_step && !task.assigned_to) {
       throw new ConflictException(
-        'There is only one task in this step, it cannot be moved.',
+        'The task you are trying to move does not have an assigned user.',
+      );
+    }
+
+    const tasks = await step.tasks.loadItems();
+    if (tasks.length === step.max) {
+      throw new ConflictException(
+        'The step you are trying to move the task to is full.',
       );
     }
 
@@ -108,6 +119,8 @@ export class BoardTaskService {
 
     const taskToSwapPosition = taskToSwap.position;
     const taskPosition = task.position;
+
+    if (step.finish_step) task.finish_date = new Date();
 
     task.position = taskToSwapPosition;
     task.step = step;
