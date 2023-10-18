@@ -10,6 +10,7 @@ import {
   BoardTaskDeleteInput,
   BoardTaskUpdateInput,
 } from '~/modules/board/inputs';
+import { BoardTaskMove } from '~/modules/board/inputs/task/move.input';
 
 @Injectable()
 export class BoardTaskService {
@@ -66,7 +67,54 @@ export class BoardTaskService {
     return 'The task has been deleted successfully.';
   }
 
-  public move() {}
+  public async move({ boardId, position, stepId, taskId }: BoardTaskMove) {
+    const step = await this.boardStepRepository.findOne({
+      board: boardId,
+      id: stepId,
+    });
+
+    if (!step) {
+      throw new ConflictException(
+        'The step you are trying to move the task to does not exist.',
+      );
+    }
+
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to move does not exist.',
+      );
+    }
+
+    const tasks = await step.tasks.loadItems();
+    if (tasks.length === 1) {
+      throw new ConflictException(
+        'There is only one task in this step, it cannot be moved.',
+      );
+    }
+
+    const taskIndex = tasks.findIndex((t) => t.id === taskId);
+    const taskToSwap = tasks[taskIndex + position];
+
+    if (!taskToSwap) {
+      throw new ConflictException(
+        'The task you are trying to swap does not exist.',
+      );
+    }
+
+    const taskToSwapPosition = taskToSwap.position;
+    const taskPosition = task.position;
+
+    task.position = taskToSwapPosition;
+    taskToSwap.position = taskPosition;
+
+    await this.em.persistAndFlush([task, taskToSwap]);
+    return task;
+  }
 
   public async update({
     boardId,
