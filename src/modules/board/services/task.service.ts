@@ -12,8 +12,21 @@ import {
 } from '~/modules/board/inputs';
 import { BoardTaskMove } from '~/modules/board/inputs/task/move.input';
 
+/**
+ * `BoardTaskService`: A service class dedicated to the management of tasks within a board.
+ * This service provides functionalities related to the lifecycle and manipulation of
+ * tasks, ensuring that they comply with the structural and logical requirements of the board
+ * and its associated steps.
+ */
 @Injectable()
 export class BoardTaskService {
+  /**
+   * Constructs a new instance of the `BoardTaskService` class.
+   *
+   * @param boardTaskRepository - Repository for accessing and manipulating `BoardTaskEntity`.
+   * @param boardStepRepository - Repository for accessing and manipulating `BoardStepEntity`.
+   * @param em - The entity manager used for database operations.
+   */
   constructor(
     @InjectRepository(BoardTaskEntity)
     private readonly boardTaskRepository: EntityRepository<BoardTaskEntity>,
@@ -22,6 +35,18 @@ export class BoardTaskService {
     private readonly em: EntityManager,
   ) {}
 
+  /**
+   * Creates a new task associated with a specified board.
+   * The task is initially assigned to the first step of the board. If the board doesn't have
+   * any steps, an exception is thrown.
+   *
+   * @param boardId - The unique identifier of the board to which the task belongs.
+   * @param description - Descriptive text providing more information about the task.
+   * @param name - A brief title or name for the task.
+   * @param userId - The unique identifier of the user who is creating the task.
+   * @returns - The created task entity.
+   * @throws {ConflictException} - If the board doesn't have a step to assign the task to.
+   */
   public async create(
     { boardId, description, name }: BoardTaskCreateInput,
     userId: string,
@@ -51,6 +76,14 @@ export class BoardTaskService {
     return task;
   }
 
+  /**
+   * Deletes a specific task from a board.
+   *
+   * @param boardId - The unique identifier of the board from which the task should be deleted.
+   * @param taskId - The unique identifier of the task to be deleted.
+   * @returns - A confirmation message indicating the task's successful deletion.
+   * @throws {ConflictException} - If the task to be deleted doesn't exist.
+   */
   public async delete({ boardId, taskId }: BoardTaskDeleteInput) {
     const task = await this.boardTaskRepository.findOne({
       board: boardId,
@@ -67,6 +100,16 @@ export class BoardTaskService {
     return 'The task has been deleted successfully.';
   }
 
+  /**
+   * Moves a task to a different position or step within a board.
+   *
+   * @param boardId - The unique identifier of the board containing the task.
+   * @param position - The desired new position for the task within the step.
+   * @param stepId - The unique identifier of the step to which the task should be moved.
+   * @param taskId - The unique identifier of the task to be moved.
+   * @returns - The task entity after its position has been updated.
+   * @throws {ConflictException} - If the target step doesn't exist, or if there are issues moving the task.
+   */
   public async move({ boardId, position, stepId, taskId }: BoardTaskMove) {
     const step = await this.boardStepRepository.findOne({
       board: boardId,
@@ -130,6 +173,17 @@ export class BoardTaskService {
     return task;
   }
 
+  /**
+   * Updates specific properties of a task.
+   *
+   * @param boardId - The unique identifier of the board containing the task.
+   * @param description - The updated descriptive text for the task.
+   * @param expirationDate - The updated deadline or expiration date for the task.
+   * @param name - The updated title or name for the task.
+   * @param taskId - The unique identifier of the task to be updated.
+   * @returns - The updated task entity.
+   * @throws {ConflictException} - If the task to be updated doesn't exist.
+   */
   public async update({
     boardId,
     description,
