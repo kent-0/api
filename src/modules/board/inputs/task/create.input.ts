@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 
-import { IsArray, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsString, IsUUID, MaxLength } from 'class-validator';
 
 /**
  * `BoardTaskCreateInput`: A data transfer object designed to encapsulate the necessary
@@ -55,17 +55,4 @@ export class BoardTaskCreateInput {
     description: 'The name of the task.',
   })
   public name!: string;
-
-  /**
-   * An array of tags associated with the task, enabling categorization and filtering
-   * of tasks within a board. Utilizing tags allows for enhanced organization and
-   * task management, especially within boards containing numerous tasks.
-   */
-  @IsArray({
-    message: 'The tags associated with this task must be an array of strings.',
-  })
-  @Field(() => [String], {
-    description: 'The tags associated with this task.',
-  })
-  public tags!: string[];
 }

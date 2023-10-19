@@ -105,6 +105,7 @@ export class BoardStepEntity extends ParentEntity {
    */
   @OneToMany(() => BoardTaskEntity, (t) => t.step, {
     comment: 'Tasks assigned to the project step.',
+    orderBy: { position: 'ASC' },
   })
   public tasks = new Collection<Rel<BoardTaskEntity>>(this);
 }

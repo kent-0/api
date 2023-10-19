@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BoardEntity, BoardMembersEntity } from '~/database/entities';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
+import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
@@ -148,6 +149,7 @@ export class BoardService {
           ...createFieldPaths('project', ...ProjectMinimalProperties),
           ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+          ...createFieldPaths('steps.tasks', ...BoardTaskMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
         ],

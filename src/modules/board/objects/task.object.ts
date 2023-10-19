@@ -1,4 +1,4 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { AuthUserMinimalObject } from '~/modules/auth/objects';
 import { BoardMinimalObject } from '~/modules/board/objects/minimal/board.object';
@@ -15,19 +15,26 @@ import { BoardTaskMinimalObject } from '~/modules/board/objects/minimal/task.obj
  * of task data and its relations is required.
  */
 @ObjectType({
-  description: 'A task on a board.',
+  description: 'A task on a step board.',
 })
 export class BoardTaskObject extends BoardTaskMinimalObject {
   /**
    * The user to whom the task has been assigned.
    * This person is responsible for the task's completion.
    */
+  @Field(() => AuthUserMinimalObject, {
+    description: 'The user to whom the task has been assigned.',
+    nullable: true,
+  })
   public assigned_to!: AuthUserMinimalObject;
 
   /**
    * The board to which the task belongs.
    * It provides context about the overarching project or category the task is a part of.
    */
+  @Field(() => BoardMinimalObject, {
+    description: 'The board to which the task belongs.',
+  })
   public board!: BoardMinimalObject;
 
   /**
@@ -41,12 +48,18 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
    * The user who created or added the task to the board.
    * This information can be useful for traceability and understanding task origins.
    */
+  @Field(() => AuthUserMinimalObject, {
+    description: 'The user who created or added the task to the board.',
+  })
   public created_by!: AuthUserMinimalObject;
 
   /**
    * The step within the board where the task currently resides.
    * It provides context about the task's current phase or progression stage.
    */
+  @Field(() => BoardStepMinimalObject, {
+    description: 'The step within the board where the task currently resides.',
+  })
   public step!: BoardStepMinimalObject;
 
   /**

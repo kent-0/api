@@ -1,5 +1,5 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { UserToken } from '~/modules/auth/decorators/user.decorator';
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
@@ -26,7 +26,7 @@ import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
 @Resolver()
 @UsePipes(ValidationPipe)
 @UseGuards(JwtAuthGuard, BoardPermissionsGuard)
-export class BoardStepResolver {
+export class BoardTaskResolver {
   /**
    * Constructor:
    * Initializes the resolver with a reference to the `BoardTaskService`.
@@ -47,7 +47,10 @@ export class BoardStepResolver {
     name: 'boardTaskCreate',
   })
   @BoardPermissions([BoardPermissionsEnum.TaskCreate])
-  public create(input: BoardTaskCreateInput, @UserToken() token: JWTPayload) {
+  public create(
+    @Args('input') input: BoardTaskCreateInput,
+    @UserToken() token: JWTPayload,
+  ) {
     return this._taskService.create(input, token.sub);
   }
 
@@ -63,7 +66,7 @@ export class BoardStepResolver {
     name: 'boardTaskMove',
   })
   @BoardPermissions([BoardPermissionsEnum.TaskUpdate])
-  public move(input: BoardTaskMoveInput) {
+  public move(@Args('input') input: BoardTaskMoveInput) {
     return this._taskService.move(input);
   }
 
@@ -72,14 +75,14 @@ export class BoardStepResolver {
    * Allows clients to remove a task from a board.
    * Requires permission to remove tasks.
    * @param input - Input data specifying which task to remove.
-   * @returns - The removed task.
+   * @returns - The removed task message.
    */
-  @Mutation(() => BoardTaskObject, {
+  @Mutation(() => String, {
     description: 'Delete a task',
     name: 'boardTaskDelete',
   })
   @BoardPermissions([BoardPermissionsEnum.TaskRemove])
-  public remove(input: BoardTaskDeleteInput) {
+  public remove(@Args('input') input: BoardTaskDeleteInput) {
     return this._taskService.delete(input);
   }
 
@@ -95,7 +98,7 @@ export class BoardStepResolver {
     name: 'boardTaskUpdate',
   })
   @BoardPermissions([BoardPermissionsEnum.TaskUpdate])
-  public update(input: BoardTaskUpdateInput) {
+  public update(@Args('input') input: BoardTaskUpdateInput) {
     return this._taskService.update(input);
   }
 }

@@ -336,7 +336,6 @@ export class BoardStepService {
   public async update({
     boardId,
     description,
-    finishStep,
     max,
     name,
     stepId,
@@ -364,7 +363,6 @@ export class BoardStepService {
 
     // Update the step's fields with the provided values, or leave them unchanged if no new value is provided.
     step.description = description ?? step.description;
-    step.finish_step = finishStep ?? step.finish_step;
     step.max = max ?? step.max;
     step.name = name ?? step.name;
 

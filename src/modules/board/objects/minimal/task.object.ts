@@ -1,5 +1,10 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+import {
+  AuthUserMinimalObject,
+  AuthUserMinimalProperties,
+} from '~/modules/auth/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { tuple } from '~/utils/functions/tuple';
 
 /**
@@ -16,6 +21,8 @@ export const BoardTaskMinimalProperties = tuple(
   'name',
   'position',
   'start_date',
+  ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+  ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
 );
 
 /**
@@ -31,21 +38,78 @@ export const BoardTaskMinimalProperties = tuple(
   description: 'Object representing a task step on the board.',
 })
 export class BoardTaskMinimalObject {
-  /** A descriptive text providing more information about the task. */
+  /**
+   * The user to whom the task is assigned. This association helps identify
+   * the person responsible for completing the task.
+   */
+  @Field(() => AuthUserMinimalObject, {
+    description: 'The user to whom the task is assigned.',
+    nullable: true,
+  })
+  public assigned_to?: AuthUserMinimalObject;
+
+  /**
+   * The user who created the task. This association helps identify the person
+   * who initiated the task and is responsible for its completion.
+   */
+  @Field(() => AuthUserMinimalObject, {
+    description: 'The user who created the task.',
+  })
+  public created_by!: AuthUserMinimalObject;
+
+  /**
+   * A descriptive text providing more information about the task.
+   * @example "This task is to be completed by the end of the week."
+   */
+  @Field(() => String, {
+    description:
+      'A descriptive text providing more information about the task.',
+  })
   public description!: string;
 
-  /** The deadline or expiration date set for the task's completion. */
-  public expiration_date!: Date;
+  /**
+   * The deadline or expiration date set for the task's completion.
+   */
+  @Field(() => String, {
+    description:
+      "The deadline or expiration date set for the task's completion.",
+    nullable: true,
+  })
+  public expiration_date?: Date;
 
-  /** The date when the task was marked as finished. */
-  public finish_date!: Date;
+  /**
+   * The date when the task was marked as finished.
+   */
+  @Field(() => String, {
+    description: 'The date when the task was marked as finished.',
+    nullable: true,
+  })
+  public finish_date?: Date;
 
-  /** A brief title or name assigned to the task. */
+  /**
+   * A brief title or name assigned to the task.
+   * @example "Complete the project proposal."
+   */
+  @Field(() => String, {
+    description: 'A brief title or name assigned to the task.',
+  })
   public name!: string;
 
-  /** The position or order of the task within its associated step on the board. */
+  /**
+   * The position or order of the task within its associated step on the board.
+   */
+  @Field(() => String, {
+    description:
+      'The position or order of the task within its associated step on the board.',
+  })
   public position!: number;
 
-  /** The date when the task was initiated or started. */
-  public start_date!: Date;
+  /**
+   * The date when the task was initiated or started.
+   */
+  @Field(() => String, {
+    description: 'The date when the task was initiated or started.',
+    nullable: true,
+  })
+  public start_date?: Date;
 }

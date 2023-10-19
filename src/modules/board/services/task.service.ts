@@ -5,12 +5,18 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { BoardStepEntity, BoardTaskEntity } from '~/database/entities';
+import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import {
   BoardTaskCreateInput,
   BoardTaskDeleteInput,
   BoardTaskUpdateInput,
 } from '~/modules/board/inputs';
 import { BoardTaskMoveInput } from '~/modules/board/inputs/task/move.input';
+import {
+  BoardMinimalProperties,
+  BoardStepMinimalProperties,
+} from '~/modules/board/objects';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 
 /**
  * `BoardTaskService`: A service class dedicated to the management of tasks within a board.
@@ -73,7 +79,21 @@ export class BoardTaskService {
     });
 
     await this.em.persistAndFlush(task);
-    return task;
+
+    return await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: task.id,
+      },
+      {
+        fields: [
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
   }
 
   /**
