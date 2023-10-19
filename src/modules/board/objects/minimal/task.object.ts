@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
   AuthUserMinimalObject,
@@ -87,6 +87,14 @@ export class BoardTaskMinimalObject {
   public finish_date?: Date;
 
   /**
+   * The unique identifier of the task.
+   */
+  @Field(() => ID, {
+    description: 'The unique identifier of the task.',
+  })
+  public id!: string;
+
+  /**
    * A brief title or name assigned to the task.
    * @example "Complete the project proposal."
    */
@@ -98,7 +106,7 @@ export class BoardTaskMinimalObject {
   /**
    * The position or order of the task within its associated step on the board.
    */
-  @Field(() => String, {
+  @Field(() => Number, {
     description:
       'The position or order of the task within its associated step on the board.',
   })

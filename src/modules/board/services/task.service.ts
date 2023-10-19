@@ -164,32 +164,35 @@ export class BoardTaskService {
       );
     }
 
-    const tasks = await step.tasks.loadItems();
-    if (tasks.length === step.max) {
+    const tasksCount = await step.tasks.loadCount();
+    if (tasksCount === step.max) {
       throw new ConflictException(
         'The step you are trying to move the task to is full.',
       );
     }
 
-    const taskIndex = tasks.findIndex((t) => t.id === taskId);
-    const taskToSwap = tasks[taskIndex + position];
+    const positionReplaceTask = await this.boardTaskRepository.findOne({
+      board: boardId,
+      position,
+    });
 
-    if (!taskToSwap) {
+    if (!positionReplaceTask) {
       throw new ConflictException(
         'The task you are trying to swap does not exist.',
       );
     }
 
-    const taskToSwapPosition = taskToSwap.position;
-    const taskPosition = task.position;
-
     if (step.finish_step) task.finish_date = new Date();
 
-    task.position = taskToSwapPosition;
-    task.step = step;
-    taskToSwap.position = taskPosition;
+    // Swap positions between the targeted task and the replacement task.
+    const tempPosition = task.position;
 
-    await this.em.persistAndFlush([task, taskToSwap]);
+    task.position = positionReplaceTask.position;
+    await this.em.persistAndFlush(step);
+
+    positionReplaceTask.position = tempPosition;
+    await this.em.persistAndFlush(positionReplaceTask);
+
     return task;
   }
 

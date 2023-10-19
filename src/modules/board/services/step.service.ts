@@ -272,10 +272,10 @@ export class BoardStepService {
     const tempPosition = step.position;
 
     step.position = positionReplaceStep.position;
-    await this.em.persistAndFlush([step]);
+    await this.em.persistAndFlush(step);
 
     positionReplaceStep.position = tempPosition;
-    await this.em.persistAndFlush([positionReplaceStep]);
+    await this.em.persistAndFlush(positionReplaceStep);
 
     // Return the step that has been moved.
     return step;
