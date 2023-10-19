@@ -125,10 +125,15 @@ export class BoardTaskService {
    * @throws {ConflictException} - If the task to be deleted doesn't exist.
    */
   public async delete({ boardId, taskId }: BoardTaskDeleteInput) {
-    const task = await this.boardTaskRepository.findOne({
-      board: boardId,
-      id: taskId,
-    });
+    const task = await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: taskId,
+      },
+      {
+        populate: ['step'],
+      },
+    );
 
     if (!task) {
       throw new ConflictException(
@@ -137,6 +142,8 @@ export class BoardTaskService {
     }
 
     await this.em.removeAndFlush(task);
+    await this.recountTasksPositions(boardId, task.step.id);
+
     return 'The task has been deleted successfully.';
   }
 
