@@ -296,6 +296,19 @@ export class BoardTaskService {
     task.name = name ?? task.name;
 
     await this.em.persistAndFlush(task);
-    return task;
+    return await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: task.id,
+      },
+      {
+        fields: [
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
   }
 }
