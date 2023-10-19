@@ -41,6 +41,26 @@ export class BoardTaskService {
     private readonly em: EntityManager,
   ) {}
 
+  private async recountTasksPositions(boardId: string, stepId: string) {
+    const tasks = await this.boardTaskRepository.find(
+      {
+        board: boardId,
+        step: stepId,
+      },
+      {
+        orderBy: {
+          position: 'ASC',
+        },
+      },
+    );
+
+    for (let i = 0; i < tasks.length; i++) {
+      tasks[i].position = i + 1;
+    }
+
+    await this.em.persistAndFlush(tasks);
+  }
+
   /**
    * Creates a new task associated with a specified board.
    * The task is initially assigned to the first step of the board. If the board doesn't have
@@ -165,33 +185,72 @@ export class BoardTaskService {
     }
 
     const tasksCount = await step.tasks.loadCount();
-    if (tasksCount === step.max) {
+    if (step.max && tasksCount + 1 >= step.max) {
       throw new ConflictException(
         'The step you are trying to move the task to is full.',
       );
     }
 
-    const positionReplaceTask = await this.boardTaskRepository.findOne({
-      board: boardId,
-      position,
-    });
+    if (step.id === task.step.id) {
+      const replacementTask = await this.boardTaskRepository.findOne({
+        board: boardId,
+        position,
+        step,
+      });
 
-    if (!positionReplaceTask) {
-      throw new ConflictException(
-        'The task you are trying to swap does not exist.',
-      );
+      if (!replacementTask) {
+        throw new ConflictException(
+          'The task you are trying to replace does not exist.',
+        );
+      }
+
+      const previousStep = task.step;
+
+      replacementTask.position = task.position;
+      task.position = position;
+      task.step = step;
+
+      await this.em.persistAndFlush([task, replacementTask]);
+      await this.recountTasksPositions(boardId, previousStep.id);
     }
 
-    if (step.finish_step) task.finish_date = new Date();
+    if (step.id !== task.step.id && tasksCount > 0) {
+      const replacementTask = await this.boardTaskRepository.findOne({
+        board: boardId,
+        position,
+        step,
+      });
 
-    // Swap positions between the targeted task and the replacement task.
-    const tempPosition = task.position;
+      if (!replacementTask && position > tasksCount + 1) {
+        throw new ConflictException(
+          'The task you are trying to replace does not exist.',
+        );
+      }
 
-    task.position = positionReplaceTask.position;
-    await this.em.persistAndFlush(step);
+      const previousStep = task.step;
 
-    positionReplaceTask.position = tempPosition;
-    await this.em.persistAndFlush(positionReplaceTask);
+      task.position = position;
+      task.step = step;
+
+      if (replacementTask) {
+        replacementTask.position = task.position + 1;
+        await this.em.persistAndFlush(replacementTask);
+      }
+
+      await this.em.persistAndFlush(task);
+      await this.recountTasksPositions(boardId, stepId);
+      await this.recountTasksPositions(boardId, previousStep.id);
+    }
+
+    if (step.id !== task.step.id && tasksCount === 0) {
+      const previousStep = task.step;
+
+      task.position = 1;
+      task.step = step;
+
+      await this.recountTasksPositions(boardId, previousStep.id);
+      await this.em.persistAndFlush(task);
+    }
 
     return task;
   }
