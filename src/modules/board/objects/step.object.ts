@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { BoardMinimalObject } from './minimal/board.object';
 import { BoardStepMinimalObject } from './minimal/step.object';
@@ -25,7 +25,7 @@ export class BoardStepObject extends BoardStepMinimalObject {
    * Reference to the board to which the step is associated. This provides a contextual
    * backdrop for tasks within the step, linking them to a specific project or workflow.
    */
-  @Field(() => ID, {
+  @Field(() => BoardMinimalObject, {
     description: 'Board to which the step belongs.',
   })
   public board!: BoardMinimalObject;

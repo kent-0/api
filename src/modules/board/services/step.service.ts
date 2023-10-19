@@ -272,10 +272,10 @@ export class BoardStepService {
     const tempPosition = step.position;
 
     step.position = positionReplaceStep.position;
-    positionReplaceStep.position = tempPosition;
+    await this.em.persistAndFlush([step]);
 
-    // Persist the changes to the database.
-    await this.em.persistAndFlush([positionReplaceStep, step]);
+    positionReplaceStep.position = tempPosition;
+    await this.em.persistAndFlush([positionReplaceStep]);
 
     // Return the step that has been moved.
     return step;

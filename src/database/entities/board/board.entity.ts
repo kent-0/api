@@ -102,6 +102,7 @@ export class BoardEntity extends ParentEntity {
    */
   @OneToMany(() => BoardStepEntity, (s) => s.board, {
     comment: 'Steps that manage the board.',
+    orderBy: { position: 'ASC' },
   })
   public steps = new Collection<Rel<BoardStepEntity>>(this);
 }
