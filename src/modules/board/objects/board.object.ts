@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { BoardStepWithTasksObject } from '~/modules/board/objects/step.object';
 import { ProjectMinimalObject } from '~/modules/project/objects';
 
 import { BoardMinimalObject } from './minimal/board.object';
 import { BoardMembersMinimalObject } from './minimal/member.object';
 import { BoardRolesMinimalObject } from './minimal/role.object';
-import { BoardStepMinimalObject } from './minimal/step.object';
 
 /**
  * The `BoardObject` provides a comprehensive view of a project board, encapsulating
@@ -82,8 +82,8 @@ export class BoardObject extends BoardMinimalObject {
    * tasks will pass through. It also aids users in visualizing the board's
    * structure and flow.
    */
-  @Field(() => [BoardStepMinimalObject], {
+  @Field(() => [BoardStepWithTasksObject], {
     description: 'Basic information about board steps.',
   })
-  public steps!: BoardStepMinimalObject[];
+  public steps!: BoardStepWithTasksObject[];
 }

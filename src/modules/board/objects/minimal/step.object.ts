@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { BoardTaskMinimalObject } from '~/modules/board/objects/minimal/task.object';
 import { tuple } from '~/utils/functions/tuple';
 
 export const BoardStepMinimalProperties = tuple(
@@ -85,14 +84,4 @@ export class BoardStepMinimalObject {
     description: 'Position of the step in the steps column of the board.',
   })
   public position!: number;
-
-  /**
-   * List of tasks that are currently in the step. This list is ordered by the task's
-   * position within the step, which is determined by the order in which the tasks were
-   * added to the step.
-   */
-  @Field(() => [BoardTaskMinimalObject], {
-    description: 'Tasks that are currently in the step.',
-  })
-  public tasks!: BoardTaskMinimalObject[];
 }
