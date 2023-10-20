@@ -95,7 +95,7 @@ export class BoardTaskService {
   ) {
     const step = await this.boardStepRepository.findOne({
       board: boardId,
-      position: 1,
+      type: StepType.START,
     });
 
     if (!step) {
