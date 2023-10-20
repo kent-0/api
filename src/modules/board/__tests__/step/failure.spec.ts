@@ -16,6 +16,7 @@ import {
   ProjectEntity,
   ProjectMembersEntity,
 } from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { BoardService } from '~/modules/board/services/board.service';
@@ -180,12 +181,14 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       expect(async () =>
@@ -209,12 +212,14 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       expect(async () =>
@@ -233,16 +238,18 @@ describe('Board - Step Unsuccessfully cases', async () => {
    */
   it('should has error because the finished step cannot be moved', async () => {
     await RequestContext.createAsync(em, async () => {
-      const stepFinished = await service.create({
-        boardId: board.id,
-        description: 'Kento testing finished step',
-        name: 'Kento',
-      });
-
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
+      });
+
+      const stepFinished = await service.create({
+        boardId: board.id,
+        description: 'Kento testing finished step',
+        name: 'Kento',
+        type: StepType.TASK,
       });
 
       await service.markAsFinished({
@@ -272,12 +279,14 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+        type: StepType.START,
       });
 
       const stepFinished = await service.create({
         boardId: board.id,
         description: 'Kento testing finished step',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       await service.markAsFinished({
@@ -307,12 +316,14 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       expect(async () =>
@@ -335,12 +346,14 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+        type: StepType.START,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       expect(async () =>
@@ -365,6 +378,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+        type: StepType.START,
       });
 
       expect(async () =>
@@ -387,6 +401,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+        type: StepType.START,
       });
 
       expect(async () =>
@@ -410,13 +425,16 @@ describe('Board - Step Unsuccessfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
         name: 'Kento',
+        type: StepType.TASK,
       });
+
       await service.markAsFinished({
         boardId: board.id,
         stepId: step.id,
