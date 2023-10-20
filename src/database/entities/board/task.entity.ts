@@ -63,6 +63,15 @@ export class BoardTaskEntity extends ParentEntity {
   public board!: Rel<BoardEntity>;
 
   /**
+   * One-to-Many relationship representing all child tasks or sub-tasks of this task.
+   * This is used to create sub-tasks or child tasks within a task.
+   */
+  @OneToMany(() => BoardTaskEntity, (c) => c.parent, {
+    comment: "Children's of the task.",
+  })
+  public children = new Collection<BoardTaskEntity>(this);
+
+  /**
    * One-to-Many relationship representing all comments or feedback from members
    * related to this task.
    */
@@ -125,6 +134,16 @@ export class BoardTaskEntity extends ParentEntity {
     type: 'string',
   })
   public name!: string;
+
+  /**
+   * Many-to-One relationship indicating the parent task of this task.
+   * This is used to create sub-tasks or child tasks within a task.
+   */
+  @ManyToOne({
+    comment: 'Parent task.',
+    entity: () => BoardTaskEntity,
+  })
+  public parent!: Rel<BoardTaskEntity>;
 
   /**
    * The position or order of this task within its assigned step on the board.

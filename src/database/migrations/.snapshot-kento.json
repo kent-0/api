@@ -1283,6 +1283,16 @@
           "comment": "Name of the task.",
           "mappedType": "string"
         },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Parent task.",
+          "mappedType": "uuid"
+        },
         "position": {
           "name": "position",
           "type": "int",
@@ -1365,6 +1375,18 @@
             "id"
           ],
           "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        },
+        "boards_tasks_parent_id_foreign": {
+          "constraintName": "boards_tasks_parent_id_foreign",
+          "columnNames": [
+            "parent_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_tasks",
           "updateRule": "cascade"
         },
         "boards_tasks_step_id_foreign": {

@@ -200,6 +200,12 @@ export class BoardTaskService {
       );
     }
 
+    if (task.finish_date) {
+      throw new ConflictException(
+        'The task you are trying to move has already been finished.',
+      );
+    }
+
     if (step.finish_step && !task.assigned_to) {
       throw new ConflictException(
         'The task you are trying to move does not have an assigned user.',
