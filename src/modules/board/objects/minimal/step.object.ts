@@ -5,7 +5,7 @@ import { tuple } from '~/utils/functions/tuple';
 export const BoardStepMinimalProperties = tuple(
   'id',
   'description',
-  'finish_step',
+  'type',
   'max',
   'name',
   'position',

@@ -1,12 +1,15 @@
 import {
   Collection,
   Entity,
+  Enum,
   ManyToOne,
   OneToMany,
   OptionalProps,
   Property,
   Rel,
 } from '@mikro-orm/core';
+
+import { StepType } from '~/database/enums/step.enum';
 
 import {
   BoardEntity,
@@ -58,13 +61,6 @@ export class BoardStepEntity extends ParentEntity {
   })
   public description!: string;
 
-  @Property({
-    columnType: 'bool',
-    comment: 'Flag if this step is the final completion step of the step flow.',
-    default: false,
-  })
-  public finish_step?: boolean;
-
   /**
    * The maximum number of tasks that can be assigned to this step at any given time.
    * This can be used to enforce limits or manage workloads.
@@ -108,4 +104,14 @@ export class BoardStepEntity extends ParentEntity {
     orderBy: { position: 'ASC' },
   })
   public tasks = new Collection<Rel<BoardTaskEntity>>(this);
+
+  /**
+   * The type of step, which indicates whether this is the first or last step on the board.
+   */
+  @Enum({
+    comment: 'If the step is the first or last step in the board.',
+    items: () => StepType,
+    type: 'enum',
+  })
+  public type!: StepType;
 }

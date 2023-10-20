@@ -5,6 +5,7 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { BoardStepEntity, BoardTaskEntity } from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import {
   BoardTaskCreateInput,
@@ -206,7 +207,7 @@ export class BoardTaskService {
       );
     }
 
-    if (step.finish_step && !task.assigned_to) {
+    if (step.type === StepType.FINISH && !task.assigned_to) {
       throw new ConflictException(
         'The task you are trying to move does not have an assigned user.',
       );

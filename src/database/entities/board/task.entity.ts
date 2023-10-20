@@ -142,8 +142,9 @@ export class BoardTaskEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Parent task.',
     entity: () => BoardTaskEntity,
+    nullable: true,
   })
-  public parent!: Rel<BoardTaskEntity>;
+  public parent?: Rel<BoardTaskEntity>;
 
   /**
    * The position or order of this task within its assigned step on the board.

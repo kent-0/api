@@ -1,9 +1,14 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { BoardStepEntity } from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
@@ -63,11 +68,34 @@ export class BoardStepService {
     description,
     max,
     name,
+    type,
   }: BoardStepCreateInput): Promise<ToCollections<BoardStepObject>> {
     // Fetch all the steps associated with the given board.
     const boardStepsTotal = await this.stepRepository.count({
       board: boardId,
     });
+
+    const existingStartStep = await this.stepRepository.findOne({
+      board: boardId,
+      type: StepType.START,
+    });
+
+    if (type === StepType.START && existingStartStep) {
+      throw new NotFoundException('The board already has a start step.');
+    }
+
+    if (type !== StepType.START && !existingStartStep) {
+      throw new ConflictException('The board does not have a start step.');
+    }
+
+    const existingFinishStep = await this.stepRepository.findOne({
+      board: boardId,
+      type: StepType.FINISH,
+    });
+
+    if (type === StepType.FINISH && existingFinishStep) {
+      throw new NotFoundException('The board already has a finish step.');
+    }
 
     // Construct a new step object with the given parameters and the calculated position.
     const newStep = this.stepRepository.create({
@@ -76,6 +104,7 @@ export class BoardStepService {
       max,
       name,
       position: boardStepsTotal + 1, // Determine the position by counting existing steps.
+      type: type ?? StepType.TASK,
     });
 
     // Save the newly created step to the database.
@@ -114,7 +143,7 @@ export class BoardStepService {
     // Retrieve any step currently marked as "finished" on the board.
     const previousFinishedStep = await this.stepRepository.findOne({
       board: boardId,
-      finish_step: true,
+      type: StepType.FINISH,
     });
 
     // If the board has no steps, throw an exception.
@@ -146,22 +175,22 @@ export class BoardStepService {
     }
 
     // if the step is already marked as "finished", throw an exception.
-    if (newFinishedStep.finish_step) {
+    if (newFinishedStep.type === StepType.FINISH) {
       throw new NotFoundException('The step is already marked as finished.');
     }
 
     // Mark the retrieved step as "finished."
-    newFinishedStep.finish_step = true;
+    newFinishedStep.type = StepType.FINISH;
 
     // If such a step exists, revert its "finished" status and "position" and save the changes.
     if (previousFinishedStep) {
-      previousFinishedStep.finish_step = false;
-
       // Replace steps positions
       const tempPosition = newFinishedStep.position;
+      const tempType = newFinishedStep.type;
 
       newFinishedStep.position = previousFinishedStep.position;
       previousFinishedStep.position = tempPosition;
+      previousFinishedStep.type = tempType;
 
       await this.em.persistAndFlush(previousFinishedStep);
     }
@@ -242,7 +271,7 @@ export class BoardStepService {
     }
 
     // If the step is already marked as "finished", throw an exception.
-    if (step.finish_step) {
+    if (step.type === StepType.FINISH) {
       throw new NotFoundException(
         'You are trying to move a column that is marked as finished. This column cannot be moved.',
       );
@@ -262,7 +291,7 @@ export class BoardStepService {
     }
 
     // If the replacement step is already marked as "finished", throw an exception.
-    if (positionReplaceStep.finish_step) {
+    if (positionReplaceStep.type === StepType.FINISH) {
       throw new NotFoundException(
         'You are trying to move a column to the position of the finished column. This column cannot be moved.',
       );
