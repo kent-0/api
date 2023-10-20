@@ -41,7 +41,20 @@ export class BoardTaskService {
     private readonly em: EntityManager,
   ) {}
 
+  /**
+   * `recountTasksPositions`:
+   * This method recalculates and updates the position of tasks within a specific step on a board.
+   * It's typically called after an operation that might disrupt the order of tasks, such as
+   * deleting or moving a task. The method ensures that tasks are sequentially ordered by their
+   * position without any gaps.
+   *
+   * @param boardId - The unique identifier of the board in which the tasks are located.
+   * @param stepId - The unique identifier of the step in which the tasks' positions need to be recounted.
+   *
+   * @returns - This method doesn't return a value. It recalculates the task positions and saves the updated positions to the database.
+   */
   private async recountTasksPositions(boardId: string, stepId: string) {
+    // Fetch all tasks associated with the given board and step, ordered by their current position.
     const tasks = await this.boardTaskRepository.find(
       {
         board: boardId,
@@ -54,10 +67,12 @@ export class BoardTaskService {
       },
     );
 
+    // Reassign the position of each task to ensure they are sequentially ordered.
     for (let i = 0; i < tasks.length; i++) {
       tasks[i].position = i + 1;
     }
 
+    // Persist the updated task positions to the database.
     await this.em.persistAndFlush(tasks);
   }
 
