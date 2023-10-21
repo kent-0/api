@@ -53,6 +53,7 @@ export class BoardService {
    * Creates a new board associated with a specific project and adds the creator as its first member.
    *
    * Steps:
+   * 0. Check if the project exists.
    * 1. Create a new board using the provided details.
    * 2. Save the board to the database.
    * 3. Add the creator (user) as the first member of the board.
@@ -63,12 +64,22 @@ export class BoardService {
    * @param {string} userId - ID of the user creating the board.
    * @returns {Promise<ToCollections<BoardObject>>} The created board entity.
    *
-   * TODO: check if project exists
    */
   public async create(
     { description, name, projectId }: BoardCreateInput,
     userId: string,
   ): Promise<ToCollections<BoardObject>> {
+    // Step 0: Check if the project exists.
+    const project = await this.boardRepository.findOne({
+      id: projectId,
+    });
+
+    if (!project) {
+      throw new NotFoundException(
+        'The project you are trying to create a board for could not be found.',
+      );
+    }
+
     // Step 1: Create a new board entity instance.
     const newBoard = this.boardRepository.create({
       created_by: userId,
