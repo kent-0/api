@@ -4,13 +4,18 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 
 import { ConflictException, Injectable } from '@nestjs/common';
 
-import { BoardStepEntity, BoardTaskEntity } from '~/database/entities';
+import {
+  BoardMembersEntity,
+  BoardStepEntity,
+  BoardTaskEntity,
+} from '~/database/entities';
 import { StepType } from '~/database/enums/step.enum';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import {
   BoardTaskCreateInput,
   BoardTaskDeleteInput,
   BoardTaskUpdateInput,
+  BoardTaskUserAssign,
 } from '~/modules/board/inputs';
 import { BoardTaskMoveInput } from '~/modules/board/inputs/task/move.input';
 import {
@@ -32,6 +37,7 @@ export class BoardTaskService {
    *
    * @param boardTaskRepository - Repository for accessing and manipulating `BoardTaskEntity`.
    * @param boardStepRepository - Repository for accessing and manipulating `BoardStepEntity`.
+   * @param boardMembersRepository - Repository for accessing and manipulating `BoardMembersEntity`.
    * @param em - The entity manager used for database operations.
    */
   constructor(
@@ -39,6 +45,8 @@ export class BoardTaskService {
     private readonly boardTaskRepository: EntityRepository<BoardTaskEntity>,
     @InjectRepository(BoardStepEntity)
     private readonly boardStepRepository: EntityRepository<BoardStepEntity>,
+    @InjectRepository(BoardMembersEntity)
+    private readonly boardMembersRepository: EntityRepository<BoardMembersEntity>,
     private readonly em: EntityManager,
   ) {}
 
@@ -75,6 +83,61 @@ export class BoardTaskService {
 
     // Persist the updated task positions to the database.
     await this.em.persistAndFlush(tasks);
+  }
+
+  /**
+   * Assigns a user (or member) to a specific task on a board.
+   * This method encapsulates the logic necessary to link a user to a task,
+   * ensuring that both the task and the user are valid and belong to the specified board.
+   *
+   * @param boardId - The unique identifier of the board where the target task is located.
+   * @param memberId - The unique identifier of the member (or user) who will be assigned to the task.
+   * @param taskId - The unique identifier of the task that the user will be assigned to.
+   *
+   * @returns - Returns the updated task with the user assigned.
+   *
+   * @throws {ConflictException} - Throws an exception if either the task or the user does not exist on the specified board.
+   */
+  public async assignUser({ boardId, memberId, taskId }: BoardTaskUserAssign) {
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to assign does not exist.',
+      );
+    }
+
+    const member = await this.boardMembersRepository.findOne({
+      board: boardId,
+      user: memberId,
+    });
+
+    if (!member) {
+      throw new ConflictException(
+        'The member you are trying to assign does not exist.',
+      );
+    }
+
+    task.assigned_to = member.user;
+    await this.em.persistAndFlush(task);
+
+    return await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: task.id,
+      },
+      {
+        fields: [
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
   }
 
   /**
@@ -282,6 +345,65 @@ export class BoardTaskService {
     }
 
     return task;
+  }
+
+  /**
+   * Unassigns a user (or member) from a specific task on a board.
+   * This method encapsulates the logic necessary to unlink a user from a task,
+   * ensuring that both the task and the user are valid and belong to the specified board.
+   *
+   * @param boardId - The unique identifier of the board where the target task is located.
+   * @param memberId - The unique identifier of the member (or user) who will be unassigned from the task.
+   * @param taskId - The unique identifier of the task from which the user will be unassigned.
+   *
+   * @returns - Returns the updated task with the user unassigned.
+   *
+   * @throws {ConflictException} - Throws an exception if either the task or the user does not exist on the specified board.
+   */
+  public async unAssignUser({
+    boardId,
+    memberId,
+    taskId,
+  }: BoardTaskUserAssign) {
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to assign does not exist.',
+      );
+    }
+
+    const member = await this.boardMembersRepository.findOne({
+      board: boardId,
+      user: memberId,
+    });
+
+    if (!member) {
+      throw new ConflictException(
+        'The member you are trying to assign does not exist.',
+      );
+    }
+
+    task.assigned_to = null;
+    await this.em.persistAndFlush(task);
+
+    return await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: task.id,
+      },
+      {
+        fields: [
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
   }
 
   /**

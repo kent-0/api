@@ -51,7 +51,7 @@ export class BoardTaskEntity extends ParentEntity {
     entity: () => AuthUserEntity,
     nullable: true,
   })
-  public assigned_to!: Rel<AuthUserEntity>;
+  public assigned_to!: Rel<AuthUserEntity> | null;
 
   /**
    * Many-to-One relationship indicating the board in which this task resides.

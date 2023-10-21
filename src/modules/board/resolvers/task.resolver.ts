@@ -9,6 +9,7 @@ import {
   BoardTaskCreateInput,
   BoardTaskDeleteInput,
   BoardTaskUpdateInput,
+  BoardTaskUserAssign,
 } from '~/modules/board/inputs';
 import { BoardTaskMoveInput } from '~/modules/board/inputs/task/move.input';
 import { BoardTaskObject } from '~/modules/board/objects/task.object';
@@ -33,6 +34,24 @@ export class BoardTaskResolver {
    * @param _taskService - An instance of the `BoardTaskService`.
    */
   constructor(private _taskService: BoardTaskService) {}
+
+  /**
+   * Mutation: Assign User to Task
+   * Allows clients to associate a user with a specific task on a board.
+   * Requires permission to update tasks.
+   *
+   * @param input - Input data for assigning the user to the task.
+   *
+   * @returns - The updated task object with the user now assigned to it.
+   */
+  @Mutation(() => BoardTaskObject, {
+    description: 'Assign a user to a task',
+    name: 'boardTaskAssignUser',
+  })
+  @BoardPermissions([BoardPermissionsEnum.TaskAssign])
+  public assign(@Args('input') input: BoardTaskUserAssign) {
+    return this._taskService.assignUser(input);
+  }
 
   /**
    * Mutation: Create Task
@@ -84,6 +103,24 @@ export class BoardTaskResolver {
   @BoardPermissions([BoardPermissionsEnum.TaskRemove])
   public remove(@Args('input') input: BoardTaskDeleteInput) {
     return this._taskService.delete(input);
+  }
+
+  /**
+   * Mutation: Unassign User from Task
+   * Allows clients to remove the association between a user and a specific task on a board.
+   * Requires permission to unassign users from tasks.
+   *
+   * @param input - Input data for unassigning the user from the task.
+   *
+   * @returns - The updated task object with no user assigned to it.
+   */
+  @Mutation(() => BoardTaskObject, {
+    description: 'Unassign a user from a task',
+    name: 'boardTaskUnAssignUser',
+  })
+  @BoardPermissions([BoardPermissionsEnum.TaskUnassign])
+  public unassign(@Args('input') input: BoardTaskUserAssign) {
+    return this._taskService.unAssignUser(input);
   }
 
   /**
