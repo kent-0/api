@@ -126,15 +126,12 @@ export class BoardStepService {
    * @param {string} params.boardId - The ID of the board containing the step.
    * @param {string} params.stepId - The ID of the step intended to be marked as "finished."
    *
-   * @returns {Promise<BoardStepEntity>} - Returns the updated step after being marked as "finished."
+   * @returns Returns the updated step after being marked as "finished."
    *
    * @throws {NotFoundException} - Throws an exception if the step intended to be marked
    *                               as "finished" is not found on the specified board.
    */
-  public async markAsFinished({
-    boardId,
-    stepId,
-  }: BoardStepFinishedInput): Promise<ToCollections<BoardStepObject>> {
+  public async markAsFinished({ boardId, stepId }: BoardStepFinishedInput) {
     // Count the number of steps on the board.
     const boardStepsCount = await this.stepRepository.count({
       board: boardId,
@@ -179,9 +176,6 @@ export class BoardStepService {
       throw new NotFoundException('The step is already marked as finished.');
     }
 
-    // Mark the retrieved step as "finished."
-    newFinishedStep.type = StepType.FINISH;
-
     // If such a step exists, revert its "finished" status and "position" and save the changes.
     if (previousFinishedStep) {
       // Replace steps positions
@@ -194,6 +188,9 @@ export class BoardStepService {
 
       await this.em.persistAndFlush(previousFinishedStep);
     }
+
+    // Mark the retrieved step as "finished."
+    newFinishedStep.type = StepType.FINISH;
 
     if (newFinishedStep.position !== boardStepsCount) {
       // Move the step to the last position on the board.
