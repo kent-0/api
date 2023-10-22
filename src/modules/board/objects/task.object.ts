@@ -45,16 +45,6 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
   /*public comments!: any;*/
 
   /**
-   * The parent task of the current task.
-   * This is used to create sub-tasks or child tasks within a task.
-   */
-  @Field(() => BoardTaskMinimalObject, {
-    description: 'The parent task of the current task.',
-    nullable: true,
-  })
-  public child_of?: BoardTaskMinimalObject;
-
-  /**
    * A list of child tasks of the current task.
    * This is used to create sub-tasks or child tasks within a task.
    */
@@ -71,6 +61,16 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
     description: 'The user who created or added the task to the board.',
   })
   public created_by!: AuthUserMinimalObject;
+
+  /**
+   * The parent task of the current task.
+   * This is used to create sub-tasks or child tasks within a task.
+   */
+  @Field(() => BoardTaskMinimalObject, {
+    description: 'The parent task of the current task.',
+    nullable: true,
+  })
+  public parent?: BoardTaskMinimalObject;
 
   /**
    * The step within the board where the task currently resides.
