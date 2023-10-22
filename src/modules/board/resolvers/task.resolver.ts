@@ -36,6 +36,23 @@ export class BoardTaskResolver {
   constructor(private _taskService: BoardTaskService) {}
 
   /**
+   * Mutation: Add Children to Task
+   * Allows clients to add children to a task on a board.
+   * Requires permission to update tasks.
+   *
+   * @param input - Input data specifying the updates for the task.
+   *
+   * @returns - The created children.
+   */
+  @Mutation(() => BoardTaskObject, {
+    description: 'Add a child to a task',
+    name: 'boardTaskAddChildren',
+  })
+  public async addChildren(@Args('input') input: BoardTaskCreateInput) {
+    return this._taskService.addChild(input);
+  }
+
+  /**
    * Mutation: Assign User to Task
    * Allows clients to associate a user with a specific task on a board.
    * Requires permission to update tasks.
@@ -103,6 +120,23 @@ export class BoardTaskResolver {
   @BoardPermissions([BoardPermissionsEnum.TaskRemove])
   public remove(@Args('input') input: BoardTaskDeleteInput) {
     return this._taskService.delete(input);
+  }
+
+  /**
+   * Mutation: Remove Children from Task
+   * Allows clients to remove children from a task on a board.
+   * Requires permission to update tasks.
+   *
+   * @param input - Input data specifying the updates for the task.
+   *
+   * @returns - Confirmation message of the removed children.
+   */
+  @Mutation(() => BoardTaskObject, {
+    description: 'Remove a child from a task',
+    name: 'boardTaskRemoveChildren',
+  })
+  public async removeChildren(@Args('input') input: BoardTaskDeleteInput) {
+    return this._taskService.removeChild(input);
   }
 
   /**
