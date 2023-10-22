@@ -1,5 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 
+import { IsDateString, IsString, IsUUID, MaxLength } from 'class-validator';
+
 /**
  * `BoardTaskUpdateInput` serves as a data transfer object, which contains the necessary
  * fields required to perform a task update operation within a specific board. This input type
@@ -19,6 +21,9 @@ export class BoardTaskUpdateInput {
   @Field(() => ID, {
     description: 'The ID of the board to update.',
   })
+  @IsUUID(4, {
+    message: 'Invalid board id provided. Please provide a valid UUID.',
+  })
   public boardId!: string;
 
   /**
@@ -30,6 +35,16 @@ export class BoardTaskUpdateInput {
     description: 'The description of the task to update.',
     nullable: true,
   })
+  @IsString({
+    message: 'The description of the task must be a string.',
+  })
+  @MaxLength(3000, {
+    message:
+      'The description of the task must be no more than 3000 characters.',
+  })
+  @Field(() => String, {
+    description: 'The description of the task.',
+  })
   public description?: string;
 
   /**
@@ -40,6 +55,12 @@ export class BoardTaskUpdateInput {
     description: 'The expiration date of the task.',
     nullable: true,
   })
+  @IsDateString(
+    {},
+    {
+      message: 'The expiration date of the task must be a valid date.',
+    },
+  )
   public expirationDate?: Date;
 
   /**
@@ -51,6 +72,15 @@ export class BoardTaskUpdateInput {
     description: 'The name of the task to update.',
     nullable: true,
   })
+  @IsString({
+    message: 'The name of the task must be a string.',
+  })
+  @MaxLength(150, {
+    message: 'The name of the task must be no more than 150 characters.',
+  })
+  @Field(() => String, {
+    description: 'The name of the task.',
+  })
   public name?: string;
 
   /**
@@ -60,6 +90,9 @@ export class BoardTaskUpdateInput {
    */
   @Field(() => ID, {
     description: 'The ID of the task to update.',
+  })
+  @IsUUID(4, {
+    message: 'Invalid task id provided. Please provide a valid UUID.',
   })
   public taskId!: string;
 }

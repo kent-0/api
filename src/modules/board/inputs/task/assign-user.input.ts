@@ -1,5 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
+import { IsUUID } from 'class-validator';
+
 /**
  * `BoardTaskUserAssign` Input Type:
  * This input type defines the necessary details required to assign a user (or member)
@@ -17,6 +19,9 @@ export class BoardTaskUserAssign {
   @Field({
     description: 'Board where the task is located.',
   })
+  @IsUUID(4, {
+    message: 'Invalid board id provided. Please provide a valid UUID.',
+  })
   public boardId!: string;
 
   /**
@@ -26,6 +31,9 @@ export class BoardTaskUserAssign {
   @Field({
     description: 'Member who will be assigned to the task.',
   })
+  @IsUUID(4, {
+    message: 'Invalid member id provided. Please provide a valid UUID.',
+  })
   public memberId!: string;
 
   /**
@@ -34,6 +42,9 @@ export class BoardTaskUserAssign {
    */
   @Field({
     description: 'Task to be assigned to the member.',
+  })
+  @IsUUID(4, {
+    message: 'Invalid task id provided. Please provide a valid UUID.',
   })
   public taskId!: string;
 }
