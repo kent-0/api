@@ -6,6 +6,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -73,7 +74,7 @@ export class ProjectPermissionsGuard implements CanActivate {
     );
 
     // If the project doesn't exist, deny access.
-    if (!project) return false;
+    if (!project) throw new NotFoundException('The project does not exist.');
 
     // If the user is the project's owner, grant access.
     if (project.owner.id === userReq.sub) return true;
