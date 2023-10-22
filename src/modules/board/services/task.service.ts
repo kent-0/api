@@ -173,6 +173,12 @@ export class BoardTaskService {
       );
     }
 
+    if (task.assigned_to?.id === memberId) {
+      throw new ConflictException(
+        'The task you are trying to assign is already assigned to this user.',
+      );
+    }
+
     const member = await this.boardMembersRepository.findOne({
       board: boardId,
       user: memberId,
