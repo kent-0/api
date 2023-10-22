@@ -1319,7 +1319,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "comment": "Step in which the task is assigned.",
           "mappedType": "uuid"
         }
@@ -1399,6 +1399,7 @@
             "id"
           ],
           "referencedTableName": "public.boards_steps",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },
