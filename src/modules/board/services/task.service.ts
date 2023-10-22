@@ -86,6 +86,69 @@ export class BoardTaskService {
   }
 
   /**
+   * Creates a new task associated with a specified board.
+   * The task is initially assigned to the first step of the board. If the board doesn't have
+   * any steps, an exception is thrown.
+   *
+   * @param boardId - The unique identifier of the board to which the task belongs.
+   * @param child_of - The unique identifier of the parent task.
+   * @param description - Descriptive text providing more information about the task.
+   * @param name - A brief title or name for the task.
+   *
+   * @returns - The created task entity.
+   */
+  public async addChild({
+    boardId,
+    child_of,
+    description,
+    name,
+  }: BoardTaskCreateInput) {
+    if (!child_of) {
+      throw new ConflictException(
+        'The parent task you are trying to assign does not exist.',
+      );
+    }
+
+    const parentTask = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: child_of,
+    });
+
+    if (!parentTask) {
+      throw new ConflictException(
+        'The parent task you are trying to assign does not exist.',
+      );
+    }
+
+    const childrensCount = await parentTask.children.loadCount();
+    const newTask = this.boardTaskRepository.create({
+      board: boardId,
+      created_by: parentTask.created_by,
+      description,
+      name,
+      position: childrensCount + 1,
+      step: parentTask.step,
+    });
+
+    await this.em.persistAndFlush(newTask);
+    await this.recountTaskChildrensPositions(boardId, child_of);
+    return await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: newTask.id,
+      },
+      {
+        fields: [
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+        ],
+      },
+    );
+  }
+
+  /**
    * Assigns a user (or member) to a specific task on a board.
    * This method encapsulates the logic necessary to link a user to a task,
    * ensuring that both the task and the user are valid and belong to the specified board.
@@ -345,6 +408,71 @@ export class BoardTaskService {
     }
 
     return task;
+  }
+
+  /**
+   * Recounts the positions of the childrens of a task.
+   *
+   * @param boardId - The unique identifier of the board containing the task.
+   * @param taskId - The unique identifier of the task to be updated.
+   *
+   * @returns - This method doesn't return a value. It recalculates the task positions and saves the updated positions to the database.
+   */
+  public async recountTaskChildrensPositions(boardId: string, taskId: string) {
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to update does not exist.',
+      );
+    }
+
+    const childrens = await task.children.loadItems();
+    for (let i = 0; i < childrens.length; i++) {
+      childrens[i].position = i + 1;
+    }
+
+    await this.em.persistAndFlush(childrens);
+  }
+
+  /**
+   * Removes a child task from a parent task.
+   *
+   * @param boardId - The unique identifier of the board from which the task should be deleted.
+   * @param child_of - The unique identifier of the parent task.
+   * @param taskId - The unique identifier of the task to be deleted.
+   *
+   * @returns - A confirmation message indicating the task's successful deletion.
+   */
+  public async removeChild({
+    boardId,
+    child_of,
+    taskId,
+  }: BoardTaskDeleteInput) {
+    if (!child_of) {
+      throw new ConflictException(
+        'The parent task you are trying to assign does not exist.',
+      );
+    }
+
+    const task = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: taskId,
+      parent: child_of,
+    });
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to delete does not exist.',
+      );
+    }
+
+    await this.em.removeAndFlush(task);
+    await this.recountTaskChildrensPositions(boardId, child_of);
+    return 'The child task has been deleted successfully.';
   }
 
   /**

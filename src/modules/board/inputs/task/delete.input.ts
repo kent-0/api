@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { Field, ID, InputType } from '@nestjs/graphql';
 
 import { IsUUID } from 'class-validator';
@@ -22,6 +23,18 @@ export class BoardTaskDeleteInput {
   })
   @IsUUID(4, { message: 'The board ID must be a valid UUID.' })
   public boardId!: string;
+
+  /**
+   * Represents the unique identifier of the task that is slated for deletion. This ID acts
+   * as a precise pointer to the task entity, ensuring that the exact task intended for deletion
+   * is the one that gets removed, thus preventing inadvertent deletions.
+   */
+  @IsUUID(4)
+  @Optional()
+  @Field(() => ID, {
+    description: 'The ID of the task to which this task is a child of.',
+  })
+  public child_of?: string;
 
   /**
    * Specifies the unique identifier of the task that is slated for deletion. This ID acts
