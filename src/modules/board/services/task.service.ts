@@ -120,14 +120,14 @@ export class BoardTaskService {
       );
     }
 
-    const childrensCount = await parentTask.children.loadCount();
+    const childrensCount = await parentTask.childrens.loadCount();
     const newTask = this.boardTaskRepository.create({
       board: boardId,
       created_by: parentTask.created_by,
       description,
       name,
+      parent: parentTask,
       position: childrensCount + 1,
-      step: parentTask.step,
     });
 
     await this.em.persistAndFlush(newTask);
@@ -283,6 +283,18 @@ export class BoardTaskService {
       );
     }
 
+    if (task.finish_date) {
+      throw new ConflictException(
+        'The task you are trying to delete has already been finished.',
+      );
+    }
+
+    if (!task.step) {
+      throw new ConflictException(
+        'The task you are trying to delete does not have a step.',
+      );
+    }
+
     await this.em.removeAndFlush(task);
     await this.recountTasksPositions(boardId, task.step.id);
 
@@ -330,6 +342,12 @@ export class BoardTaskService {
     if (task.finish_date) {
       throw new ConflictException(
         'The task you are trying to move has already been finished.',
+      );
+    }
+
+    if (!task.step) {
+      throw new ConflictException(
+        'The task you are trying to move does not have a step.',
       );
     }
 
@@ -430,7 +448,7 @@ export class BoardTaskService {
       );
     }
 
-    const childrens = await task.children.loadItems();
+    const childrens = await task.childrens.loadItems();
     for (let i = 0; i < childrens.length; i++) {
       childrens[i].position = i + 1;
     }

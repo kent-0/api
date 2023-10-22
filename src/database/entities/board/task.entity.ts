@@ -69,7 +69,7 @@ export class BoardTaskEntity extends ParentEntity {
   @OneToMany(() => BoardTaskEntity, (c) => c.parent, {
     comment: "Children's of the task.",
   })
-  public children = new Collection<BoardTaskEntity>(this);
+  public childrens = new Collection<BoardTaskEntity>(this);
 
   /**
    * One-to-Many relationship representing all comments or feedback from members
@@ -174,8 +174,9 @@ export class BoardTaskEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Step in which the task is assigned.',
     entity: () => BoardStepEntity,
+    nullable: true,
   })
-  public step!: Rel<BoardStepEntity>;
+  public step?: Rel<BoardStepEntity>;
 
   /**
    * Many-to-Many relationship representing all the tags or labels associated
