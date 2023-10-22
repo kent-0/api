@@ -162,10 +162,13 @@ export class BoardTaskService {
    * @throws {ConflictException} - Throws an exception if either the task or the user does not exist on the specified board.
    */
   public async assignUser({ boardId, memberId, taskId }: BoardTaskUserAssign) {
-    const task = await this.boardTaskRepository.findOne({
-      board: boardId,
-      id: taskId,
-    });
+    const task = await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: taskId,
+      },
+      { populate: ['assigned_to'] },
+    );
 
     if (!task) {
       throw new ConflictException(
@@ -173,20 +176,35 @@ export class BoardTaskService {
       );
     }
 
-    if (task.assigned_to?.id === memberId) {
+    if (task.finish_date) {
+      throw new ConflictException(
+        'The task you are trying to assign has already been finished.',
+      );
+    }
+
+    const member = await this.boardMembersRepository.findOne(
+      {
+        board: boardId,
+        id: memberId,
+      },
+      { populate: ['user'] },
+    );
+
+    if (!member) {
+      throw new ConflictException(
+        'The member you are trying to assign does not exist.',
+      );
+    }
+
+    if (task.assigned_to?.id === member.user.id) {
       throw new ConflictException(
         'The task you are trying to assign is already assigned to this user.',
       );
     }
 
-    const member = await this.boardMembersRepository.findOne({
-      board: boardId,
-      user: memberId,
-    });
-
-    if (!member) {
+    if (task.assigned_to !== null) {
       throw new ConflictException(
-        'The member you are trying to assign does not exist.',
+        'The task you are trying to assign already has an assigned user.',
       );
     }
 
@@ -528,9 +546,21 @@ export class BoardTaskService {
       );
     }
 
+    if (task.finish_date) {
+      throw new ConflictException(
+        'The task you are trying to assign has already been finished.',
+      );
+    }
+
+    if (!task.assigned_to) {
+      throw new ConflictException(
+        'The task you are trying to unassign does not have an assigned user.',
+      );
+    }
+
     const member = await this.boardMembersRepository.findOne({
       board: boardId,
-      user: memberId,
+      id: memberId,
     });
 
     if (!member) {

@@ -50,6 +50,7 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
    */
   @Field(() => BoardTaskMinimalObject, {
     description: 'The parent task of the current task.',
+    nullable: true,
   })
   public child_of?: BoardTaskMinimalObject;
 

@@ -1,7 +1,6 @@
-import { Optional } from '@nestjs/common';
 import { Field, ID, InputType } from '@nestjs/graphql';
 
-import { IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 /**
  * `BoardTaskCreateInput`: A data transfer object designed to encapsulate the necessary
@@ -29,10 +28,14 @@ export class BoardTaskCreateInput {
    * Ensuring that the `child_of` is accurate and valid safeguards against misplacement
    * of tasks and maintains the structural integrity of the board’s task management.
    */
-  @IsUUID(4)
-  @Optional()
+  @IsOptional()
+  @IsUUID(4, {
+    message:
+      'The ID of the task to which this task is a child of must be a UUID.',
+  })
   @Field(() => ID, {
     description: 'The ID of the task to which this task is a child of.',
+    nullable: true,
   })
   public child_of?: string;
 

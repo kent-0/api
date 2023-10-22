@@ -3,7 +3,11 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { BoardEntity, BoardMembersEntity } from '~/database/entities';
+import {
+  BoardEntity,
+  BoardMembersEntity,
+  ProjectEntity,
+} from '~/database/entities';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
@@ -39,6 +43,7 @@ export class BoardService {
    *
    * @param boardRepository - Repository for CRUD operations on the BoardEntity.
    * @param boardMembersRepository - Repository for CRUD operations on the BoardMembersEntity.
+   * @param projectRepository - Repository for CRUD operations on the ProjectEntity.
    * @param em - EntityManager for handling database transactions.
    */
   constructor(
@@ -46,6 +51,8 @@ export class BoardService {
     private readonly boardRepository: EntityRepository<BoardEntity>,
     @InjectRepository(BoardMembersEntity)
     private readonly boardMembersRepository: EntityRepository<BoardMembersEntity>,
+    @InjectRepository(ProjectEntity)
+    private readonly projectRepository: EntityRepository<ProjectEntity>,
     private readonly em: EntityManager,
   ) {}
 
@@ -70,7 +77,7 @@ export class BoardService {
     userId: string,
   ): Promise<ToCollections<BoardObject>> {
     // Step 0: Check if the project exists.
-    const project = await this.boardRepository.findOne({
+    const project = await this.projectRepository.findOne({
       id: projectId,
     });
 

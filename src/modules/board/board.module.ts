@@ -8,6 +8,7 @@ import {
   BoardRolesEntity,
   BoardStepEntity,
   BoardTaskEntity,
+  ProjectEntity,
 } from '~/database/entities';
 import { BoardTaskResolver } from '~/modules/board/resolvers/task.resolver';
 import { BoardTaskService } from '~/modules/board/services/task.service';
@@ -32,6 +33,7 @@ import { BoardStepService } from './services/step.service';
         BoardMembersEntity,
         BoardStepEntity,
         BoardTaskEntity,
+        ProjectEntity,
       ],
     }),
   ],
