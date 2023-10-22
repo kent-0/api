@@ -14,6 +14,7 @@ import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import {
   BoardTaskCreateInput,
   BoardTaskDeleteInput,
+  BoardTaskGetInput,
   BoardTaskUpdateInput,
   BoardTaskUserAssign,
 } from '~/modules/board/inputs';
@@ -327,6 +328,33 @@ export class BoardTaskService {
     return 'The task has been deleted successfully.';
   }
 
+  public get({ boardId, taskId }: BoardTaskGetInput) {
+    const task = this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: taskId,
+      },
+      {
+        fields: [
+          ...BoardTaskMinimalProperties,
+          ...createFieldPaths('step', ...BoardStepMinimalProperties),
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+        ],
+      },
+    );
+
+    if (!task) {
+      throw new ConflictException(
+        'The task you are trying to fetch does not exist.',
+      );
+    }
+
+    return task;
+  }
+
   /**
    * Moves a task to a different position or step within a board.
    *
@@ -581,6 +609,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
@@ -631,6 +660,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),

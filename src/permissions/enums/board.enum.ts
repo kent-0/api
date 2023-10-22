@@ -28,6 +28,7 @@ export enum BoardPermissionsEnum {
   TaskCommentUpdate = 2 << 20,
   TaskCommentPin = 2 << 21,
   TaskCommentUnpin = 2 << 22,
+  TaskView = 2 << 23,
 }
 
 /**

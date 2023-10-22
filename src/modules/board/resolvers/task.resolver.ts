@@ -1,5 +1,5 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UserToken } from '~/modules/auth/decorators/user.decorator';
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
@@ -8,6 +8,7 @@ import { BoardPermissionsGuard } from '~/modules/board/guards/permissions.guard'
 import {
   BoardTaskCreateInput,
   BoardTaskDeleteInput,
+  BoardTaskGetInput,
   BoardTaskUpdateInput,
   BoardTaskUserAssign,
 } from '~/modules/board/inputs';
@@ -88,6 +89,22 @@ export class BoardTaskResolver {
     @UserToken() token: JWTPayload,
   ) {
     return this._taskService.create(input, token.sub);
+  }
+
+  /**
+   * Query: Get Task
+   * Allows clients to get a task with full details.
+   * Requires permission to view tasks.
+   *
+   * @param input - Input data specifying which task to get.
+   */
+  @Query(() => BoardTaskObject, {
+    description: 'Get a task with full details',
+    name: 'boardTask',
+  })
+  @BoardPermissions([BoardPermissionsEnum.TaskView])
+  public get(@Args('input') input: BoardTaskGetInput) {
+    return this._taskService.get(input);
   }
 
   /**
