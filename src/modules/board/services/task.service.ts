@@ -464,6 +464,14 @@ export class BoardTaskService {
         await this.em.persistAndFlush(replacementTask);
       }
 
+      if (step.type === StepType.FINISH) {
+        task.finish_date = new Date();
+      }
+
+      if (step.type === StepType.TASK) {
+        task.start_date = new Date();
+      }
+
       await this.em.persistAndFlush(task);
       await this.recountTasksPositions(boardId, stepId);
       await this.recountTasksPositions(boardId, previousStep.id);
@@ -474,6 +482,14 @@ export class BoardTaskService {
 
       task.position = 1;
       task.step = step;
+
+      if (step.type === StepType.FINISH) {
+        task.finish_date = new Date();
+      }
+
+      if (step.type === StepType.TASK) {
+        task.start_date = new Date();
+      }
 
       await this.recountTasksPositions(boardId, previousStep.id);
       await this.em.persistAndFlush(task);
