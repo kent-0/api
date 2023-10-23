@@ -134,7 +134,7 @@ export class BoardTaskService {
 
     await this.em.persistAndFlush(newTask);
     await this.recountTaskChildrensPositions(boardId, child_of);
-    return await this.boardTaskRepository.findOne(
+    return await this.boardTaskRepository.findOneOrFail(
       {
         board: boardId,
         id: newTask.id,
@@ -205,7 +205,7 @@ export class BoardTaskService {
       );
     }
 
-    if (task.assigned_to !== null) {
+    if (task.assigned_to) {
       throw new ConflictException(
         'The task you are trying to assign already has an assigned user.',
       );
@@ -214,7 +214,7 @@ export class BoardTaskService {
     task.assigned_to = member.user;
     await this.em.persistAndFlush(task);
 
-    return await this.boardTaskRepository.findOne(
+    return await this.boardTaskRepository.findOneOrFail(
       {
         board: boardId,
         id: task.id,
@@ -257,7 +257,7 @@ export class BoardTaskService {
       );
     }
 
-    const stepsCount = await step.tasks.loadCount();
+    const stepsCount = await step.tasks.loadCount({ refresh: true });
     const task = this.boardTaskRepository.create({
       board: boardId,
       created_by: userId,
@@ -269,13 +269,14 @@ export class BoardTaskService {
 
     await this.em.persistAndFlush(task);
 
-    return await this.boardTaskRepository.findOne(
+    return await this.boardTaskRepository.findOneOrFail(
       {
         board: boardId,
         id: task.id,
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
@@ -491,8 +492,8 @@ export class BoardTaskService {
         task.start_date = new Date();
       }
 
-      await this.recountTasksPositions(boardId, previousStep.id);
       await this.em.persistAndFlush(task);
+      await this.recountTasksPositions(boardId, previousStep.id);
     }
 
     return task;
@@ -618,7 +619,7 @@ export class BoardTaskService {
     task.assigned_to = null;
     await this.em.persistAndFlush(task);
 
-    return await this.boardTaskRepository.findOne(
+    return await this.boardTaskRepository.findOneOrFail(
       {
         board: boardId,
         id: task.id,
@@ -669,7 +670,7 @@ export class BoardTaskService {
     task.name = name ?? task.name;
 
     await this.em.persistAndFlush(task);
-    return await this.boardTaskRepository.findOne(
+    return await this.boardTaskRepository.findOneOrFail(
       {
         board: boardId,
         id: task.id,
