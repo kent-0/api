@@ -616,6 +616,70 @@ describe('Task - Successfully cases', async () => {
   });
 
   /**
+   * Test Case: Set Finish Date in second task Move to Finish Step
+   * Verifies that a finish date is set when a task is moved to a finish step.
+   */
+  it('should set finish date when the second task is moved to finish step', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const task = await service.create(
+        {
+          boardId: board.id,
+          description: 'First Task description',
+          name: 'First Task name',
+        },
+        user.id,
+      );
+
+      expect(task).toBeDefined();
+      expect(task.id).toBeDefined();
+      expect(task.finish_date).toBeUndefined();
+
+      await service.assignUser({
+        boardId: board.id,
+        memberId: board.members[0].id,
+        taskId: task.id,
+      });
+
+      const task2 = await service.create(
+        {
+          boardId: board.id,
+          description: 'Second Task description',
+          name: 'Second Task name',
+        },
+        user.id,
+      );
+
+      expect(task2).toBeDefined();
+      expect(task2.id).toBeDefined();
+      expect(task2.finish_date).toBeUndefined();
+
+      await service.assignUser({
+        boardId: board.id,
+        memberId: board.members[0].id,
+        taskId: task2.id,
+      });
+
+      await service.move({
+        boardId: board.id,
+        position: 1,
+        stepId: stepFinish.id,
+        taskId: task.id,
+      });
+
+      const updatedTask = await service.move({
+        boardId: board.id,
+        position: 2,
+        stepId: stepFinish.id,
+        taskId: task2.id,
+      });
+
+      expect(updatedTask).toBeDefined();
+      expect(updatedTask.id).toBeDefined();
+      expect(updatedTask.finish_date).toBeDefined();
+    });
+  });
+
+  /**
    * Test Case: Add Child Task to Parent Task
    * Ensures that a child task can be successfully added to a parent task.
    */
