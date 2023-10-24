@@ -33,6 +33,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
+/**
+ * Test Suite: Task / Comments - Unsuccessfully cases
+ * This suite focuses on scenarios where operations on task comments fail due to various reasons such as
+ * non-existent tasks, non-existent comments, or unauthorized operations.
+ */
 describe('Task / Comments - Unsuccessfully cases', async () => {
   let module: TestingModule;
   let service: BoardTaskCommentService;
@@ -173,6 +178,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     expect(service).toBeDefined();
   });
 
+  /**
+   * Test Case: Task non-existence during comment creation
+   * Ensures a comment cannot be created for a task that doesn't exist.
+   */
   it('should not create a comment if the task not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -188,6 +197,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Task non-existence during comment deletion
+   * Ensures a comment cannot be deleted if the associated task doesn't exist.
+   */
   it('should not delete a comment if the task not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -205,6 +218,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Task non-existence during comment update
+   * Ensures a comment cannot be updated if the associated task doesn't exist.
+   */
   it('should not update a comment if the task not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
@@ -221,6 +238,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Comment non-existence during update
+   * Ensures a comment cannot be updated if it doesn't exist.
+   */
   it('should not update a comment if the comment not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
@@ -239,6 +260,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Comment non-existence during deletion
+   * Ensures a comment cannot be deleted if it doesn't exist.
+   */
   it('should not delete a comment if the comment not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
@@ -256,6 +281,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Task non-existence during comment reply
+   * Ensures a reply cannot be added to a comment if the associated task doesn't exist.
+   */
   it('should not reply to a comment if the task not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
@@ -272,6 +301,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Comment non-existence during reply
+   * Ensures a reply cannot be added to a comment if the comment doesn't exist.
+   */
   it('should not reply to a comment if the comment not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(
@@ -290,6 +323,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Unauthorized comment update
+   * Ensures a user cannot update a comment if they are not the author.
+   */
   it('should not update a comment if the user is not the owner', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -317,6 +354,10 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Unauthorized comment deletion
+   * Ensures a user cannot delete a comment if they are not the author.
+   */
   it('should not delete a comment if the user is not the owner', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(

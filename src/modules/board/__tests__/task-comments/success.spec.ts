@@ -33,6 +33,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
+/**
+ * Test Suite: Task / Comments - Successful Scenarios
+ * This suite focuses on testing the successful scenarios related to task comments in the system.
+ * It ensures that various operations like creating, updating, replying, and deleting comments and replies work as expected.
+ */
 describe('Task / Comments - Successfully cases', async () => {
   let module: TestingModule;
   let service: BoardTaskCommentService;
@@ -173,6 +178,10 @@ describe('Task / Comments - Successfully cases', async () => {
     expect(service).toBeDefined();
   });
 
+  /**
+   * Test Case: Create Comment
+   * Ensures that a comment can be successfully created for a task.
+   */
   it('should create a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -200,6 +209,10 @@ describe('Task / Comments - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Reply to Comment
+   * Ensures that a reply can be made to an existing comment for a task.
+   */
   it('should create a reply to a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -248,6 +261,10 @@ describe('Task / Comments - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Delete Comment
+   * Ensures that a comment can be deleted from a task.
+   */
   it('should delete a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -294,6 +311,10 @@ describe('Task / Comments - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Delete Reply
+   * Ensures that a reply to a comment can be deleted from a task.
+   */
   it('should delete a reply to a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -364,6 +385,10 @@ describe('Task / Comments - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Update Comment
+   * Ensures that a comment can be updated in a task.
+   */
   it('should update a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
@@ -417,6 +442,10 @@ describe('Task / Comments - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Test Case: Update Reply
+   * Ensures that a reply to a comment can be updated in a task.
+   */
   it('should update a reply to a comment in a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const comment = await service.create(
