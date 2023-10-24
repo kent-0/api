@@ -19,12 +19,9 @@ import {
 import { DeviceTypes } from '~/database/enums/devices.enum';
 import { TokenType } from '~/database/enums/token.enum';
 import { AuthPasswordService } from '~/modules/auth/services/password.service';
-import { BoardMinimalProperties } from '~/modules/board/objects';
 import {
-  ProjectGoalMinimalProperties,
   ProjectMembersMinimalProperties,
-  ProjectNotesMinimalProperties,
-  ProjectRolesMinimalProperties,
+  ProjectMinimalProperties,
 } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
@@ -55,7 +52,7 @@ export class AuthAccountService {
    *
    * Initializes the class with necessary repositories and services.
    *
-   * @param {EntityRepository<AuthUserEntity>} usersRespository - Repository for interacting with user data.
+   * @param {EntityRepository<AuthUserEntity>} usersRepository - Repository for interacting with user data.
    * @param {EntityRepository<AuthPasswordEntity>} passwordRepository - Repository for handling password data.
    * @param {EntityRepository<AuthTokensEntity>} tokensRepository - Repository for managing authentication tokens.
    * @param {EntityRepository<AuthEmailsEntity>} authEmailsRepository - Repository for working with email data.
@@ -65,7 +62,7 @@ export class AuthAccountService {
    */
   constructor(
     @InjectRepository(AuthUserEntity)
-    private readonly usersRespository: EntityRepository<AuthUserEntity>,
+    private readonly usersRepository: EntityRepository<AuthUserEntity>,
 
     @InjectRepository(AuthPasswordEntity)
     private readonly passwordRepository: EntityRepository<AuthPasswordEntity>,
@@ -137,40 +134,17 @@ export class AuthAccountService {
    */
   public async me(userId: string): Promise<ToCollections<AuthUserObject>> {
     // Fetch the user's information using the provided userId and populate the user's email.
-    const user = await this.usersRespository.findOne(
+    const user = await this.usersRepository.findOne(
       {
         id: userId,
       },
       {
         fields: [
           ...AuthUserMinimalProperties,
-          ...createFieldPaths(
-            'projects.project.owner',
-            ...AuthUserMinimalProperties,
-          ),
-          ...createFieldPaths(
-            'projects.project.members',
-            ...ProjectMembersMinimalProperties,
-          ),
-          ...createFieldPaths(
-            'projects.roles',
-            ...ProjectRolesMinimalProperties,
-          ),
-          ...createFieldPaths(
-            'projects.project.notes',
-            ...ProjectNotesMinimalProperties,
-          ),
-          ...createFieldPaths(
-            'projects.project.goals',
-            ...ProjectGoalMinimalProperties,
-          ),
-          ...createFieldPaths(
-            'projects.project.boards',
-            ...BoardMinimalProperties,
-          ),
+          ...createFieldPaths('projects', ...ProjectMembersMinimalProperties),
+          ...createFieldPaths('projects.project', ...ProjectMinimalProperties),
           'email.value',
           'email.is_confirmed',
-          'createdAt',
         ],
       },
     );
@@ -291,7 +265,7 @@ export class AuthAccountService {
     username,
   }: AuthSignInInput): Promise<AuthSignInObject> {
     // Fetch the user's information using the provided username.
-    const user = await this.usersRespository.findOne(
+    const user = await this.usersRepository.findOne(
       {
         username,
       },
@@ -389,7 +363,7 @@ export class AuthAccountService {
     username,
   }: AuthSignUpInput): Promise<ToCollections<AuthUserObject>> {
     // Check if a user with the same username or email already exists in the database.
-    const userExist = await this.usersRespository.findOne({
+    const userExist = await this.usersRepository.findOne({
       $or: [{ username }, { email: { value: email } }],
     });
 
@@ -401,7 +375,7 @@ export class AuthAccountService {
     }
 
     // Construct a new user entity using the provided registration details.
-    const user = this.usersRespository.create({
+    const user = this.usersRepository.create({
       first_name,
       last_name,
       username,
@@ -462,7 +436,7 @@ export class AuthAccountService {
     userId: string,
   ): Promise<ToCollections<AuthUserObject>> {
     // Fetch the user's information from the database using the provided userId.
-    const user = await this.usersRespository.findOne(
+    const user = await this.usersRepository.findOne(
       {
         id: userId,
       },
@@ -479,7 +453,7 @@ export class AuthAccountService {
     }
 
     // Check if the provided username is already associated with another user account.
-    const usernameExist = await this.usersRespository.findOne({
+    const usernameExist = await this.usersRepository.findOne({
       username,
     });
 

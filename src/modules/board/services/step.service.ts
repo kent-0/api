@@ -1,9 +1,14 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { BoardStepEntity } from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
@@ -60,20 +65,46 @@ export class BoardStepService {
    */
   public async create({
     boardId,
+    description,
     max,
     name,
+    type,
   }: BoardStepCreateInput): Promise<ToCollections<BoardStepObject>> {
     // Fetch all the steps associated with the given board.
     const boardStepsTotal = await this.stepRepository.count({
       board: boardId,
     });
 
+    const existingStartStep = await this.stepRepository.findOne({
+      board: boardId,
+      type: StepType.START,
+    });
+
+    if (type === StepType.START && existingStartStep) {
+      throw new NotFoundException('The board already has a start step.');
+    }
+
+    if (type !== StepType.START && !existingStartStep) {
+      throw new ConflictException('The board does not have a start step.');
+    }
+
+    const existingFinishStep = await this.stepRepository.findOne({
+      board: boardId,
+      type: StepType.FINISH,
+    });
+
+    if (type === StepType.FINISH && existingFinishStep) {
+      throw new NotFoundException('The board already has a finish step.');
+    }
+
     // Construct a new step object with the given parameters and the calculated position.
     const newStep = this.stepRepository.create({
       board: boardId,
+      description,
       max,
       name,
       position: boardStepsTotal + 1, // Determine the position by counting existing steps.
+      type: type ?? StepType.TASK,
     });
 
     // Save the newly created step to the database.
@@ -95,15 +126,12 @@ export class BoardStepService {
    * @param {string} params.boardId - The ID of the board containing the step.
    * @param {string} params.stepId - The ID of the step intended to be marked as "finished."
    *
-   * @returns {Promise<BoardStepEntity>} - Returns the updated step after being marked as "finished."
+   * @returns Returns the updated step after being marked as "finished."
    *
    * @throws {NotFoundException} - Throws an exception if the step intended to be marked
    *                               as "finished" is not found on the specified board.
    */
-  public async markAsFinished({
-    boardId,
-    stepId,
-  }: BoardStepFinishedInput): Promise<ToCollections<BoardStepObject>> {
+  public async markAsFinished({ boardId, stepId }: BoardStepFinishedInput) {
     // Count the number of steps on the board.
     const boardStepsCount = await this.stepRepository.count({
       board: boardId,
@@ -112,7 +140,7 @@ export class BoardStepService {
     // Retrieve any step currently marked as "finished" on the board.
     const previousFinishedStep = await this.stepRepository.findOne({
       board: boardId,
-      finish_step: true,
+      type: StepType.FINISH,
     });
 
     // If the board has no steps, throw an exception.
@@ -144,25 +172,25 @@ export class BoardStepService {
     }
 
     // if the step is already marked as "finished", throw an exception.
-    if (newFinishedStep.finish_step) {
+    if (newFinishedStep.type === StepType.FINISH) {
       throw new NotFoundException('The step is already marked as finished.');
     }
 
-    // Mark the retrieved step as "finished."
-    newFinishedStep.finish_step = true;
-
     // If such a step exists, revert its "finished" status and "position" and save the changes.
     if (previousFinishedStep) {
-      previousFinishedStep.finish_step = false;
-
       // Replace steps positions
       const tempPosition = newFinishedStep.position;
+      const tempType = newFinishedStep.type;
 
       newFinishedStep.position = previousFinishedStep.position;
       previousFinishedStep.position = tempPosition;
+      previousFinishedStep.type = tempType;
 
       await this.em.persistAndFlush(previousFinishedStep);
     }
+
+    // Mark the retrieved step as "finished."
+    newFinishedStep.type = StepType.FINISH;
 
     if (newFinishedStep.position !== boardStepsCount) {
       // Move the step to the last position on the board.
@@ -240,7 +268,7 @@ export class BoardStepService {
     }
 
     // If the step is already marked as "finished", throw an exception.
-    if (step.finish_step) {
+    if (step.type === StepType.FINISH) {
       throw new NotFoundException(
         'You are trying to move a column that is marked as finished. This column cannot be moved.',
       );
@@ -260,7 +288,7 @@ export class BoardStepService {
     }
 
     // If the replacement step is already marked as "finished", throw an exception.
-    if (positionReplaceStep.finish_step) {
+    if (positionReplaceStep.type === StepType.FINISH) {
       throw new NotFoundException(
         'You are trying to move a column to the position of the finished column. This column cannot be moved.',
       );
@@ -270,10 +298,10 @@ export class BoardStepService {
     const tempPosition = step.position;
 
     step.position = positionReplaceStep.position;
-    positionReplaceStep.position = tempPosition;
+    await this.em.persistAndFlush(step);
 
-    // Persist the changes to the database.
-    await this.em.persistAndFlush([positionReplaceStep, step]);
+    positionReplaceStep.position = tempPosition;
+    await this.em.persistAndFlush(positionReplaceStep);
 
     // Return the step that has been moved.
     return step;
@@ -334,7 +362,6 @@ export class BoardStepService {
   public async update({
     boardId,
     description,
-    finishStep,
     max,
     name,
     stepId,
@@ -362,7 +389,6 @@ export class BoardStepService {
 
     // Update the step's fields with the provided values, or leave them unchanged if no new value is provided.
     step.description = description ?? step.description;
-    step.finish_step = finishStep ?? step.finish_step;
     step.max = max ?? step.max;
     step.name = name ?? step.name;
 

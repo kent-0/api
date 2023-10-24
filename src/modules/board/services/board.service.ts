@@ -3,7 +3,13 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { BoardEntity, BoardMembersEntity } from '~/database/entities';
+import {
+  BoardEntity,
+  BoardMembersEntity,
+  ProjectEntity,
+} from '~/database/entities';
+import { AuthUserMinimalProperties } from '~/modules/auth/objects';
+import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
@@ -37,6 +43,7 @@ export class BoardService {
    *
    * @param boardRepository - Repository for CRUD operations on the BoardEntity.
    * @param boardMembersRepository - Repository for CRUD operations on the BoardMembersEntity.
+   * @param projectRepository - Repository for CRUD operations on the ProjectEntity.
    * @param em - EntityManager for handling database transactions.
    */
   constructor(
@@ -44,6 +51,8 @@ export class BoardService {
     private readonly boardRepository: EntityRepository<BoardEntity>,
     @InjectRepository(BoardMembersEntity)
     private readonly boardMembersRepository: EntityRepository<BoardMembersEntity>,
+    @InjectRepository(ProjectEntity)
+    private readonly projectRepository: EntityRepository<ProjectEntity>,
     private readonly em: EntityManager,
   ) {}
 
@@ -51,6 +60,7 @@ export class BoardService {
    * Creates a new board associated with a specific project and adds the creator as its first member.
    *
    * Steps:
+   * 0. Check if the project exists.
    * 1. Create a new board using the provided details.
    * 2. Save the board to the database.
    * 3. Add the creator (user) as the first member of the board.
@@ -60,11 +70,23 @@ export class BoardService {
    * @param {BoardCreateInput} description, name, projectId - Input data to create a new board.
    * @param {string} userId - ID of the user creating the board.
    * @returns {Promise<ToCollections<BoardObject>>} The created board entity.
+   *
    */
   public async create(
     { description, name, projectId }: BoardCreateInput,
     userId: string,
   ): Promise<ToCollections<BoardObject>> {
+    // Step 0: Check if the project exists.
+    const project = await this.projectRepository.findOne({
+      id: projectId,
+    });
+
+    if (!project) {
+      throw new NotFoundException(
+        'The project you are trying to create a board for could not be found.',
+      );
+    }
+
     // Step 1: Create a new board entity instance.
     const newBoard = this.boardRepository.create({
       created_by: userId,
@@ -86,17 +108,7 @@ export class BoardService {
     await this.em.persistAndFlush(newMember);
 
     // Step 5: Populate relations.
-    await newBoard.populate([], {
-      fields: [
-        ...BoardMinimalProperties,
-        ...createFieldPaths('project', ...ProjectMinimalProperties),
-        ...createFieldPaths('members', ...BoardMembersMinimalProperties),
-        ...createFieldPaths('steps', ...BoardStepMinimalProperties),
-        ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
-      ],
-    });
-
-    return newBoard;
+    return this.get({ boardId: newBoard.id, projectId });
   }
 
   /**
@@ -133,7 +145,9 @@ export class BoardService {
           ...createFieldPaths('project', ...ProjectMinimalProperties),
           ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ...createFieldPaths('steps', ...BoardStepMinimalProperties),
+          ...createFieldPaths('steps.tasks', ...BoardTaskMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
         ],
       },
     );
@@ -165,6 +179,7 @@ export class BoardService {
    * @throws {NotFoundException} - Indicates that the board to be deleted was not found in the database.
    *
    * @returns {Promise<string>} - A promise that resolves to a confirmation message indicating successful deletion.
+   *
    */
   public async remove({
     boardId,
@@ -236,6 +251,7 @@ export class BoardService {
           ...createFieldPaths('members', ...BoardMembersMinimalProperties),
           ...createFieldPaths('steps', ...BoardStepMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
+          ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
         ],
       },
     );

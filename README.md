@@ -1,85 +1,59 @@
-# Kento API Documentation
+<img alt="Kento Banner" src="./.github/assets/banner.png">
 
-## Introduction
+Welcome to the Core API of Kento, a robust and scalable backend solution inspired by popular task management platforms like Trello and Jira. Our aim is to provide a seamless experience for managing projects and their associated task boards. Whether you're a small team looking to keep track of your tasks or a large organization aiming to streamline your project management processes, this API has got you covered.
 
-The Kento API is an application for managing users and authentication, built using NestJS and MikroORM.
+Built with cutting-edge technologies like NestJS, TypeScript, and GraphQL, this project ensures high performance, security, and ease of use. With Mikro-ORM for object-relational mapping, we ensure smooth interactions with the database, and with the upcoming addition of Redis, users can expect even faster response times due to efficient caching.
 
-## Installation
+The modular architecture allows for easy scalability and maintenance. Each module, such as Auth, Board, and Project, has been meticulously crafted to handle its specific functionalities, ensuring a clean and organized codebase.
 
-1. Clone this repository:
+Dive into the details below to understand more about the individual modules, entities, and the requirements to get this project up and running.
 
-   ```bash
-   git clone https://github.com/kent-0/kento-api.git
-   ```
+## Table of Contents
 
-2. Install dependencies:
+- [Modules](#modules)
+  - [Auth Module](#auth-module)
+  - [Board Module](#board-module)
+  - [Project Module](#project-module)
+- [Entities](#entities)
+  - [User Entity](#user-entity)
+  - [Board Entity](#board-entity)
+  - [Project Entity](#project-entity)
+- [Requirements to Run the Project](#requirements-to-run-the-project)
 
-   ```bash
-   cd kento-api
-   npm install
-   ```
+## Modules
 
-3. Configure the database:
+### [Auth Module](https://github.com/kent-0/api/tree/main/src/modules/auth)
+- Responsible for user authentication and authorization.
+- Contains services, controllers, and entities related to authentication.
 
-   Create a `mikro-orm.config.js` file in the project root with the database configuration.
+### [Board Module](https://github.com/kent-0/api/tree/main/src/modules/board)
+- Manages the project's task boards.
+- Includes functionalities to create, edit, and delete boards.
 
-4. Run migrations and seeders:
+### [Project Module](https://github.com/kent-0/api/tree/main/src/modules/project)
+- In charge of project management.
+- Allows for the creation, editing, and deletion of projects.
 
-   ```bash
-   npm run migration:up
-   npm run seed:initial
-   ```
+## Entities
 
-5. Start the development server:
+### [User Entity](https://github.com/kent-0/api/tree/main/src/database/entities/auth)
+- Represents a user in the system.
+- Contains attributes such as ID, name, email, among others.
 
-   ```bash
-   npm run start:dev
-   ```
+### [Board Entity](https://github.com/kent-0/api/tree/main/src/database/entities/board)
+- Represents a task board.
+- Includes attributes like ID, board name, description, among others.
 
-## Project Structure
+### [Project Entity](https://github.com/kent-0/api/tree/main/src/database/entities/project)
+- Represents a project in the system.
+- Contains attributes like ID, project name, description, among others.
 
-To see the current structure of the project, view the file `PROJECT_STRUCTURE.md`
+## Requirements to Run the Project
 
-## Services
-
-### AuthPasswordService
-
-Handles logic related to user passwords.
-
-### AuthEmailService
-
-Handles logic for confirming user email.
-
-### AuthAccountService
-
-Handles user account management logic, including login, registration, and updating.
-
-## Resolvers
-
-### AuthResolver
-
-Resolver for operations related to authentication and user management. Utilizes the services mentioned above to perform operations.
-
-## Authentication Strategies
-
-### JWTStrategy
-
-JWT-based authentication strategy. Validates and verifies JWT tokens to authenticate users.
-
-## Main Dependencies
-
-- `@nestjs/graphql`: Library for creating GraphQL APIs with NestJS.
-- `@nestjs/jwt`: JWT support for NestJS.
-- `@nestjs/passport`: Authentication library for NestJS.
-- `@mikro-orm/core`: ORM for database manipulation.
-- `bcrypt`: Library for password hashing.
-- `graphql`: Library for creating GraphQL APIs.
-- `passport-jwt`: JWT strategy for Passport.
-
-## Contribution
-
-Contributions are welcome! If you find a bug or want to improve the API, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the AGPL-3.0 license License. See the LICENSE file for more details.
+1. **Node.js**: Ensure you have Node.js installed.
+2. **NestJS**: The project is built using the NestJS framework.
+3. **TypeScript**: Ensure TypeScript is installed globally or as a project dependency.
+4. **Mikro-ORM**: Required for object-relational mapping.
+5. **GraphQL**: Ensure the necessary GraphQL packages are installed.
+6. **PostgreSQL**: The project uses PostgreSQL as its database. Ensure you have PostgreSQL set up and running.
+7. **Redis** (Upcoming): Will be used for caching in the future. Ensure you have Redis installed if you plan to implement caching.

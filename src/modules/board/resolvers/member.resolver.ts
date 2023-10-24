@@ -54,7 +54,7 @@ export class BoardMembersResolver {
    * @param input - Data containing information about the user and board.
    * @returns The removed board member's details.
    */
-  @Mutation(() => BoardMembersObject, {
+  @Mutation(() => String, {
     description: 'Remove a user from a board.',
     name: 'boardMemberRemove',
   })

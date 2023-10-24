@@ -9,7 +9,13 @@ import { AppModule } from './app.module';
  */
 async function bootstrap() {
   // Create an instance of the Nest.js application using AppModule
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      credentials: true,
+      methods: 'POST, GET, PUT, DELETE, OPTIONS',
+      origin: true,
+    },
+  });
 
   // Get config from env file
   const config = app.get(ConfigService);

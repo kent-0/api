@@ -6,6 +6,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -71,7 +72,7 @@ export class BoardPermissionsGuard implements CanActivate {
     );
 
     // If the board doesn't exist, deny access.
-    if (!board) return false;
+    if (!board) throw new NotFoundException('The board does not exist.');
 
     // If the user is the board's owner, grant access.
     if (board.project.owner.id === userReq.sub) return true;

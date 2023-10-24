@@ -1089,17 +1089,6 @@
           "comment": "Brief description of what the step is about.",
           "mappedType": "string"
         },
-        "finish_step": {
-          "name": "finish_step",
-          "type": "bool",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "false",
-          "comment": "Flag if this step is the final completion step of the step flow.",
-          "mappedType": "boolean"
-        },
         "max": {
           "name": "max",
           "type": "int",
@@ -1130,6 +1119,16 @@
           "nullable": false,
           "comment": "Step position on the board.",
           "mappedType": "integer"
+        },
+        "type": {
+          "name": "type",
+          "type": "smallint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "If the step is the first or last step in the board.",
+          "mappedType": "enum"
         }
       },
       "name": "boards_steps",
@@ -1279,8 +1278,19 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "length": 150,
           "comment": "Name of the task.",
           "mappedType": "string"
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Parent task.",
+          "mappedType": "uuid"
         },
         "position": {
           "name": "position",
@@ -1309,7 +1319,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "comment": "Step in which the task is assigned.",
           "mappedType": "uuid"
         }
@@ -1366,6 +1376,19 @@
           "referencedTableName": "public.auth_users",
           "updateRule": "cascade"
         },
+        "boards_tasks_parent_id_foreign": {
+          "constraintName": "boards_tasks_parent_id_foreign",
+          "columnNames": [
+            "parent_id"
+          ],
+          "localTableName": "public.boards_tasks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards_tasks",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
         "boards_tasks_step_id_foreign": {
           "constraintName": "boards_tasks_step_id_foreign",
           "columnNames": [
@@ -1376,6 +1399,7 @@
             "id"
           ],
           "referencedTableName": "public.boards_steps",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },

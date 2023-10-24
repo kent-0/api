@@ -10,6 +10,7 @@ import {
   ProjectRoleAssignInput,
   ProjectRoleCreateInput,
   ProjectRolePaginationInput,
+  ProjectRoleRemoveInput,
   ProjectRoleUnassignInput,
   ProjectRoleUpdateInput,
 } from '../inputs';
@@ -91,7 +92,7 @@ export class ProjectRoleResolver {
    * Steps:
    * 1. Calls the role service's delete method with provided roleId to remove the role.
    *
-   * @param roleId - The ID of the role to delete.
+   * @param input - Data containing the role ID to delete.
    * @returns A message confirming the deletion.
    */
   @Mutation(() => String, {
@@ -99,8 +100,8 @@ export class ProjectRoleResolver {
     name: 'projectRoleRemove',
   })
   @ProjectPermissions([ProjectPermissionsEnum.RoleDelete])
-  public remove(@Args('roleId') roleId: string) {
-    return this._roleService.remove(roleId);
+  public remove(@Args('input') input: ProjectRoleRemoveInput) {
+    return this._roleService.remove(input);
   }
 
   /**

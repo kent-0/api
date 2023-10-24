@@ -7,7 +7,11 @@ import {
   BoardMembersEntity,
   BoardRolesEntity,
   BoardStepEntity,
+  BoardTaskEntity,
+  ProjectEntity,
 } from '~/database/entities';
+import { BoardTaskResolver } from '~/modules/board/resolvers/task.resolver';
+import { BoardTaskService } from '~/modules/board/services/task.service';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { BoardResolver } from './resolvers/board.resolver';
@@ -28,6 +32,8 @@ import { BoardStepService } from './services/step.service';
         BoardRolesEntity,
         BoardMembersEntity,
         BoardStepEntity,
+        BoardTaskEntity,
+        ProjectEntity,
       ],
     }),
   ],
@@ -41,6 +47,8 @@ import { BoardStepService } from './services/step.service';
     BoardRoleResolver,
     BoardStepResolver,
     BoardStepService,
+    BoardTaskResolver,
+    BoardTaskService,
   ],
 })
 export class BoardModule {}

@@ -16,6 +16,7 @@ import {
   ProjectEntity,
   ProjectMembersEntity,
 } from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { BoardService } from '~/modules/board/services/board.service';
@@ -145,6 +146,7 @@ describe('Board - Step Successfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       expect(step).toBeDefined();
@@ -163,6 +165,7 @@ describe('Board - Step Successfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       const updatedStep = await service.update({
@@ -188,6 +191,7 @@ describe('Board - Step Successfully cases', async () => {
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       const deletedStep = await service.remove({
@@ -206,16 +210,18 @@ describe('Board - Step Successfully cases', async () => {
    */
   it('should mark as finished a step', async () => {
     await RequestContext.createAsync(em, async () => {
-      const step = await service.create({
-        boardId: board.id,
-        description: 'Test Step Description',
-        name: 'Test Step',
-      });
-
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
+      });
+
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+        type: StepType.TASK,
       });
 
       const finishedStep = await service.markAsFinished({
@@ -224,7 +230,7 @@ describe('Board - Step Successfully cases', async () => {
       });
 
       expect(finishedStep).toBeDefined();
-      expect(finishedStep.finish_step).toBe(true);
+      expect(finishedStep.type).toBe(StepType.FINISH);
     });
   });
 
@@ -235,16 +241,25 @@ describe('Board - Step Successfully cases', async () => {
    */
   it('should mark a new step as finished and unmark the previous one', async () => {
     await RequestContext.createAsync(em, async () => {
-      const step = await service.create({
+      await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.START,
       });
 
       const toFinishedStep = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
+      });
+
+      const step = await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+        type: StepType.TASK,
       });
 
       const finishedStep = await service.markAsFinished({
@@ -253,7 +268,7 @@ describe('Board - Step Successfully cases', async () => {
       });
 
       expect(finishedStep).toBeDefined();
-      expect(finishedStep.finish_step).toBe(true);
+      expect(finishedStep.type).toBe(StepType.FINISH);
 
       const finishedOtherStep = await service.markAsFinished({
         boardId: board.id,
@@ -261,26 +276,26 @@ describe('Board - Step Successfully cases', async () => {
       });
 
       expect(finishedOtherStep).toBeDefined();
-      expect(finishedOtherStep.finish_step).toBe(true);
+      expect(finishedOtherStep.type).toBe(StepType.FINISH);
 
       const steps = await em.find(BoardStepEntity, { board: board.id });
 
       expect(steps).toBeDefined();
-      expect(steps.length).toBe(2);
+      expect(steps.length).toBe(3);
 
       const previousStepFinished = steps.find(
         (step) => step.id === finishedStep.id,
       );
 
       expect(previousStepFinished).toBeDefined();
-      expect(previousStepFinished!.finish_step).toBe(false);
+      expect(previousStepFinished!.type).toBe(StepType.TASK);
 
       const previousStepUnfinished = steps.find(
         (step) => step.id === finishedOtherStep.id,
       );
 
       expect(previousStepUnfinished).toBeDefined();
-      expect(previousStepUnfinished!.finish_step).toBe(true);
+      expect(previousStepUnfinished!.type).toBe(StepType.FINISH);
     });
   });
 
@@ -294,25 +309,29 @@ describe('Board - Step Successfully cases', async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
-        name: 'Test Step to move with position 3',
+        name: 'Test Step',
+        type: StepType.START,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
-        name: 'Test Step',
+        name: 'Test Step to move with position 3',
+        type: StepType.TASK,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step to move with position 1',
+        type: StepType.TASK,
       });
 
       const stepFinished = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       await service.markAsFinished({
@@ -359,28 +378,32 @@ describe('Board - Step Successfully cases', async () => {
    */
   it('should move the step to the last position if the step is marked as finished', async () => {
     await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+        type: StepType.START,
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Test Step Description',
+        name: 'Test Step',
+        type: StepType.TASK,
+      });
+
       const stepFinished = await service.create({
         boardId: board.id,
         description: 'This step should be moved to the last position',
         name: 'Test Step finished',
+        type: StepType.TASK,
       });
 
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
-        name: 'Test Step',
-      });
-
-      await service.create({
-        boardId: board.id,
-        description: 'Test Step Description',
-        name: 'Test Step',
-      });
-
-      await service.create({
-        boardId: board.id,
-        description: 'Test Step Description',
-        name: 'Test Step',
+        name: 'Test Step in the last position',
+        type: StepType.TASK,
       });
 
       const steps = await em.find(BoardStepEntity, { board: board.id });
@@ -401,6 +424,7 @@ describe('Board - Step Successfully cases', async () => {
       });
 
       expect(stepsAfterMove).toBeDefined();
+      expect(stepsAfterMove.length).toBe(4);
 
       const stepMoved = stepsAfterMove.find(
         (step) => step.id === stepFinished.id,
@@ -411,7 +435,7 @@ describe('Board - Step Successfully cases', async () => {
 
       const stepMoved2 = stepsAfterMove.find((step) => step.id === steps[3].id);
       expect(stepMoved2).toBeDefined();
-      expect(stepMoved2!.position).toBe(1);
+      expect(stepMoved2!.position).toBe(3);
     });
   });
 
@@ -427,12 +451,14 @@ describe('Board - Step Successfully cases', async () => {
         boardId: board.id,
         description: 'This step should be moved to the last position',
         name: 'Test Step finished',
+        type: StepType.START,
       });
 
       const stepFinished = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
         name: 'Test Step',
+        type: StepType.TASK,
       });
 
       const steps = await em.find(BoardStepEntity, { board: board.id });

@@ -32,17 +32,6 @@ export class BoardStepUpdateInput {
   public description?: string;
 
   /**
-   * Indicates if this step is the final stage in a task's lifecycle within the board.
-   * If set to true, this could signify the completion or resolution of tasks that reach this step.
-   */
-  @Field(() => Boolean, {
-    description:
-      "Determines if the step represents the final stage in the task's lifecycle.",
-    nullable: true,
-  })
-  public finishStep?: boolean;
-
-  /**
    * Specifies the maximum number of tasks that can be present in this step at any given time.
    * Useful for steps that have capacity limits or for implementing WIP (Work In Progress) limits.
    */

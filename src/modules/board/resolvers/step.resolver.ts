@@ -1,5 +1,5 @@
 import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '~/modules/auth/guards/jwt.guard';
 import { BoardPermissions } from '~/permissions/decorators/request-permissions.decorator';
@@ -44,7 +44,7 @@ export class BoardStepResolver {
     name: 'boardStepCreate',
   })
   @BoardPermissions([BoardPermissionsEnum.StepCreate])
-  public create(input: BoardStepCreateInput) {
+  public create(@Args('input') input: BoardStepCreateInput) {
     return this._stepService.create(input);
   }
 
@@ -58,7 +58,7 @@ export class BoardStepResolver {
     name: 'boardStepMarkAsFinished',
   })
   @BoardPermissions([BoardPermissionsEnum.StepUpdate])
-  public markAsFinished(input: BoardStepFinishedInput) {
+  public markAsFinished(@Args('input') input: BoardStepFinishedInput) {
     return this._stepService.markAsFinished(input);
   }
 
@@ -72,7 +72,7 @@ export class BoardStepResolver {
     name: 'boardStepMove',
   })
   @BoardPermissions([BoardPermissionsEnum.StepUpdate])
-  public move(input: BoardStepMoveInput) {
+  public move(@Args('input') input: BoardStepMoveInput) {
     return this._stepService.move(input);
   }
 
@@ -86,7 +86,7 @@ export class BoardStepResolver {
     name: 'boardStepRemove',
   })
   @BoardPermissions([BoardPermissionsEnum.StepRemove])
-  public remove(input: BoardStepRemoveInput) {
+  public remove(@Args('input') input: BoardStepRemoveInput) {
     return this._stepService.remove(input);
   }
 
@@ -100,7 +100,7 @@ export class BoardStepResolver {
     name: 'boardStepUpdate',
   })
   @BoardPermissions([BoardPermissionsEnum.StepUpdate])
-  public update(input: BoardStepUpdateInput) {
+  public update(@Args('input') input: BoardStepUpdateInput) {
     return this._stepService.update(input);
   }
 }

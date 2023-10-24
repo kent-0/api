@@ -1,11 +1,12 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
+import { StepType } from '~/database/enums/step.enum';
 import { tuple } from '~/utils/functions/tuple';
 
 export const BoardStepMinimalProperties = tuple(
   'id',
   'description',
-  'finish_step',
+  'type',
   'max',
   'name',
   'position',
@@ -38,19 +39,9 @@ export class BoardStepMinimalObject {
    */
   @Field(() => String, {
     description: 'Brief explanation of what the step is about.',
-  })
-  public description?: string;
-
-  /**
-   * Indicates if the step is the concluding stage in the board's workflow. Tasks within
-   * this step are generally considered completed or finalized.
-   */
-  @Field(() => Boolean, {
-    description:
-      "Determines whether the step is the end of the board's step flow.",
     nullable: true,
   })
-  public finish_step?: boolean;
+  public description?: string;
 
   @Field(() => ID, {
     description: 'Unique ID of the step on the board.',
@@ -83,4 +74,15 @@ export class BoardStepMinimalObject {
     description: 'Position of the step in the steps column of the board.',
   })
   public position!: number;
+
+  /**
+   * Indicates if the step is the concluding stage in the board's workflow. Tasks within
+   * this step are generally considered completed or finalized.
+   */
+  @Field(() => StepType, {
+    description:
+      "Determines whether the step is the end of the board's step flow.",
+    nullable: true,
+  })
+  public type?: StepType;
 }

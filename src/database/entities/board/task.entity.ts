@@ -36,6 +36,7 @@ export class BoardTaskEntity extends ParentEntity {
    */
   public [OptionalProps]?:
     | 'assigned_to'
+    | 'comments'
     | 'expiration_date'
     | 'finish_date'
     | 'start_date'
@@ -50,7 +51,7 @@ export class BoardTaskEntity extends ParentEntity {
     entity: () => AuthUserEntity,
     nullable: true,
   })
-  public assigned_to!: Rel<AuthUserEntity>;
+  public assigned_to!: Rel<AuthUserEntity> | null;
 
   /**
    * Many-to-One relationship indicating the board in which this task resides.
@@ -60,6 +61,15 @@ export class BoardTaskEntity extends ParentEntity {
     entity: () => BoardEntity,
   })
   public board!: Rel<BoardEntity>;
+
+  /**
+   * One-to-Many relationship representing all child tasks or sub-tasks of this task.
+   * This is used to create sub-tasks or child tasks within a task.
+   */
+  @OneToMany(() => BoardTaskEntity, (c) => c.parent, {
+    comment: "Children's of the task.",
+  })
+  public childrens = new Collection<BoardTaskEntity>(this);
 
   /**
    * One-to-Many relationship representing all comments or feedback from members
@@ -120,9 +130,21 @@ export class BoardTaskEntity extends ParentEntity {
   @Property({
     columnType: 'varchar',
     comment: 'Name of the task.',
+    length: 150,
     type: 'string',
   })
   public name!: string;
+
+  /**
+   * Many-to-One relationship indicating the parent task of this task.
+   * This is used to create sub-tasks or child tasks within a task.
+   */
+  @ManyToOne({
+    comment: 'Parent task.',
+    entity: () => BoardTaskEntity,
+    nullable: true,
+  })
+  public parent?: Rel<BoardTaskEntity>;
 
   /**
    * The position or order of this task within its assigned step on the board.
@@ -152,8 +174,9 @@ export class BoardTaskEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Step in which the task is assigned.',
     entity: () => BoardStepEntity,
+    nullable: true,
   })
-  public step!: Rel<BoardStepEntity>;
+  public step?: Rel<BoardStepEntity>;
 
   /**
    * Many-to-Many relationship representing all the tags or labels associated

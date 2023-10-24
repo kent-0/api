@@ -185,9 +185,9 @@ describe('Project - Role unsuccessfully cases', async () => {
    */
   it('should not delete a role that does not exist', async () => {
     await RequestContext.createAsync(em, async () => {
-      expect(service.remove(project.id)).rejects.toThrowError(
-        'Could not find role to delete.',
-      );
+      expect(
+        service.remove({ projectId: project.id, roleId: project.id }),
+      ).rejects.toThrowError('Could not find role to delete.');
     });
   });
 

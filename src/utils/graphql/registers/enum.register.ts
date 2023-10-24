@@ -9,6 +9,7 @@ import {
   ProjectGoalsStatus,
   ProjectStatus,
 } from '~/database/enums/status.enum';
+import { StepType } from '~/database/enums/step.enum';
 import { TokenType } from '~/database/enums/token.enum';
 
 registerEnumType(ActivityHistory, {
@@ -46,4 +47,9 @@ registerEnumType(TokenType, {
 registerEnumType(QueryOrder, {
   description: 'Types of order for the pagination of elements.',
   name: 'SortOrder',
+});
+
+registerEnumType(StepType, {
+  description: 'Types of the first and last steps of a board.',
+  name: 'StepType',
 });

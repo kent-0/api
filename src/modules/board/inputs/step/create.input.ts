@@ -1,5 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 
+import { StepType } from '~/database/enums/step.enum';
+
 /**
  * The `BoardStepCreateInput` class defines the necessary information required to create a new
  * step within a specific project board. Steps in project boards are often used to represent
@@ -38,8 +40,9 @@ export class BoardStepCreateInput {
    */
   @Field(() => String, {
     description: 'Brief explanation of what the step is about.',
+    nullable: true,
   })
-  public description!: string;
+  public description?: string;
 
   /**
    * Specifies the maximum number of tasks that can be contained within this step. This
@@ -60,4 +63,13 @@ export class BoardStepCreateInput {
     description: 'Name that the step will have.',
   })
   public name!: string;
+
+  /**
+   * Determines if the step represents the final stage in the task's lifecycle. This can
+   * be useful for steps like 'Done', where tasks are no longer active.
+   */
+  @Field(() => StepType, {
+    description: 'Type of step that will be created.',
+  })
+  public type!: StepType;
 }

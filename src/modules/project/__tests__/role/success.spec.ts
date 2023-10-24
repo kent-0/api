@@ -189,7 +189,10 @@ describe('Project - Role successfully cases', () => {
         projectId: project.id,
       });
 
-      const deletedRole = await service.remove(role.id);
+      const deletedRole = await service.remove({
+        projectId: project.id,
+        roleId: role.id,
+      });
 
       expect(deletedRole).toBe('The role for project has been removed.');
     });
