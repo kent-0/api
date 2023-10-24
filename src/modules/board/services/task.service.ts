@@ -24,6 +24,7 @@ import {
   BoardStepMinimalProperties,
 } from '~/modules/board/objects';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
+import { BoardTaskCommentMinimalProperties } from '~/modules/board/objects/minimal/task-comment.object';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 
 /**
@@ -337,6 +338,7 @@ export class BoardTaskService {
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
           ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );
@@ -630,6 +632,8 @@ export class BoardTaskService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );
@@ -681,6 +685,8 @@ export class BoardTaskService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );

@@ -58,10 +58,9 @@ export class BoardTaskCommentEntity extends ParentEntity {
    * One-to-Many relationship with the same entity, BoardTaskCommentEntity. Represents
    * all the comments that are direct replies to this specific comment.
    */
-  @OneToMany({
+  @OneToMany(() => BoardTaskCommentEntity, (comment) => comment.reply_to, {
     comment: 'Replies to this comment.',
     entity: () => BoardTaskCommentEntity,
-    mappedBy: 'reply_to',
   })
   public replies = new Collection<BoardTaskCommentEntity>(this);
 
@@ -83,8 +82,9 @@ export class BoardTaskCommentEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Task originating from the comment.',
     entity: () => BoardTaskEntity,
+    nullable: true,
   })
-  public task!: Rel<BoardTaskEntity>;
+  public task?: Rel<BoardTaskEntity>;
 
   /**
    * Enum property indicating the type of comment. It can be a general comment

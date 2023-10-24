@@ -10,7 +10,6 @@ import {
 
 import { BoardTaskCommentEntity, BoardTaskEntity } from '~/database/entities';
 import { CommentsTypes } from '~/database/enums/comments.enum';
-import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import {
   BoardTaskCommentCreateInput,
   BoardTaskCommentDeleteInput,
@@ -18,6 +17,7 @@ import {
   BoardTaskCommentUpdateInput,
 } from '~/modules/board/inputs';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
+import { BoardTaskCommentMinimalProperties } from '~/modules/board/objects/minimal/task-comment.object';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 
 /**
@@ -77,7 +77,7 @@ export class BoardTaskCommentService {
       },
       {
         fields: [
-          ...createFieldPaths('author', ...AuthUserMinimalProperties),
+          ...BoardTaskCommentMinimalProperties,
           ...createFieldPaths('task', ...BoardTaskMinimalProperties),
         ],
       },
@@ -154,18 +154,17 @@ export class BoardTaskCommentService {
       author: userId,
       content,
       reply_to: comment,
-      task,
       type: CommentsTypes.Reply,
     });
 
     await this.em.persistAndFlush(reply);
     return this.boardTaskComment.findOneOrFail(
       {
-        id: comment.id,
+        id: reply.id,
       },
       {
         fields: [
-          ...createFieldPaths('author', ...AuthUserMinimalProperties),
+          ...BoardTaskCommentMinimalProperties,
           ...createFieldPaths('task', ...BoardTaskMinimalProperties),
         ],
       },
@@ -210,8 +209,6 @@ export class BoardTaskCommentService {
     }
 
     comment.content = content;
-    comment.task = task;
-
     await this.em.persistAndFlush(comment);
     return this.boardTaskComment.findOneOrFail(
       {
@@ -219,7 +216,7 @@ export class BoardTaskCommentService {
       },
       {
         fields: [
-          ...createFieldPaths('author', ...AuthUserMinimalProperties),
+          ...BoardTaskCommentMinimalProperties,
           ...createFieldPaths('task', ...BoardTaskMinimalProperties),
         ],
       },
