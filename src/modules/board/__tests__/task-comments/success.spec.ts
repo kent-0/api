@@ -273,11 +273,14 @@ describe('Task / Comments - Successfully cases', async () => {
       expect(taskWithComment.comments.length).toBe(1);
       expect(taskWithComment.comments[0].content).toBe('This is a comment');
 
-      const deletedComment = await service.delete({
-        boardId: board.id,
-        commentId: comment.id,
-        taskId: task.id,
-      });
+      const deletedComment = await service.delete(
+        {
+          boardId: board.id,
+          commentId: comment.id,
+          taskId: task.id,
+        },
+        user.id,
+      );
 
       expect(deletedComment).toBe('Comment deleted successfully.');
 
@@ -337,11 +340,14 @@ describe('Task / Comments - Successfully cases', async () => {
         'This is a reply',
       );
 
-      const deletedReply = await service.delete({
-        boardId: board.id,
-        commentId: reply.id,
-        taskId: task.id,
-      });
+      const deletedReply = await service.delete(
+        {
+          boardId: board.id,
+          commentId: reply.id,
+          taskId: task.id,
+        },
+        user.id,
+      );
 
       expect(deletedReply).toBe('Comment deleted successfully.');
 
