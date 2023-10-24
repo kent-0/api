@@ -448,4 +448,76 @@ describe('Board - Step Unsuccessfully cases', async () => {
       ).rejects.toThrowError('The step is already marked as finished.');
     });
   });
+
+  /**
+   * Test Case: Create a step without a start step
+   * Ensures that the system throws an error when trying to create a step without a start step
+   */
+  it('should has error because the board are missing the start step', async () => {
+    await RequestContext.createAsync(em, async () => {
+      expect(async () =>
+        service.create({
+          boardId: board.id,
+          description: 'Kento testing step',
+          name: 'Kento',
+          type: StepType.TASK,
+        }),
+      ).rejects.toThrowError('The board does not have a start step.');
+    });
+  });
+
+  /**
+   * Test Case: Create a start step when the board already has a start step
+   * Ensures that the system throws an error when trying to create a start step when the board already has a start step
+   */
+  it('should has error because the board already has the start step', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+        type: StepType.START,
+      });
+
+      expect(async () =>
+        service.create({
+          boardId: board.id,
+          description: 'Kento testing step',
+          name: 'Kento',
+          type: StepType.START,
+        }),
+      ).rejects.toThrowError('The board already has a start step.');
+    });
+  });
+
+  /**
+   * Test Case: Create a finish step when the board already has a finish step
+   * Ensures that the system throws an error when trying to create a finish step when the board already has a finish step
+   */
+  it('should has error because the board already has the finish step', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+        type: StepType.START,
+      });
+
+      await service.create({
+        boardId: board.id,
+        description: 'Kento testing step',
+        name: 'Kento',
+        type: StepType.FINISH,
+      });
+
+      expect(async () =>
+        service.create({
+          boardId: board.id,
+          description: 'Kento testing step',
+          name: 'Kento',
+          type: StepType.FINISH,
+        }),
+      ).rejects.toThrowError('The board already has a finish step.');
+    });
+  });
 });

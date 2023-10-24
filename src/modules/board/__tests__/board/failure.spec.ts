@@ -158,4 +158,25 @@ describe('Board - Unsuccessfully cases', () => {
       );
     });
   });
+
+  /**
+   * Test Case: Board Creation Failure:
+   * Ensures that the system handles attempts to create boards in non-existent projects by providing a relevant error message.
+   */
+  it('should has error because the project to create the board is not found', () => {
+    RequestContext.createAsync(em, async () => {
+      expect(async () =>
+        service.create(
+          {
+            description: 'Kento testing board',
+            name: 'Kento',
+            projectId: '30e8b06e-1542-4253-b88d-738d910bbe68',
+          },
+          '30e8b06e-1542-4253-b88d-738d910bbe68',
+        ),
+      ).rejects.toThrowError(
+        'The project you are trying to create a board for could not be found.',
+      );
+    });
+  });
 });
