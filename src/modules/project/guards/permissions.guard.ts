@@ -92,7 +92,7 @@ export class ProjectPermissionsGuard implements CanActivate {
     }
 
     // Retrieve the count of roles related to the project.
-    const roles = await project.roles.loadCount();
+    const roles = await project.roles.loadCount({ refresh: true });
 
     if (roles) {
       // Identify the permissions needed for the current route or resolver.

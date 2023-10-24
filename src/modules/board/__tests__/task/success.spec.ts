@@ -180,10 +180,18 @@ describe('Task - Successfully cases', async () => {
     await module.close();
   });
 
+  /**
+   * Test Case: Service Definition
+   * Ensures that the service being tested is correctly instantiated.
+   */
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
+  /**
+   * Test Case: Create Task
+   * Ensures that a task can be successfully created.
+   */
   it('should create a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const task = await service.create(
@@ -205,8 +213,8 @@ describe('Task - Successfully cases', async () => {
   });
 
   /**
-   * Test Case: Service Definition
-   * Ensures that the service being tested is correctly instantiated.
+   * Test Case: Update Task
+   * Verifies that a task's properties can be successfully updated.
    */
   it('should update a task', async () => {
     await RequestContext.createAsync(em, async () => {
@@ -236,8 +244,8 @@ describe('Task - Successfully cases', async () => {
   });
 
   /**
-   * Test Case: Create Task
-   * Ensures that a task can be successfully created.
+   * Test Case: Delete Task
+   * Ensures that a task can be successfully deleted from the system.
    */
   it('should delete a task', async () => {
     await RequestContext.createAsync(em, async () => {
@@ -704,6 +712,78 @@ describe('Task - Successfully cases', async () => {
       expect(parentTaskWithoutChildren?.id).toBeDefined();
       expect(parentTaskWithoutChildren?.childrens).toBeDefined();
       expect(parentTaskWithoutChildren?.childrens.length).toBe(0);
+    });
+  });
+
+  /**
+   * Test Case: Recount Childrens When Child is Removed
+   * Ensures that the childrens of a parent task are correctly recounted when a child task is removed.
+   */
+  it('should recount childrens when a child is removed', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const parentTask = await service.create(
+        {
+          boardId: board.id,
+          description: 'Parent Task description',
+          name: 'Parent Task name',
+        },
+        user.id,
+      );
+
+      expect(parentTask).toBeDefined();
+      expect(parentTask.id).toBeDefined();
+
+      await service.addChild({
+        boardId: board.id,
+        child_of: parentTask.id,
+        description: 'Child Task description',
+        name: 'Child Task name',
+      });
+
+      const childToBeRemoved = await service.addChild({
+        boardId: board.id,
+        child_of: parentTask.id,
+        description: 'Child Task description',
+        name: 'Child Task name',
+      });
+
+      await service.addChild({
+        boardId: board.id,
+        child_of: parentTask.id,
+        description: 'Child Task description',
+        name: 'Child Task name',
+      });
+
+      const parentTaskWithChildren = await service.get({
+        boardId: board.id,
+        taskId: parentTask.id,
+      });
+
+      expect(parentTaskWithChildren).toBeDefined();
+      expect(parentTaskWithChildren.id).toBeDefined();
+      expect(parentTaskWithChildren.childrens).toBeDefined();
+      expect(parentTaskWithChildren.childrens.length).toBe(3);
+      expect(parentTaskWithChildren.childrens[0].position).toBe(1);
+      expect(parentTaskWithChildren.childrens[1].position).toBe(2);
+      expect(parentTaskWithChildren.childrens[2].position).toBe(3);
+
+      await service.removeChild({
+        boardId: board.id,
+        child_of: parentTask.id,
+        taskId: childToBeRemoved.id,
+      });
+
+      const parentTaskWithoutChildren = await service.get({
+        boardId: board.id,
+        taskId: parentTask.id,
+      });
+
+      expect(parentTaskWithoutChildren).toBeDefined();
+      expect(parentTaskWithoutChildren.id).toBeDefined();
+      expect(parentTaskWithoutChildren.childrens).toBeDefined();
+      expect(parentTaskWithoutChildren.childrens.length).toBe(2);
+      expect(parentTaskWithoutChildren.childrens[0].position).toBe(1);
+      expect(parentTaskWithoutChildren.childrens[1].position).toBe(2);
     });
   });
 });

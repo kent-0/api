@@ -106,9 +106,7 @@ export class BoardTaskService {
     name,
   }: BoardTaskCreateInput) {
     if (!child_of) {
-      throw new ConflictException(
-        'The parent task you are trying to assign does not exist.',
-      );
+      throw new ConflictException('The child task must have a parent task.');
     }
 
     const parentTask = await this.boardTaskRepository.findOne({
@@ -122,7 +120,10 @@ export class BoardTaskService {
       );
     }
 
-    const childrensCount = await parentTask.childrens.loadCount();
+    const childrensCount = await parentTask.childrens.loadCount({
+      refresh: true,
+    });
+
     const newTask = this.boardTaskRepository.create({
       board: boardId,
       created_by: parentTask.created_by,
@@ -196,12 +197,6 @@ export class BoardTaskService {
     if (!member) {
       throw new ConflictException(
         'The member you are trying to assign does not exist.',
-      );
-    }
-
-    if (task.assigned_to?.id === member.user.id) {
-      throw new ConflictException(
-        'The task you are trying to assign is already assigned to this user.',
       );
     }
 
@@ -329,8 +324,8 @@ export class BoardTaskService {
     return 'The task has been deleted successfully.';
   }
 
-  public get({ boardId, taskId }: BoardTaskGetInput) {
-    const task = this.boardTaskRepository.findOne(
+  public async get({ boardId, taskId }: BoardTaskGetInput) {
+    const task = await this.boardTaskRepository.findOne(
       {
         board: boardId,
         id: taskId,
@@ -412,8 +407,8 @@ export class BoardTaskService {
       );
     }
 
-    const tasksCount = await step.tasks.loadCount();
-    if (step.max && tasksCount + 1 >= step.max) {
+    const tasksCount = await step.tasks.loadCount({ refresh: true });
+    if (step.max && tasksCount === step.max) {
       throw new ConflictException(
         'The step you are trying to move the task to is full.',
       );
@@ -541,7 +536,12 @@ export class BoardTaskService {
     child_of,
     taskId,
   }: BoardTaskDeleteInput) {
-    if (!child_of) {
+    const parentTask = await this.boardTaskRepository.findOne({
+      board: boardId,
+      id: child_of,
+    });
+
+    if (!parentTask) {
       throw new ConflictException(
         'The parent task you are trying to assign does not exist.',
       );
@@ -550,7 +550,7 @@ export class BoardTaskService {
     const task = await this.boardTaskRepository.findOne({
       board: boardId,
       id: taskId,
-      parent: child_of,
+      parent: parentTask,
     });
 
     if (!task) {
@@ -560,7 +560,7 @@ export class BoardTaskService {
     }
 
     await this.em.removeAndFlush(task);
-    await this.recountTaskChildrensPositions(boardId, child_of);
+    await this.recountTaskChildrensPositions(boardId, parentTask.id);
     return 'The child task has been deleted successfully.';
   }
 
@@ -589,13 +589,13 @@ export class BoardTaskService {
 
     if (!task) {
       throw new ConflictException(
-        'The task you are trying to assign does not exist.',
+        'The task you are trying to unassign does not exist.',
       );
     }
 
     if (task.finish_date) {
       throw new ConflictException(
-        'The task you are trying to assign has already been finished.',
+        'The task you are trying to unassign has already been finished.',
       );
     }
 
@@ -612,7 +612,7 @@ export class BoardTaskService {
 
     if (!member) {
       throw new ConflictException(
-        'The member you are trying to assign does not exist.',
+        'The member you are trying to unassign does not exist.',
       );
     }
 
