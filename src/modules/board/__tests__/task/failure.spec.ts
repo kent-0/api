@@ -307,12 +307,15 @@ describe('Task - Unsuccessfully cases', async () => {
         taskId: task.id,
       });
 
-      const taskChild = await service.addChild({
-        boardId: board.id,
-        child_of: task.id,
-        description: 'Task description',
-        name: 'Task Child',
-      });
+      const taskChild = await service.addChild(
+        {
+          boardId: board.id,
+          child_of: task.id,
+          description: 'Task description',
+          name: 'Task Child',
+        },
+        user.id,
+      );
 
       await expect(
         service.delete({
@@ -833,12 +836,15 @@ describe('Task - Unsuccessfully cases', async () => {
         user.id,
       );
 
-      const child = await service.addChild({
-        boardId: board.id,
-        child_of: task.id,
-        description: 'Task description',
-        name: 'Task 2',
-      });
+      const child = await service.addChild(
+        {
+          boardId: board.id,
+          child_of: task.id,
+          description: 'Task description',
+          name: 'Task 2',
+        },
+        user.id,
+      );
 
       expect(async () =>
         service.move({
@@ -975,11 +981,14 @@ describe('Task - Unsuccessfully cases', async () => {
   it('should not add child to a task if the parent tasks id is not present', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
-        service.addChild({
-          boardId: board.id,
-          description: 'Task description',
-          name: 'Task',
-        }),
+        service.addChild(
+          {
+            boardId: board.id,
+            description: 'Task description',
+            name: 'Task',
+          },
+          user.id,
+        ),
       ).rejects.toThrowError('The child task must have a parent task.');
     });
   });
@@ -990,12 +999,15 @@ describe('Task - Unsuccessfully cases', async () => {
   it('should not add child to a task if the parent task does not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       expect(async () =>
-        service.addChild({
-          boardId: board.id,
-          child_of: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
-          description: 'Task description',
-          name: 'Task',
-        }),
+        service.addChild(
+          {
+            boardId: board.id,
+            child_of: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
+            description: 'Task description',
+            name: 'Task',
+          },
+          user.id,
+        ),
       ).rejects.toThrowError(
         'The parent task you are trying to assign does not exist.',
       );

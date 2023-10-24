@@ -24,6 +24,7 @@ import {
   BoardStepMinimalProperties,
 } from '~/modules/board/objects';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
+import { BoardTaskCommentMinimalProperties } from '~/modules/board/objects/minimal/task-comment.object';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 
 /**
@@ -96,15 +97,14 @@ export class BoardTaskService {
    * @param child_of - The unique identifier of the parent task.
    * @param description - Descriptive text providing more information about the task.
    * @param name - A brief title or name for the task.
+   * @param userId - The unique identifier of the user who is creating the task.
    *
    * @returns - The created task entity.
    */
-  public async addChild({
-    boardId,
-    child_of,
-    description,
-    name,
-  }: BoardTaskCreateInput) {
+  public async addChild(
+    { boardId, child_of, description, name }: BoardTaskCreateInput,
+    userId: string,
+  ) {
     if (!child_of) {
       throw new ConflictException('The child task must have a parent task.');
     }
@@ -126,7 +126,7 @@ export class BoardTaskService {
 
     const newTask = this.boardTaskRepository.create({
       board: boardId,
-      created_by: parentTask.created_by,
+      created_by: userId,
       description,
       name,
       parent: parentTask,
@@ -338,6 +338,7 @@ export class BoardTaskService {
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
           ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );
@@ -631,6 +632,8 @@ export class BoardTaskService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );
@@ -682,6 +685,8 @@ export class BoardTaskService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
+          ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
         ],
       },
     );

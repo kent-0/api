@@ -11,6 +11,7 @@ import {
   ProjectEntity,
 } from '~/database/entities';
 import { BoardTaskResolver } from '~/modules/board/resolvers/task.resolver';
+import { BoardTaskCommentResolver } from '~/modules/board/resolvers/task-comment.resolver';
 import { BoardTaskService } from '~/modules/board/services/task.service';
 import { PermissionManagerService } from '~/permissions/services/manager.service';
 
@@ -49,6 +50,7 @@ import { BoardStepService } from './services/step.service';
     BoardStepService,
     BoardTaskResolver,
     BoardTaskService,
+    BoardTaskCommentResolver,
   ],
 })
 export class BoardModule {}

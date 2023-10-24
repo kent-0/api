@@ -18,3 +18,7 @@ export * from './task/update.input';
 export * from './task/delete.input';
 export * from './task/assign-user.input';
 export * from './task/get.input';
+export * from './task-comment/create.input';
+export * from './task-comment/update.input';
+export * from './task-comment/delete.input';
+export * from './task-comment/reply.input';

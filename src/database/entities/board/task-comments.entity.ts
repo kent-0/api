@@ -4,12 +4,19 @@ import {
   Enum,
   ManyToOne,
   OneToMany,
+  OptionalProps,
+  Property,
   Rel,
 } from '@mikro-orm/core';
 
 import { CommentsTypes } from '~/database/enums/comments.enum';
 
-import { AuthUserEntity, BoardTaskEntity, ParentEntity } from '..';
+import {
+  AuthUserEntity,
+  BoardTaskEntity,
+  OptionalParentProps,
+  ParentEntity,
+} from '..';
 
 /**
  * Entity representing different comments that members can make on tasks.
@@ -22,6 +29,12 @@ import { AuthUserEntity, BoardTaskEntity, ParentEntity } from '..';
 })
 export class BoardTaskCommentEntity extends ParentEntity {
   /**
+   * Defines the optional properties that can be set on this entity, including reply_to and
+   * any optional properties from the parent entity.
+   */
+  public [OptionalProps]?: 'reply_to' | OptionalParentProps;
+
+  /**
    * Many-to-One relationship with the AuthUserEntity. Indicates the user or member
    * who authored or wrote this specific comment.
    */
@@ -32,13 +45,22 @@ export class BoardTaskCommentEntity extends ParentEntity {
   public author!: Rel<AuthUserEntity>;
 
   /**
+   * Content of the comment.
+   */
+  @Property({
+    comment: 'Content of the comment.',
+    length: 1000,
+    type: 'varchar',
+  })
+  public content!: string;
+
+  /**
    * One-to-Many relationship with the same entity, BoardTaskCommentEntity. Represents
    * all the comments that are direct replies to this specific comment.
    */
-  @OneToMany({
+  @OneToMany(() => BoardTaskCommentEntity, (comment) => comment.reply_to, {
     comment: 'Replies to this comment.',
     entity: () => BoardTaskCommentEntity,
-    mappedBy: 'reply_to',
   })
   public replies = new Collection<BoardTaskCommentEntity>(this);
 
@@ -51,7 +73,7 @@ export class BoardTaskCommentEntity extends ParentEntity {
     entity: () => BoardTaskCommentEntity,
     nullable: true,
   })
-  public reply_to!: BoardTaskCommentEntity;
+  public reply_to?: BoardTaskCommentEntity;
 
   /**
    * Many-to-One relationship with the BoardTaskEntity. Indicates the specific task
@@ -60,8 +82,9 @@ export class BoardTaskCommentEntity extends ParentEntity {
   @ManyToOne({
     comment: 'Task originating from the comment.',
     entity: () => BoardTaskEntity,
+    nullable: true,
   })
-  public task!: Rel<BoardTaskEntity>;
+  public task?: Rel<BoardTaskEntity>;
 
   /**
    * Enum property indicating the type of comment. It can be a general comment

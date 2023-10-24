@@ -77,8 +77,9 @@ export class BoardTaskEntity extends ParentEntity {
    */
   @OneToMany(() => BoardTaskCommentEntity, (c) => c.task, {
     comment: 'Member feedback on the task.',
+    orderBy: { createdAt: 'ASC' },
   })
-  public comments!: Rel<BoardTaskCommentEntity>;
+  public comments = new Collection<BoardTaskCommentEntity>(this);
 
   /**
    * Many-to-One relationship indicating the member or user who created this task.

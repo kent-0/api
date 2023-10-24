@@ -697,12 +697,15 @@ describe('Task - Successfully cases', async () => {
       expect(parentTask).toBeDefined();
       expect(parentTask.id).toBeDefined();
 
-      const childTask = await service.addChild({
-        boardId: board.id,
-        child_of: parentTask.id,
-        description: 'Child Task description',
-        name: 'Child Task name',
-      });
+      const childTask = await service.addChild(
+        {
+          boardId: board.id,
+          child_of: parentTask.id,
+          description: 'Child Task description',
+          name: 'Child Task name',
+        },
+        user.id,
+      );
 
       expect(childTask).toBeDefined();
       expect(childTask.id).toBeDefined();
@@ -739,12 +742,15 @@ describe('Task - Successfully cases', async () => {
       expect(parentTask).toBeDefined();
       expect(parentTask.id).toBeDefined();
 
-      const childTask = await service.addChild({
-        boardId: board.id,
-        child_of: parentTask.id,
-        description: 'Child Task description',
-        name: 'Child Task name',
-      });
+      const childTask = await service.addChild(
+        {
+          boardId: board.id,
+          child_of: parentTask.id,
+          description: 'Child Task description',
+          name: 'Child Task name',
+        },
+        user.id,
+      );
 
       expect(childTask).toBeDefined();
       expect(childTask.id).toBeDefined();
@@ -797,26 +803,35 @@ describe('Task - Successfully cases', async () => {
       expect(parentTask).toBeDefined();
       expect(parentTask.id).toBeDefined();
 
-      await service.addChild({
-        boardId: board.id,
-        child_of: parentTask.id,
-        description: 'Child Task description',
-        name: 'Child Task name',
-      });
+      await service.addChild(
+        {
+          boardId: board.id,
+          child_of: parentTask.id,
+          description: 'Child Task description',
+          name: 'Child Task name',
+        },
+        user.id,
+      );
 
-      const childToBeRemoved = await service.addChild({
-        boardId: board.id,
-        child_of: parentTask.id,
-        description: 'Child Task description',
-        name: 'Child Task name',
-      });
+      const childToBeRemoved = await service.addChild(
+        {
+          boardId: board.id,
+          child_of: parentTask.id,
+          description: 'Child Task description',
+          name: 'Child Task name',
+        },
+        user.id,
+      );
 
-      await service.addChild({
-        boardId: board.id,
-        child_of: parentTask.id,
-        description: 'Child Task description',
-        name: 'Child Task name',
-      });
+      await service.addChild(
+        {
+          boardId: board.id,
+          child_of: parentTask.id,
+          description: 'Child Task description',
+          name: 'Child Task name',
+        },
+        user.id,
+      );
 
       const parentTaskWithChildren = await service.get({
         boardId: board.id,
