@@ -87,13 +87,13 @@ export class BoardTaskCommentService {
   /**
    * Deletes a comment from a specific task on a board.
    * @param input - Contains details like boardId, commentId, and taskId.
+   * @param userId - Identifier for the user deleting the comment.
    * @returns - Success message or throws an exception if task/comment not found.
    */
-  public async delete({
-    boardId,
-    commentId,
-    taskId,
-  }: BoardTaskCommentDeleteInput) {
+  public async delete(
+    { boardId, commentId, taskId }: BoardTaskCommentDeleteInput,
+    userId: string,
+  ) {
     const task = await this.boardTaskRepository.findOne({
       board: boardId,
       id: taskId,
@@ -112,6 +112,12 @@ export class BoardTaskCommentService {
     if (!comment) {
       throw new NotFoundException(
         'The comment that you want to delete was not found.',
+      );
+    }
+
+    if (comment.author.id !== userId) {
+      throw new UnauthorizedException(
+        'You are not allowed to update this comment because you are not the author.',
       );
     }
 
