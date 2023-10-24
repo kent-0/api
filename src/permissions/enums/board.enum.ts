@@ -24,11 +24,9 @@ export enum BoardPermissionsEnum {
   TaskUnassign = 2 << 16,
   TaskMove = 2 << 17,
   TaskCommentCreate = 2 << 18,
-  TaskCommentRemove = 2 << 19,
-  TaskCommentUpdate = 2 << 20,
-  TaskCommentPin = 2 << 21,
-  TaskCommentUnpin = 2 << 22,
-  TaskView = 2 << 23,
+  TaskCommentPin = 2 << 19,
+  TaskCommentUnpin = 2 << 20,
+  TaskView = 2 << 21,
 }
 
 /**

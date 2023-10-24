@@ -1,4 +1,4 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { CommentsTypes } from '~/database/enums/comments.enum';
 import {
@@ -22,13 +22,14 @@ export const BoardTaskCommentMinimalProperties = tuple(
 );
 
 /**
- * `BoardTaskCommentObject` Input Type:
- * This input type represents the structure of a comment object associated with a task on a board.
+ * `BoardTaskCommentObject` Object Type:
+ * This object type represents the structure of a comment object associated with a task on a board.
  * It provides details about the author, content, any replies to the comment, and potentially a reference
  * to another comment if this is a reply itself. Additionally, it specifies the type of comment (e.g., Comment or Reply).
  */
-@InputType({
-  description: 'Input type for creating a new comment on a task.',
+@ObjectType({
+  description:
+    'Object representing a comment associated with a task on a board.',
 })
 export class BoardTaskCommentMinimalObject {
   /**
