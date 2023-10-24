@@ -96,15 +96,14 @@ export class BoardTaskService {
    * @param child_of - The unique identifier of the parent task.
    * @param description - Descriptive text providing more information about the task.
    * @param name - A brief title or name for the task.
+   * @param userId - The unique identifier of the user who is creating the task.
    *
    * @returns - The created task entity.
    */
-  public async addChild({
-    boardId,
-    child_of,
-    description,
-    name,
-  }: BoardTaskCreateInput) {
+  public async addChild(
+    { boardId, child_of, description, name }: BoardTaskCreateInput,
+    userId: string,
+  ) {
     if (!child_of) {
       throw new ConflictException('The child task must have a parent task.');
     }
@@ -126,7 +125,7 @@ export class BoardTaskService {
 
     const newTask = this.boardTaskRepository.create({
       board: boardId,
-      created_by: parentTask.created_by,
+      created_by: userId,
       description,
       name,
       parent: parentTask,

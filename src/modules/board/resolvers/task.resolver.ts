@@ -42,6 +42,7 @@ export class BoardTaskResolver {
    * Requires permission to update tasks.
    *
    * @param input - Input data specifying the updates for the task.
+   * @param token - JWT payload of the authenticated user.
    *
    * @returns - The created children.
    */
@@ -49,8 +50,11 @@ export class BoardTaskResolver {
     description: 'Add a child to a task',
     name: 'boardTaskAddChildren',
   })
-  public async addChildren(@Args('input') input: BoardTaskCreateInput) {
-    return this._taskService.addChild(input);
+  public async addChildren(
+    @Args('input') input: BoardTaskCreateInput,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._taskService.addChild(input, token.sub);
   }
 
   /**
@@ -152,6 +156,7 @@ export class BoardTaskResolver {
     description: 'Remove a child from a task',
     name: 'boardTaskRemoveChildren',
   })
+  @BoardPermissions([BoardPermissionsEnum.TaskRemove])
   public async removeChildren(@Args('input') input: BoardTaskDeleteInput) {
     return this._taskService.removeChild(input);
   }
