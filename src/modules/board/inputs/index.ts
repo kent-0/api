@@ -25,3 +25,4 @@ export * from './task-comment/reply.input';
 export * from './tags/create.input';
 export * from './tags/update.input';
 export * from './tags/delete.input';
+export * from './tags/manage-task.input';

@@ -142,6 +142,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
@@ -216,6 +217,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
