@@ -9,6 +9,7 @@ import {
   ProjectEntity,
 } from '~/database/entities';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
+import { BoardTagMinimalProperties } from '~/modules/board/objects/minimal/tag.object';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
@@ -148,6 +149,7 @@ export class BoardService {
           ...createFieldPaths('steps.tasks', ...BoardTaskMinimalProperties),
           ...createFieldPaths('roles', ...BoardRolesMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
+          ...createFieldPaths('tags', ...BoardTagMinimalProperties),
         ],
       },
     );

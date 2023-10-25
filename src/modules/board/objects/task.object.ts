@@ -3,7 +3,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { AuthUserMinimalObject } from '~/modules/auth/objects';
 import { BoardMinimalObject } from '~/modules/board/objects/minimal/board.object';
 import { BoardStepMinimalObject } from '~/modules/board/objects/minimal/step.object';
+import { BoardTagMinimalObject } from '~/modules/board/objects/minimal/tag.object';
 import { BoardTaskMinimalObject } from '~/modules/board/objects/minimal/task.object';
+import { BoardTaskCommentMinimalObject } from '~/modules/board/objects/minimal/task-comment.object';
 
 /**
  * `BoardTaskObject`:
@@ -38,13 +40,6 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
   public board!: BoardMinimalObject;
 
   /**
-   * A list of comments associated with the task.
-   * These comments can provide additional context, updates, or discussions about the task's progress.
-   * TODO: Define the 'any' type more explicitly once comments structure is known.
-   */
-  /*public comments!: any;*/
-
-  /**
    * A list of child tasks of the current task.
    * This is used to create sub-tasks or child tasks within a task.
    */
@@ -52,6 +47,15 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
     description: 'A list of child tasks of the current task.',
   })
   public childrens!: BoardTaskMinimalObject[];
+
+  /**
+   * A list of comments associated with the task.
+   * These comments can provide additional context, updates, or discussions about the task's progress.
+   */
+  @Field(() => [BoardTaskCommentMinimalObject], {
+    description: 'A list of comments associated with the task.',
+  })
+  public comments!: BoardTaskCommentMinimalObject[];
 
   /**
    * The user who created or added the task to the board.
@@ -85,7 +89,9 @@ export class BoardTaskObject extends BoardTaskMinimalObject {
   /**
    * A list of tags associated with the task.
    * Tags can provide a quick way to categorize or label tasks based on certain criteria or attributes.
-   * TODO: Define the 'any' type more explicitly once tags structure is known.
    */
-  /*public tags!: any;*/
+  @Field(() => [BoardTagMinimalObject], {
+    description: 'A list of tags associated with the task.',
+  })
+  public tags!: BoardTagMinimalObject[];
 }

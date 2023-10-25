@@ -23,6 +23,7 @@ import {
   BoardMinimalProperties,
   BoardStepMinimalProperties,
 } from '~/modules/board/objects';
+import { BoardTagMinimalProperties } from '~/modules/board/objects/minimal/tag.object';
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { BoardTaskCommentMinimalProperties } from '~/modules/board/objects/minimal/task-comment.object';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
@@ -142,6 +143,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
@@ -216,6 +218,7 @@ export class BoardTaskService {
       },
       {
         fields: [
+          ...BoardTaskMinimalProperties,
           ...createFieldPaths('step', ...BoardStepMinimalProperties),
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
@@ -339,6 +342,7 @@ export class BoardTaskService {
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
           ...createFieldPaths('childrens', ...BoardTaskMinimalProperties),
           ...createFieldPaths('comments', ...BoardTaskCommentMinimalProperties),
+          ...createFieldPaths('tags', ...BoardTagMinimalProperties),
         ],
       },
     );

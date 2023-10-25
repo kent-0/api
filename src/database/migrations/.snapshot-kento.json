@@ -667,132 +667,6 @@
           "comment": "Optimistic Locking transactions.",
           "mappedType": "integer"
         },
-        "color": {
-          "name": "color",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "comment": "Custom color to display in the tag view.",
-          "mappedType": "string"
-        },
-        "created_by_id": {
-          "name": "created_by_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "comment": "Member who created the tag.",
-          "mappedType": "uuid"
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 300,
-          "comment": "Brief description of what the tag is about.",
-          "mappedType": "string"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 100,
-          "comment": "Name of the tag.",
-          "mappedType": "string"
-        }
-      },
-      "name": "boards_tags",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "boards_tags_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [
-        {
-          "name": "boards_tags_color_check",
-          "expression": "color ~* '#[A-Za-z0-9]{1,6}'",
-          "definition": "check ((color ~* '#[A-Za-z0-9]{1,6}'))",
-          "columnName": "color"
-        }
-      ],
-      "foreignKeys": {
-        "boards_tags_created_by_id_foreign": {
-          "constraintName": "boards_tags_created_by_id_foreign",
-          "columnNames": [
-            "created_by_id"
-          ],
-          "localTableName": "public.boards_tags",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.auth_users",
-          "updateRule": "cascade"
-        }
-      },
-      "comment": "Tags to assign to tasks."
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "uuid_generate_v4()",
-          "comment": "UUID v4 unique to the row.",
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was created.",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "comment": "Date when the row was last updated.",
-          "mappedType": "datetime"
-        },
-        "version": {
-          "name": "version",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "1",
-          "comment": "Optimistic Locking transactions.",
-          "mappedType": "integer"
-        },
         "description": {
           "name": "description",
           "type": "varchar(300)",
@@ -1021,6 +895,154 @@
         }
       },
       "comment": "Task table information."
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "comment": "UUID v4 unique to the row.",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was created.",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "comment": "Date when the row was last updated.",
+          "mappedType": "datetime"
+        },
+        "version": {
+          "name": "version",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "1",
+          "comment": "Optimistic Locking transactions.",
+          "mappedType": "integer"
+        },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Board on which tasks are assigned.",
+          "mappedType": "uuid"
+        },
+        "color": {
+          "name": "color",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "comment": "Custom color to display in the tag view.",
+          "mappedType": "string"
+        },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Member who created the tag.",
+          "mappedType": "uuid"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 300,
+          "comment": "Brief description of what the tag is about.",
+          "mappedType": "string"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 100,
+          "comment": "Name of the tag.",
+          "mappedType": "string"
+        }
+      },
+      "name": "boards_tags",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "boards_tags_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [
+        {
+          "name": "boards_tags_color_check",
+          "expression": "color ~* '#[A-Za-z0-9]{1,6}'",
+          "definition": "check ((color ~* '#[A-Za-z0-9]{1,6}'))",
+          "columnName": "color"
+        }
+      ],
+      "foreignKeys": {
+        "boards_tags_board_id_foreign": {
+          "constraintName": "boards_tags_board_id_foreign",
+          "columnNames": [
+            "board_id"
+          ],
+          "localTableName": "public.boards_tags",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.boards",
+          "updateRule": "cascade"
+        },
+        "boards_tags_created_by_id_foreign": {
+          "constraintName": "boards_tags_created_by_id_foreign",
+          "columnNames": [
+            "created_by_id"
+          ],
+          "localTableName": "public.boards_tags",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.auth_users",
+          "updateRule": "cascade"
+        }
+      },
+      "comment": "Tags to assign to tasks."
     },
     {
       "columns": {
@@ -1461,6 +1483,17 @@
           "comment": "Author of the comment.",
           "mappedType": "uuid"
         },
+        "content": {
+          "name": "content",
+          "type": "varchar(1000)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 1000,
+          "comment": "Content of the comment.",
+          "mappedType": "string"
+        },
         "reply_to_id": {
           "name": "reply_to_id",
           "type": "uuid",
@@ -1477,7 +1510,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "comment": "Task originating from the comment.",
           "mappedType": "uuid"
         },
@@ -1542,6 +1575,7 @@
             "id"
           ],
           "referencedTableName": "public.boards_tasks",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },

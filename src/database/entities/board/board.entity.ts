@@ -13,6 +13,7 @@ import {
   BoardMembersEntity,
   BoardRolesEntity,
   BoardStepEntity,
+  BoardTagsEntity,
   OptionalParentProps,
   ParentEntity,
   ProjectEntity,
@@ -105,4 +106,13 @@ export class BoardEntity extends ParentEntity {
     orderBy: { position: 'ASC' },
   })
   public steps = new Collection<Rel<BoardStepEntity>>(this);
+
+  /**
+   * Many-to-Many relationship representing all the tags or labels associated
+   * with this board, which help in categorizing or highlighting specific tasks.
+   */
+  @OneToMany(() => BoardTagsEntity, (t) => t.board, {
+    comment: 'Tags associated with this board',
+  })
+  public tags = new Collection<BoardTagsEntity>(this);
 }

@@ -10,6 +10,7 @@ import {
 
 import {
   AuthUserEntity,
+  BoardEntity,
   BoardTaskEntity,
   OptionalParentProps,
   ParentEntity,
@@ -28,7 +29,16 @@ export class BoardTagsEntity extends ParentEntity {
    * Defines the optional properties that can be set on this entity, including
    * a custom color for the tag and any optional properties from the parent entity.
    */
-  public [OptionalProps]?: 'color' | OptionalParentProps;
+  public [OptionalProps]?: OptionalParentProps;
+
+  /**
+   * Many-to-One relationship indicating the board in which this tag resides.
+   */
+  @ManyToOne({
+    comment: 'Board on which tasks are assigned.',
+    entity: () => BoardEntity,
+  })
+  public board!: Rel<BoardEntity>;
 
   /**
    * An optional color associated with this tag, which provides a visual cue when displayed
@@ -41,7 +51,7 @@ export class BoardTagsEntity extends ParentEntity {
     nullable: true,
     type: 'string',
   })
-  public color!: string;
+  public color?: string;
 
   /**
    * Many-to-One relationship with the AuthUserEntity. Indicates the user or member
@@ -63,7 +73,7 @@ export class BoardTagsEntity extends ParentEntity {
     nullable: true,
     type: 'string',
   })
-  public description!: string;
+  public description?: string;
 
   /**
    * The name of the tag, which provides a quick identifier for users.
