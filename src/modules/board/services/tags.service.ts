@@ -62,13 +62,14 @@ export class BoardTagsService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('tags', ...BoardTagMinimalProperties),
         ],
       },
     );
 
     if (!task) {
       throw new NotFoundException(
-        'The task that you are trying to add a tag to does not exist',
+        'The task that you are trying to add a tag to does not exist.',
       );
     }
 
@@ -79,12 +80,26 @@ export class BoardTagsService {
 
     if (!tag) {
       throw new NotFoundException(
-        'The tag that you are trying to add to a task does not exist',
+        'The tag that you are trying to add to a task does not exist.',
       );
     }
 
     task.tags.add(tag);
     await this.em.persistAndFlush(task);
+
+    return this.boardTagsRepository.findOneOrFail(
+      {
+        board: boardId,
+        id: tag.id,
+      },
+      {
+        fields: [
+          ...BoardTagMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('tasks', ...BoardTaskMinimalProperties),
+        ],
+      },
+    );
   }
 
   /**
@@ -110,7 +125,7 @@ export class BoardTagsService {
     });
 
     await this.em.persistAndFlush(newTag);
-    return this.boardTagsRepository.findOne(
+    return this.boardTagsRepository.findOneOrFail(
       {
         board: boardId,
         id: newTag.id,
@@ -141,12 +156,12 @@ export class BoardTagsService {
 
     if (!tag) {
       throw new NotFoundException(
-        'The tag that you are trying to delete does not exist',
+        'The tag that you are trying to delete does not exist.',
       );
     }
 
     await this.em.removeAndFlush(tag);
-    return 'Tag deleted successfully';
+    return 'Tag deleted successfully.';
   }
 
   /**
@@ -171,13 +186,14 @@ export class BoardTagsService {
           ...createFieldPaths('board', ...BoardMinimalProperties),
           ...createFieldPaths('created_by', ...AuthUserMinimalProperties),
           ...createFieldPaths('assigned_to', ...AuthUserMinimalProperties),
+          ...createFieldPaths('tags', ...BoardTagMinimalProperties),
         ],
       },
     );
 
     if (!task) {
       throw new NotFoundException(
-        'The task that you are trying to remove a tag from does not exist',
+        'The tag that you are trying to remove from a task does not exist.',
       );
     }
 
@@ -188,12 +204,25 @@ export class BoardTagsService {
 
     if (!tag) {
       throw new NotFoundException(
-        'The tag that you are trying to remove from a task does not exist',
+        'The tag that you are trying to remove from a task does not exist.',
       );
     }
 
     task.tags.remove(tag);
     await this.em.persistAndFlush(task);
+    return this.boardTagsRepository.findOneOrFail(
+      {
+        board: boardId,
+        id: tag.id,
+      },
+      {
+        fields: [
+          ...BoardTagMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('tasks', ...BoardTaskMinimalProperties),
+        ],
+      },
+    );
   }
 
   /**
@@ -231,7 +260,7 @@ export class BoardTagsService {
 
     if (!tag) {
       throw new NotFoundException(
-        'The tag that you are trying to update does not exist',
+        'The tag that you are trying to update does not exist.',
       );
     }
 
