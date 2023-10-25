@@ -141,7 +141,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -160,13 +161,15 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
       const updatedRole = await service.update({
         name: 'Testing role updated',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
         roleId: role.id,
       });
@@ -185,7 +188,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -207,7 +211,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -235,7 +240,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -268,7 +274,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 

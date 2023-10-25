@@ -167,7 +167,8 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -186,13 +187,15 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       const updatedRole = await service.update({
         boardId: board.id,
         name: 'Testing role updated',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
         roleId: role.id,
       });
 
@@ -211,7 +214,8 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       const deletedRole = await service.remove({
@@ -233,7 +237,8 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -261,7 +266,8 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();
@@ -294,7 +300,8 @@ describe('Board - Role successfully cases', () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
-        permissions: BoardPermissionsEnum.RoleCreate,
+        permissions_denied: BoardPermissionsEnum.TaskView,
+        permissions_granted: BoardPermissionsEnum.RoleCreate,
       });
 
       expect(role).toBeDefined();

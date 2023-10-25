@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { BoardMembersEntity, BoardRolesEntity } from '~/database/entities';
-import { checkValidPermissions } from '~/permissions/enums/project.enum';
+import { checkValidPermissions } from '~/permissions/enums/board.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
 import { ToCollections } from '~/utils/types/to-collection';
 
@@ -127,13 +127,15 @@ export class BoardRoleService {
    * Creates a new board role.
    *
    * This method carries out the following steps:
+   * 0. Fetches the roles count of the board.
    * 1. Constructs a new role object with the provided details.
    * 2. Persists the new role to the database.
    * 3. Returns the newly created role object.
    *
    * @param {Object} params - The parameters for creating a new board role.
    * @param {string} params.name - The name of the new role.
-   * @param {Array<string>} params.permissions - A list of permissions associated with the role.
+   * @param {number} params.permissions_granted - The permissions granted to the role.
+   * @param {number} params.permissions_denied - The permissions denied to the role.
    * @param {string} params.boardId - The ID of the board the role belongs to.
    *
    * @returns {Promise<ToCollections<BoardRolesObject>>} - Returns the newly created role object.
@@ -141,17 +143,29 @@ export class BoardRoleService {
   public async create({
     boardId,
     name,
-    permissions,
+    permissions_denied,
+    permissions_granted,
+    position,
   }: BoardRoleCreateInput): Promise<ToCollections<BoardRolesObject>> {
+    // Fetch roles count of the board.
+    const rolesCount = await this.rolesRepository.count({
+      board: boardId,
+    });
+
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       board: boardId,
       name,
-      permissions,
+      permissions_denied,
+      permissions_granted,
+      position: position ?? rolesCount + 1,
     });
 
     // Check if the permissions are valid for the type of role.
-    if (!checkValidPermissions(permissions)) {
+    if (
+      !checkValidPermissions(permissions_denied) ||
+      !checkValidPermissions(permissions_granted)
+    ) {
       throw new ConflictException(
         'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
       );
@@ -351,7 +365,8 @@ export class BoardRoleService {
    *
    * @param {Object} params - The parameters for updating a board role.
    * @param {string} params.name - The new name for the role (optional).
-   * @param {Array<string>} params.permissions - The new list of permissions for the role (optional).
+   * @param {number} params.permissions_granted - The new permissions for the role (optional).
+   * @param {number} params.permissions_denied - The new permissions for the role (optional).
    * @param {string} params.roleId - The ID of the role to be updated.
    *
    * @returns {Promise<ToCollections<BoardRolesObject>>} - Returns the updated role object.
@@ -359,13 +374,16 @@ export class BoardRoleService {
    * @throws {NotFoundException} - Throws this exception if the specified role is not found.
    */
   public async update({
+    boardId,
     name,
-    permissions,
+    permissions_denied,
+    permissions_granted,
     roleId,
   }: BoardRoleUpdateInput): Promise<ToCollections<BoardRolesObject>> {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne(
       {
+        board: boardId,
         id: roleId,
       },
       {
@@ -380,20 +398,28 @@ export class BoardRoleService {
     // If the role does not exist, throw an exception.
     if (!role) throw new NotFoundException('Could not find role to update.');
 
-    if (permissions !== undefined) {
-      // Check if the permissions are valid for the type of role.
-      if (!checkValidPermissions(permissions)) {
+    if (permissions_denied !== undefined) {
+      if (!checkValidPermissions(permissions_denied)) {
         throw new ConflictException(
-          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+          'It seems that the denied permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
         );
       }
 
-      role.permissions = permissions ?? role.permissions;
+      role.permissions_denied = permissions_denied;
+    }
+
+    if (permissions_granted !== undefined) {
+      if (!checkValidPermissions(permissions_granted)) {
+        throw new ConflictException(
+          'It seems that the granted permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+        );
+      }
+
+      role.permissions_denied = permissions_granted;
     }
 
     // Update the role's name and permissions if provided.
     role.name = name ?? role.name;
-    role.permissions = permissions ?? role.permissions;
 
     // Persist the updated role to the database.
     await this.em.persistAndFlush(role);

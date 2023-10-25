@@ -52,6 +52,17 @@ export class ProjectRolesEntity extends ParentEntity {
   public name!: string;
 
   /**
+   * Bit-based permissions that are denied to this role.
+   * Each bit in this numeric value represents a specific permission, allowing for efficient representation and checking of multiple permissions.
+   */
+  @Property({
+    columnType: 'numeric',
+    comment: 'Role bit-based permissions that are denied.',
+    type: 'numeric',
+  })
+  public permissions_denied!: number;
+
+  /**
    * Bit-based permissions associated with this role.
    * Each bit in this numeric value represents a specific permission, allowing for efficient representation and checking of multiple permissions.
    */
@@ -60,7 +71,17 @@ export class ProjectRolesEntity extends ParentEntity {
     comment: 'Role bit-based permissions',
     type: 'numeric',
   })
-  public permissions!: number;
+  public permissions_granted!: number;
+
+  /**
+   * Position of the role in the project.
+   */
+  @Property({
+    columnType: 'numeric',
+    comment: 'Position of the role in the project.',
+    type: 'numeric',
+  })
+  public position!: number;
 
   /**
    * The specific project that this role is associated with.
