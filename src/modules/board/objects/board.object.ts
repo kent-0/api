@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { BoardTagMinimalObject } from '~/modules/board/objects/minimal/tag.object';
 import { BoardStepWithTasksObject } from '~/modules/board/objects/step.object';
 import { ProjectMinimalObject } from '~/modules/project/objects';
 
@@ -86,4 +87,13 @@ export class BoardObject extends BoardMinimalObject {
     description: 'Basic information about board steps.',
   })
   public steps!: BoardStepWithTasksObject[];
+
+  /**
+   * A list of tags associated with the board.
+   * Tags can provide a quick way to categorize or label tasks based on certain criteria or attributes.
+   */
+  @Field(() => [BoardTagMinimalObject], {
+    description: 'A list of tags associated with the task.',
+  })
+  public tags!: BoardTagMinimalObject[];
 }
