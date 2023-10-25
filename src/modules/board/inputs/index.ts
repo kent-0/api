@@ -22,3 +22,6 @@ export * from './task-comment/create.input';
 export * from './task-comment/update.input';
 export * from './task-comment/delete.input';
 export * from './task-comment/reply.input';
+export * from './tags/create.input';
+export * from './tags/update.input';
+export * from './tags/delete.input';
