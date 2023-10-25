@@ -22,7 +22,7 @@
       "~/database/entities": ["./src/database/entities/index"],
       "~/auth/guard": ["./src/auth/guards/jwt.guard"],
       "~/auth/decorator": ["./src/auth/decorators/user.decorator"],
-      "~/permissions": ["./src/permissions/services/manager.service"],
+      "~/permissions": ["./src/permissions"],
       "~/permissions/list": ["./src/permissions/enums/index"],
       "../../../../../mikro-orm.config": ["./mikro-orm.config"],
     },
