@@ -33,6 +33,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
+/**
+ * Test suite for the unsuccessful cases of the `BoardTagsService` operations.
+ */
 describe('Tags - Unsuccessfully cases', async () => {
   let module: TestingModule;
   let service: BoardTagsService;
@@ -173,6 +176,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     expect(service).toBeDefined();
   });
 
+  /**
+   * Tests the scenario when trying to add a non-existent tag to a task.
+   * Expected behavior: It should throw an error indicating that the tag does not exist.
+   */
   it('should not add a tag to a task if no exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -187,6 +194,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario when trying to add a non-existent tag to a task.
+   * This test is similar to the previous one, and probably one of them should be removed.
+   */
   it('should not add a tag to a task if the tag not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -201,6 +212,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario when trying to delete a non-existent tag.
+   * Expected behavior: It should throw an error indicating that the tag does not exist.
+   */
   it('should not delete a tag if no exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -214,6 +229,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario when trying to remove a non-existent tag from a task.
+   * Expected behavior: It should throw an error indicating that the tag does not exist.
+   */
   it('should not remove a tag to a task if no exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -228,6 +247,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario when trying to remove a non-existent tag from a task.
+   * This test is similar to the previous one, and probably one of them should be removed.
+   */
   it('should not remove a tag to a task if the tag not exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(
@@ -242,6 +265,10 @@ describe('Tags - Unsuccessfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario when trying to update a non-existent tag.
+   * Expected behavior: It should throw an error indicating that the tag does not exist.
+   */
   it('should not update a tag if no exist', async () => {
     await RequestContext.createAsync(em, async () => {
       await expect(

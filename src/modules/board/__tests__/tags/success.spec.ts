@@ -33,6 +33,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { TestingMikroORMConfig } from '../../../../../mikro-orm.config';
 
+/**
+ * Test suite for the successful operations of the `BoardTagsService`.
+ */
 describe('Tags - Successfully cases', async () => {
   let module: TestingModule;
   let service: BoardTagsService;
@@ -173,6 +176,10 @@ describe('Tags - Successfully cases', async () => {
     expect(service).toBeDefined();
   });
 
+  /**
+   * Tests the scenario where a new tag is created.
+   * Expected behavior: A new tag should be created and returned with the specified name.
+   */
   it('should create a new tag', async () => {
     await RequestContext.createAsync(em, async () => {
       const tag = await service.create(
@@ -189,6 +196,10 @@ describe('Tags - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario where a tag is deleted.
+   * Expected behavior: The tag should be deleted and a confirmation message should be returned.
+   */
   it('should delete a tag', async () => {
     await RequestContext.createAsync(em, async () => {
       const tag = await service.create(
@@ -209,6 +220,10 @@ describe('Tags - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario where an existing tag is updated.
+   * Expected behavior: The tag should be updated and returned with the updated name.
+   */
   it('should update a tag', async () => {
     await RequestContext.createAsync(em, async () => {
       const tag = await service.create(
@@ -230,6 +245,10 @@ describe('Tags - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario where a tag is added to a task.
+   * Expected behavior: The tag should be added to the specified task and returned.
+   */
   it('should add a tag to a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const tag = await service.create(
@@ -252,6 +271,10 @@ describe('Tags - Successfully cases', async () => {
     });
   });
 
+  /**
+   * Tests the scenario where a tag is removed from a task.
+   * Expected behavior: The tag should be removed from the specified task and returned.
+   */
   it('should remove a tag from a task', async () => {
     await RequestContext.createAsync(em, async () => {
       const tag = await service.create(
