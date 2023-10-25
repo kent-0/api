@@ -281,4 +281,40 @@ describe('Tags - Unsuccessfully cases', async () => {
       );
     });
   });
+
+  /**
+   * Tests the scenario when trying to add a non-existent tag to a task.
+   * Expected behavior: It should throw an error indicating that the task does not exist.
+   */
+  it('should not add a tag to a task that not exist', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(async () =>
+        service.addToTask({
+          boardId: board.id,
+          tagId: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
+          taskId: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
+        }),
+      ).rejects.toThrowError(
+        'The task that you are trying to add a tag to does not exist.',
+      );
+    });
+  });
+
+  /**
+   * Tests the scenario when trying to remove a non-existent tag from a task.
+   * Expected behavior: It should throw an error indicating that the task does not exist.
+   */
+  it('should not remove a tag to a task that not exist', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await expect(async () =>
+        service.removeFromTask({
+          boardId: board.id,
+          tagId: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
+          taskId: 'f903e4b6-0bb8-44e2-8652-a31c14351829',
+        }),
+      ).rejects.toThrowError(
+        'The tag that you are trying to remove from a task does not exist.',
+      );
+    });
+  });
 });
