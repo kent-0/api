@@ -9,6 +9,10 @@ import {
   BoardTagsUpdateInput,
   BoardTaskTagDeleteInput,
 } from '~/modules/board/inputs';
+import { BoardMinimalProperties } from '~/modules/board/objects';
+import { BoardTagMinimalProperties } from '~/modules/board/objects/minimal/tag.object';
+import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
+import { createFieldPaths } from '~/utils/functions/create-fields-path';
 
 @Injectable()
 export class BoardTagsService {
@@ -31,7 +35,19 @@ export class BoardTagsService {
     });
 
     await this.em.persistAndFlush(newTag);
-    return newTag;
+    return this.boardTagsRepository.findOne(
+      {
+        board: boardId,
+        id: newTag.id,
+      },
+      {
+        fields: [
+          ...BoardTagMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('tasks', ...BoardTaskMinimalProperties),
+        ],
+      },
+    );
   }
 
   public async delete({ boardId, tagId }: BoardTaskTagDeleteInput) {
@@ -50,10 +66,6 @@ export class BoardTagsService {
     return 'Tag deleted successfully';
   }
 
-  public async getTags(boardId: string) {
-    return this.boardTagsRepository.find({ board: boardId });
-  }
-
   public async update({
     boardId,
     color,
@@ -61,10 +73,19 @@ export class BoardTagsService {
     name,
     tagId,
   }: BoardTagsUpdateInput) {
-    const tag = await this.boardTagsRepository.findOne({
-      board: boardId,
-      id: tagId,
-    });
+    const tag = await this.boardTagsRepository.findOne(
+      {
+        board: boardId,
+        id: tagId,
+      },
+      {
+        fields: [
+          ...BoardTagMinimalProperties,
+          ...createFieldPaths('board', ...BoardMinimalProperties),
+          ...createFieldPaths('tasks', ...BoardTaskMinimalProperties),
+        ],
+      },
+    );
 
     if (!tag) {
       throw new NotFoundException(

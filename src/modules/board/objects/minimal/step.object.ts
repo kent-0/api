@@ -43,6 +43,11 @@ export class BoardStepMinimalObject {
   })
   public description?: string;
 
+  /**
+   * The unique identifier of the step.
+   * This attribute is crucial for identifying and accessing the step.
+   * It is also used for associating the step with other entities, such as tasks.
+   */
   @Field(() => ID, {
     description: 'Unique ID of the step on the board.',
   })
