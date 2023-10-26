@@ -1,17 +1,13 @@
 <img alt="Kento Banner" src="./.github/assets/banner.png">
 
-<div style="display: flex; gap: 10px; width: 100%;justify-content: center">
-
-[![codecov](https://codecov.io/gh/kent-0/api/graph/badge.svg?token=5YF31XAE3C)](https://codecov.io/gh/kent-0/api)
-
-![GitHub issues](https://img.shields.io/github/issues/kent-0/api)
-
-![GitHub pull requests](https://img.shields.io/github/issues-pr/kent-0/api)
 
 
-</div>
 
 
+
+
+|[![codecov](https://codecov.io/gh/kent-0/api/graph/badge.svg?token=5YF31XAE3C)](https://codecov.io/gh/kent-0/api)|![GitHub issues](https://img.shields.io/github/issues/kent-0/api)|![GitHub pull requests](https://img.shields.io/github/issues-pr/kent-0/api)|
+|---|---|---|
 
 Welcome to the Core API of Kento, a robust and scalable backend solution inspired by popular task management platforms like Trello and Jira. Our aim is to provide a seamless experience for managing projects and their associated task boards. Whether you're a small team looking to keep track of your tasks or a large organization aiming to streamline your project management processes, this API has got you covered.
 
