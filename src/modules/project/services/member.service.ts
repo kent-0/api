@@ -4,10 +4,8 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { ProjectMembersEntity } from '~/database/entities';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectMemberAddRemoveInput } from '../inputs';
-import { ProjectMemberObject } from '../objects';
 
 /**
  * Provides methods to manage project members, including adding and removing members from projects.
@@ -32,10 +30,7 @@ export class ProjectMemberService {
    * @returns The newly created project member object.
    * @throws ConflictException if the user is already a member of the project.
    */
-  public async add({
-    projectId,
-    userId,
-  }: ProjectMemberAddRemoveInput): Promise<ToCollections<ProjectMemberObject>> {
+  public async add({ projectId, userId }: ProjectMemberAddRemoveInput) {
     // Check if the user is already a member of the project.
     const currentMember = await this.membersRepository.findOne({
       project: projectId,
