@@ -4,10 +4,8 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { BoardMembersEntity } from '~/database/entities';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import { AddRemoveBoardMemberInput } from '../inputs';
-import { BoardMembersObject } from '../objects';
 
 /**
  * Provides methods to manage board members, including adding and removing members from boards.
@@ -32,10 +30,7 @@ export class BoardMemberService {
    * @returns The newly created board member object.
    * @throws ConflictException if the user is already a member of the board.
    */
-  public async add({
-    boardId,
-    userId,
-  }: AddRemoveBoardMemberInput): Promise<ToCollections<BoardMembersObject>> {
+  public async add({ boardId, userId }: AddRemoveBoardMemberInput) {
     // Check if the user is already a member of the board.
     const currentMember = await this.membersRepository.findOne({
       board: boardId,

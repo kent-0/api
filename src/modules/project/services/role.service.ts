@@ -129,31 +129,45 @@ export class ProjectRoleService {
    * Creates a new project role.
    *
    * This method carries out the following steps:
+   * 0. Fetches the roles count of the project.
    * 1. Constructs a new role object with the provided details.
    * 2. Persists the new role to the database.
    * 3. Returns the newly created role object.
    *
    * @param {Object} params - The parameters for creating a new project role.
    * @param {string} params.name - The name of the new role.
-   * @param {Array<string>} params.permissions - A list of permissions associated with the role.
+   * @param {number} params.permissions_denied - The permissions denied for the role.
+   * @param {number} params.permissions_granted - The permissions granted for the role.
    * @param {string} params.projectId - The ID of the project the role belongs to.
    *
    * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the newly created role object.
    */
   public async create({
     name,
-    permissions,
+    permissions_denied,
+    permissions_granted,
+    position,
     projectId,
   }: ProjectRoleCreateInput): Promise<ToCollections<ProjectRoleObject>> {
+    // Fetch roles count of the project.
+    const rolesCount = await this.rolesRepository.count({
+      project: projectId,
+    });
+
     // Create a new role object with the provided details.
     const role = this.rolesRepository.create({
       name,
-      permissions,
+      permissions_denied,
+      permissions_granted,
+      position: position ?? rolesCount + 1,
       project: projectId,
     });
 
     // Check if the permissions are valid for the type of role.
-    if (!checkValidPermissions(permissions)) {
+    if (
+      !checkValidPermissions(permissions_denied) ||
+      !checkValidPermissions(permissions_granted)
+    ) {
       throw new ConflictException(
         'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role created.',
       );
@@ -359,7 +373,8 @@ export class ProjectRoleService {
    *
    * @param {Object} params - The parameters for updating a project role.
    * @param {string} params.name - The new name for the role (optional).
-   * @param {Array<string>} params.permissions - The new list of permissions for the role (optional).
+   * @param {number} params.permissions_granted - The new permissions granted for the role (optional).
+   * @param {number} params.permissions_denied - The new permissions denied for the role (optional).
    * @param {string} params.roleId - The ID of the role to be updated.
    *
    * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the updated role object.
@@ -368,13 +383,16 @@ export class ProjectRoleService {
    */
   public async update({
     name,
-    permissions,
+    permissions_denied,
+    permissions_granted,
+    projectId,
     roleId,
   }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRoleObject>> {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne(
       {
         id: roleId,
+        project: projectId,
       },
       {
         fields: [
@@ -392,15 +410,24 @@ export class ProjectRoleService {
     // Update the role's name and permissions if provided.
     role.name = name ?? role.name;
 
-    if (permissions !== undefined) {
-      // Check if the permissions are valid for the type of role.
-      if (!checkValidPermissions(permissions)) {
+    if (permissions_denied !== undefined) {
+      if (!checkValidPermissions(permissions_denied)) {
         throw new ConflictException(
-          'It seems that the permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+          'It seems that the denied permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
         );
       }
 
-      role.permissions = permissions ?? role.permissions;
+      role.permissions_denied = permissions_denied;
+    }
+
+    if (permissions_granted !== undefined) {
+      if (!checkValidPermissions(permissions_granted)) {
+        throw new ConflictException(
+          'It seems that the granted permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
+        );
+      }
+
+      role.permissions_denied = permissions_granted;
     }
 
     // Persist the updated role to the database.

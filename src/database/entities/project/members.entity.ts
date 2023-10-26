@@ -74,17 +74,14 @@ export class ProjectMembersEntity extends ParentEntity {
    * @returns PermissionManagerService instance loaded with the user's permissions.
    */
   public async permissions() {
-    // Load roles associated with the user member.
     const roles = await this.roles.loadItems();
-
-    // Extract permissions from roles.
-    const permissions = roles.flatMap(({ permissions }) => permissions);
-
-    // Create a new PermissionManagerService instance.
     const manager = new PermissionManagerService();
+    const rolesSorted = roles.sort((a, b) => b.position - a.position);
 
-    // Bulk add permissions to the manager.
-    manager.bulkAdd(permissions);
+    for (const role of rolesSorted) {
+      manager.add(role.permissions_granted);
+      manager.remove(role.permissions_denied);
+    }
 
     return manager;
   }

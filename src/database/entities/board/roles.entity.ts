@@ -66,13 +66,34 @@ export class BoardRolesEntity extends ParentEntity {
   public name!: string;
 
   /**
-   * The bit-based permissions associated with this role. This numeric value is used
-   * to determine what actions a user with this role can perform on the board.
+   * Bit-based permissions that are denied to this role.
+   * Each bit in this numeric value represents a specific permission, allowing for efficient representation and checking of multiple permissions.
+   */
+  @Property({
+    columnType: 'numeric',
+    comment: 'Role bit-based permissions that are denied.',
+    type: 'numeric',
+  })
+  public permissions_denied!: number;
+
+  /**
+   * Bit-based permissions associated with this role.
+   * Each bit in this numeric value represents a specific permission, allowing for efficient representation and checking of multiple permissions.
    */
   @Property({
     columnType: 'numeric',
     comment: 'Role bit-based permissions',
     type: 'numeric',
   })
-  public permissions!: number;
+  public permissions_granted!: number;
+
+  /**
+   * Position of the role in the project.
+   */
+  @Property({
+    columnType: 'numeric',
+    comment: 'Position of the role in the project.',
+    type: 'numeric',
+  })
+  public position!: number;
 }

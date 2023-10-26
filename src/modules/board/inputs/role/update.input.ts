@@ -51,19 +51,41 @@ export class BoardRoleUpdateInput {
   public name?: string;
 
   /**
-   * Updated permissions bit for the role, representing the permissions
-   * assigned to the role. This is optional, and only required if permissions are being updated.
-   *
-   * @type {number}
-   * @optional
+   * The permissions associated with the role are represented as a bit.
+   * This provides a compact and efficient way of representing multiple
+   * permissions. For instance, each bit in the number could represent a
+   * specific permission and the value (0 or 1) indicates whether the role
+   * has that permission or not.
    */
   @Field(() => Number, {
     description: 'Role permissions bit.',
     nullable: true,
   })
   @IsNumber({}, { message: 'Permissions must be in bit format.' })
-  @IsOptional()
-  public permissions?: number;
+  public permissions_denied?: number;
+
+  /**
+   * The permissions associated with the role are represented as a bit.
+   * This provides a compact and efficient way of representing multiple
+   * permissions. For instance, each bit in the number could represent a
+   * specific permission and the value (0 or 1) indicates whether the role
+   * has that permission or not.
+   */
+  @Field(() => Number, {
+    description: 'Role permissions bit.',
+    nullable: true,
+  })
+  @IsNumber({}, { message: 'Permissions must be in bit format.' })
+  public permissions_granted?: number;
+
+  /**
+   * Position of the role in the project.
+   */
+  @Field(() => Number, {
+    description: 'Position of the role in the project.',
+    nullable: true,
+  })
+  public position?: number;
 
   /**
    * Unique identifier for the role that is to be updated.

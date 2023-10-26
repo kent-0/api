@@ -20,6 +20,7 @@ import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { BoardService } from '~/modules/board/services/board.service';
 import { BoardMemberService } from '~/modules/board/services/member.service';
 import { ProjectService } from '~/modules/project/services/project.service';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -190,6 +191,27 @@ describe('Board - Member successfuly cases', () => {
       expect(result).toBe(
         'The user was successfully removed from the board members.',
       );
+    });
+  });
+
+  /**
+   * Test Case: Getting a Member's Permissions:
+   * Check the current user role and permissions for a board.
+   */
+  it('should get user member permissions', async () => {
+    await RequestContext.createAsync(orm.em, async () => {
+      const member = await service.add({
+        boardId: board.id,
+        userId: user2.id,
+      });
+
+      const memberPermissions = await member.permissions();
+
+      expect(member.user.id).toBe(user2.id);
+      expect(member.board.id).toEqual(board.id);
+      expect(member.permissions()).toBeDefined();
+      expect(memberPermissions).toBeInstanceOf(PermissionManagerService);
+      expect(memberPermissions.permissions).toBeTypeOf('number');
     });
   });
 });

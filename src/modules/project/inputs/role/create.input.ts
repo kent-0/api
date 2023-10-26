@@ -42,7 +42,29 @@ export class ProjectRoleCreateInput {
     description: 'Role permissions bit.',
   })
   @IsNumber({}, { message: 'Permissions must be in bit format.' })
-  public permissions!: number;
+  public permissions_denied!: number;
+
+  /**
+   * The permissions associated with the role are represented as a bit.
+   * This provides a compact and efficient way of representing multiple
+   * permissions. For instance, each bit in the number could represent a
+   * specific permission and the value (0 or 1) indicates whether the role
+   * has that permission or not.
+   */
+  @Field(() => Number, {
+    description: 'Role permissions bit.',
+  })
+  @IsNumber({}, { message: 'Permissions must be in bit format.' })
+  public permissions_granted!: number;
+
+  /**
+   * Position of the role in the project.
+   */
+  @Field(() => Number, {
+    description: 'Position of the role in the project.',
+    nullable: true,
+  })
+  public position?: number;
 
   /**
    * This field captures the unique identifier of the project for which

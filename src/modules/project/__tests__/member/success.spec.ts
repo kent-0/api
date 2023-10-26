@@ -17,6 +17,7 @@ import { AuthModule } from '~/modules/auth/auth.module';
 import { AuthAccountService } from '~/modules/auth/services/account.service';
 import { ProjectMemberService } from '~/modules/project/services/member.service';
 import { ProjectService } from '~/modules/project/services/project.service';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -177,6 +178,27 @@ describe('Project - Member successfuly cases', () => {
       expect(result).toBe(
         'The user was successfully removed from the project members.',
       );
+    });
+  });
+
+  /**
+   * Test Case: Getting a Member's Permissions:
+   * Check the current user role and permissions for a project.
+   */
+  it('should get user member permissions', async () => {
+    await RequestContext.createAsync(orm.em, async () => {
+      const member = await service.add({
+        projectId: project.id,
+        userId: userMember.id,
+      });
+
+      const memberPermissions = await member.permissions();
+
+      expect(member.user.id).toBe(userMember.id);
+      expect(member.project.id).toEqual(project.id);
+      expect(member.permissions()).toBeDefined();
+      expect(memberPermissions).toBeInstanceOf(PermissionManagerService);
+      expect(memberPermissions.permissions).toBeTypeOf('number');
     });
   });
 });

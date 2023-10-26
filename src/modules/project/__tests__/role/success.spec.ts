@@ -20,6 +20,7 @@ import { ProjectMemberService } from '~/modules/project/services/member.service'
 import { ProjectService } from '~/modules/project/services/project.service';
 import { ProjectRoleService } from '~/modules/project/services/role.service';
 import { ProjectPermissionsEnum } from '~/permissions/enums/project.enum';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -141,7 +142,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -160,13 +162,15 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
       const updatedRole = await service.update({
         name: 'Testing role updated',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
         roleId: role.id,
       });
@@ -185,7 +189,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -207,7 +212,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -235,7 +241,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -250,12 +257,25 @@ describe('Project - Role successfully cases', () => {
 
       expect(assignedRole).toBeDefined();
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       expect(rolesAssigned.length).toEqual(1);
 
       const roleAssigned = rolesAssigned.at(0);
       expect(roleAssigned).toBeDefined();
       expect(roleAssigned.name).toEqual('Testing role');
+
+      const memberWithPermissions = await em.findOneOrFail(
+        ProjectMembersEntity,
+        {
+          id: userMember.id,
+        },
+      );
+
+      const memberPermissions = await memberWithPermissions.permissions();
+
+      expect(memberWithPermissions.permissions()).toBeDefined();
+      expect(memberPermissions).toBeInstanceOf(PermissionManagerService);
+      expect(memberPermissions.permissions).toBeTypeOf('number');
     });
   });
 
@@ -268,7 +288,8 @@ describe('Project - Role successfully cases', () => {
     await RequestContext.createAsync(em, async () => {
       const role = await service.create({
         name: 'Testing role',
-        permissions: ProjectPermissionsEnum.RoleCreate,
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
         projectId: project.id,
       });
 
@@ -283,7 +304,7 @@ describe('Project - Role successfully cases', () => {
 
       expect(assignedRole).toBeDefined();
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
@@ -295,7 +316,7 @@ describe('Project - Role successfully cases', () => {
         roleId: role.id,
       });
 
-      const rolesRemoved = await removedRole.roles.getItems();
+      const rolesRemoved = await removedRole.roles.loadItems();
       const isRoleRemoved = rolesRemoved.some((r) => r.id === role.id);
 
       expect(isRoleRemoved).toBe(false);

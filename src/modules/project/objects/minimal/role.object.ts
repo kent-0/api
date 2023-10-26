@@ -27,7 +27,12 @@ import { tuple } from '~/utils/functions/tuple';
  * - 'name'
  * - 'permissions'
  */
-export const ProjectRolesMinimalProperties = tuple('id', 'name', 'permissions');
+export const ProjectRolesMinimalProperties = tuple(
+  'id',
+  'name',
+  'permissions_granted',
+  'permissions_denied',
+);
 
 /**
  * The `ProjectRolesObject` class serves as a blueprint for defining roles within a project management system.
@@ -64,5 +69,19 @@ export class ProjectRoleMinimalObject {
    * easier and more efficient to manage and verify permissions.
    */
   @Field(() => Number, { description: 'Role bit-based permissions.' })
-  public permissions!: number;
+  public permissions_denied!: number;
+
+  /**
+   * The `permissions` field represents the bit-based permission value for the role. Using bits,
+   * a role can have a combination of permissions represented as a single integer. This makes it
+   * easier and more efficient to manage and verify permissions.
+   */
+  @Field(() => Number, { description: 'Role bit-based permissions.' })
+  public permissions_granted!: number;
+
+  /**
+   * The `position` field represents the position of the role in the project.
+   */
+  @Field(() => Number, { description: 'Role position in the project.' })
+  public position!: number;
 }
