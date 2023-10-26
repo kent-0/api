@@ -1713,14 +1713,34 @@
           "comment": "Name representing the role.",
           "mappedType": "string"
         },
-        "permissions": {
-          "name": "permissions",
+        "permissions_denied": {
+          "name": "permissions_denied",
+          "type": "numeric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Role bit-based permissions that are denied.",
+          "mappedType": "decimal"
+        },
+        "permissions_granted": {
+          "name": "permissions_granted",
           "type": "numeric",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "comment": "Role bit-based permissions",
+          "mappedType": "decimal"
+        },
+        "position": {
+          "name": "position",
+          "type": "numeric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Position of the role in the project.",
           "mappedType": "decimal"
         }
       },
@@ -2504,14 +2524,34 @@
           "comment": "Name representing the role.",
           "mappedType": "string"
         },
-        "permissions": {
-          "name": "permissions",
+        "permissions_denied": {
+          "name": "permissions_denied",
+          "type": "numeric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Role bit-based permissions that are denied.",
+          "mappedType": "decimal"
+        },
+        "permissions_granted": {
+          "name": "permissions_granted",
           "type": "numeric",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
           "comment": "Role bit-based permissions",
+          "mappedType": "decimal"
+        },
+        "position": {
+          "name": "position",
+          "type": "numeric",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "comment": "Position of the role in the project.",
           "mappedType": "decimal"
         },
         "project_id": {
