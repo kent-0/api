@@ -23,6 +23,7 @@ import { BoardMemberService } from '~/modules/board/services/member.service';
 import { BoardRoleService } from '~/modules/board/services/role.service';
 import { ProjectService } from '~/modules/project/services/project.service';
 import { BoardPermissionsEnum } from '~/permissions/enums/board.enum';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -280,13 +281,24 @@ describe('Board - Role successfully cases', () => {
       });
 
       expect(assignedRole).toBeDefined();
+      expect(assignedRole.user.id).toEqual(member.user.id);
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       expect(rolesAssigned.length).toEqual(1);
 
       const roleAssigned = rolesAssigned.at(0);
       expect(roleAssigned).toBeDefined();
       expect(roleAssigned.name).toEqual('Testing role');
+
+      const memberWithPermissions = await em.findOneOrFail(BoardMembersEntity, {
+        id: member.id,
+      });
+
+      const memberPermissions = await memberWithPermissions.permissions();
+
+      expect(memberWithPermissions.permissions()).toBeDefined();
+      expect(memberPermissions).toBeInstanceOf(PermissionManagerService);
+      expect(memberPermissions.permissions).toBeTypeOf('number');
     });
   });
 
@@ -315,7 +327,7 @@ describe('Board - Role successfully cases', () => {
 
       expect(assignedRole).toBeDefined();
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
@@ -327,7 +339,7 @@ describe('Board - Role successfully cases', () => {
         roleId: role.id,
       });
 
-      const rolesRemoved = await removedRole.roles.getItems();
+      const rolesRemoved = await removedRole.roles.loadItems();
       const isRoleRemoved = rolesRemoved.some((r) => r.id === role.id);
 
       expect(isRoleRemoved).toBe(false);

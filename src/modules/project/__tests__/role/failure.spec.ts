@@ -266,7 +266,7 @@ describe('Project - Role unsuccessfully cases', async () => {
       expect(assignedRole.user.id).toBe(userMember.user.id);
       expect(assignedRole.project.id).toBe(project.id);
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
@@ -339,7 +339,7 @@ describe('Project - Role unsuccessfully cases', async () => {
       expect(assignedRole.user.id).toBe(userMember.user.id);
       expect(assignedRole.project.id).toBe(project.id);
 
-      const rolesAssigned = await assignedRole.roles.getItems();
+      const rolesAssigned = await assignedRole.roles.loadItems();
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
@@ -371,6 +371,35 @@ describe('Project - Role unsuccessfully cases', async () => {
         }),
       ).rejects.toThrowError(
         'No information was found about the project role to be assigned.',
+      );
+    });
+  });
+
+  /**
+   * Test Case: Invalid Role Update:
+   * Validates the scenario where a role is attempted to be updated with an invalid permissions bit.
+   */
+  it('should not update role with invalid denied permissions in role', async () => {
+    await RequestContext.createAsync(em, async () => {
+      const role = await service.create({
+        name: 'Testing role',
+        permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
+        permissions_granted: ProjectPermissionsEnum.RoleCreate,
+        projectId: project.id,
+      });
+
+      expect(role).toBeDefined();
+      expect(role.name).toEqual('Testing role');
+
+      await expect(
+        service.update({
+          permissions_denied: 0,
+          permissions_granted: ProjectPermissionsEnum.RoleCreate,
+          projectId: project.id,
+          roleId: role.id,
+        }),
+      ).rejects.toThrowError(
+        'It seems that the denied permissions you have entered are invalid. Make sure to enter only valid permissions for the type of role updated.',
       );
     });
   });
