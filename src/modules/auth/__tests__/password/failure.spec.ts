@@ -142,4 +142,23 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
       ).rejects.toThrowError('The current password is incorrect.');
     });
   });
+
+  /**
+   * If the password details are not found, throw a NotFoundException.
+   */
+  it('should has invalid password', async () => {
+    await RequestContext.createAsync(em, async () => {
+      await em.removeAndFlush(user.password!);
+
+      expect(
+        async () =>
+          await passwordService.change(
+            { currentPassword: 'sawako', newPassword: 'sawa' },
+            user.id,
+          ),
+      ).rejects.toThrowError(
+        'Something happened and your password information could not be obtained.',
+      );
+    });
+  });
 });

@@ -79,7 +79,6 @@ export class AuthPasswordService {
     });
 
     // If the password details are not found, throw a NotFoundException.
-    /* istanbul ignore if */
     if (!password) {
       throw new NotFoundException(
         'Something happened and your password information could not be obtained.',
