@@ -1,0 +1,66 @@
+name: Generate CODEOWNERS
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    outputs:
+      changed: ${{ steps.check_changes.outputs.changed }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for changes in specific directories
+        id: check_changes
+        run: |
+          directories=("app" "components" "lib" "__test__")
+          changed=false
+          
+          for dir in "${directories[@]}"; do
+           if git diff --quiet HEAD~1 HEAD -- $dir; then
+               echo "No changes in $dir"
+           else
+               echo "Changes detected in $dir"
+               changed=true
+               break
+           fi
+          done
+          
+          if [ "$changed" = true ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi        
+
+      - name: Generate CODEOWNERS file
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "# CODEOWNERS" > .github/CODEOWNERS
+          
+          directories=("app" "components" "lib" "__test__")
+          
+          for dir in "${directories[@]}"; do
+           if [ -d "$dir" ]; then
+               cd $dir
+          
+               for file in $(git ls-files); do
+                   contributors=$(git log --pretty=format:"@%an" $file | sort | uniq | tr '\n' ' ')
+                   echo "$dir/$file $contributors" >> ../.github/CODEOWNERS
+               done
+          
+               cd ..
+           fi
+          done
+
+      - name: Commit and push if changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/CODEOWNERS
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update codeowners [skip ci]"
+          git push
