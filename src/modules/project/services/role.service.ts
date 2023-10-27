@@ -53,6 +53,35 @@ export class ProjectRoleService {
   ) {}
 
   /**
+   * Reorders the roles of a project.
+   *
+   * @param projectId - The ID of the board whose roles are to be reordered.
+   * @private
+   */
+  private async recountRolesPositions(projectId: string) {
+    // Fetch all tasks associated with the given board and step, ordered by their current position.
+    const tasks = await this.rolesRepository.find(
+      {
+        project: projectId,
+      },
+      {
+        orderBy: {
+          position: 'ASC',
+          updatedAt: 'DESC',
+        },
+      },
+    );
+
+    // Reassign the position of each task to ensure they are sequentially ordered.
+    for (let i = 0; i < tasks.length; i++) {
+      tasks[i].position = i + 1;
+    }
+
+    // Persist the updated task positions to the database.
+    await this.em.persistAndFlush(tasks);
+  }
+
+  /**
    * Assigns a role to a project member.
    *
    * @param {Object} params - The parameters for assigning roles.
@@ -385,6 +414,7 @@ export class ProjectRoleService {
     name,
     permissions_denied,
     permissions_granted,
+    position,
     projectId,
     roleId,
   }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRoleObject>> {
@@ -407,9 +437,6 @@ export class ProjectRoleService {
     // If the role does not exist, throw an exception.
     if (!role) throw new NotFoundException('Could not find role to update.');
 
-    // Update the role's name and permissions if provided.
-    role.name = name ?? role.name;
-
     if (permissions_denied !== undefined) {
       if (!checkValidPermissions(permissions_denied)) {
         throw new ConflictException(
@@ -430,8 +457,13 @@ export class ProjectRoleService {
       role.permissions_denied = permissions_granted;
     }
 
+    // Update the role's name and permissions if provided.
+    role.name = name ?? role.name;
+    role.position = position ?? role.position;
+
     // Persist the updated role to the database.
     await this.em.persistAndFlush(role);
+    await this.recountRolesPositions(projectId);
 
     // Return the updated role object.
     return role;

@@ -76,6 +76,7 @@ export class BoardTaskService {
       {
         orderBy: {
           position: 'ASC',
+          updatedAt: 'DESC',
         },
       },
     );
@@ -508,10 +509,18 @@ export class BoardTaskService {
    * @returns - This method doesn't return a value. It recalculates the task positions and saves the updated positions to the database.
    */
   public async recountTaskChildrensPositions(boardId: string, taskId: string) {
-    const task = await this.boardTaskRepository.findOne({
-      board: boardId,
-      id: taskId,
-    });
+    const task = await this.boardTaskRepository.findOne(
+      {
+        board: boardId,
+        id: taskId,
+      },
+      {
+        orderBy: {
+          position: 'ASC',
+          updatedAt: 'DESC',
+        },
+      },
+    );
 
     if (!task) {
       throw new ConflictException(

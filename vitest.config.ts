@@ -56,6 +56,7 @@ export default defineConfig({
         '**/app.module.ts',
         '**/resolvers/**',
         '**/inputs/**',
+        '**/objects/**',
         '**/resolvers/**',
         '**/*.module.ts',
         '**/guards**/',
