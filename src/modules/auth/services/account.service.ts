@@ -293,9 +293,6 @@ export class AuthAccountService {
       );
     }
 
-    // Calculate the expiration time for the access token.
-    const tokenExp = Date.now() + 288e5;
-
     // Create the payload for the tokens.
     const tokenPayload: Omit<JWTPayload, 'raw'> = {
       iat: Date.now(),
@@ -304,9 +301,13 @@ export class AuthAccountService {
 
     // Generate the access token.
     const tokenAuth = await this._jwtService.signAsync(tokenPayload);
+
+    // Calculate the expiration time for the tokens.
+    const tokenExp = this._jwtService.decode(tokenAuth) as { exp: number };
+
     const tokenAuthCreated = this.tokensRepository.create({
       device: DeviceTypes.NotFound,
-      expiration: new Date(tokenExp),
+      expiration: new Date(tokenExp.exp),
       revoked: false,
       token_type: TokenType.AUTH,
       token_value: tokenAuth,
@@ -319,7 +320,7 @@ export class AuthAccountService {
     });
     const tokenRefreshCreated = this.tokensRepository.create({
       device: DeviceTypes.NotFound,
-      expiration: new Date(tokenExp),
+      expiration: new Date(tokenExp.exp),
       revoked: false,
       token_type: TokenType.REFRESH,
       token_value: tokenRefresh,

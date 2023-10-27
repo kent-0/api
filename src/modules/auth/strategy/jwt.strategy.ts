@@ -83,14 +83,16 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     }
 
     // Verify if the token is valid
-    const isValidToken = await this._jwtService.verifyAsync(token);
+    const isValidToken = await this._jwtService
+      .verifyAsync(token)
+      .catch(() => null);
+
     if (!isValidToken) {
       throw new UnauthorizedException('The authentication token is invalid.');
     }
 
     // Find the token session information in the repository
     const tokenSession = await this.em.fork().findOne(AuthTokensEntity, {
-      revoked: false,
       token_type: TokenType.AUTH,
       token_value: token,
       user: payload.sub,
@@ -111,7 +113,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     }
 
     // Check if the token session is expired
-    if (tokenSession.expiration < currentDate) {
+    if (tokenSession.expiration <= currentDate) {
       tokenSession.revoked = true;
       await this.em.persistAndFlush(tokenSession);
       throw new UnauthorizedException('The authentication token has expired.');

@@ -59,7 +59,6 @@ export default defineConfig({
         '**/objects/**',
         '**/resolvers/**',
         '**/*.module.ts',
-        '**/guards**/',
         '**/decorators/**',
         '**/seeds/**',
         '**/types/**',
