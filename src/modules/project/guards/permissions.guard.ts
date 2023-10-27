@@ -40,7 +40,12 @@ export class ProjectPermissionsGuard implements CanActivate {
    */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const args: { projectId: string } = ctx.getArgs();
+    const args: { projectId?: string } = ctx.getArgs();
+
+    // If the projectId isn't provided, deny access.
+    if (!args?.projectId) return false;
+
+    // Extract the projectId from the incoming request.
     const projectId = deepFindKey<string>(args, 'projectId');
 
     // Extract the user payload from the incoming request.

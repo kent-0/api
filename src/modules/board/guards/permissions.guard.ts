@@ -41,6 +41,11 @@ export class BoardPermissionsGuard implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const args: { boardId: string } = ctx.getArgs();
+
+    // If the boardId is not provided, deny access.
+    if (!args?.boardId) return false;
+
+    // Extract the boardId from the incoming request.
     const boardId = deepFindKey<string>(args, 'boardId');
 
     // Extract the user payload from the incoming request.
@@ -106,7 +111,7 @@ export class BoardPermissionsGuard implements CanActivate {
 
     // If no roles are associated with the board, only the project can take actions.
     throw new ForbiddenException(
-      'Only the project owner can perform actions because there are no member roles available.',
+      'Only the board owner can perform actions because there are no member roles available.',
     );
   }
 }
