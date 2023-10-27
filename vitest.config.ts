@@ -63,6 +63,7 @@ export default defineConfig({
         '**/seeds/**',
         '**/types/**',
         '**/graphql/registers/**',
+        '**/jwt.guard.ts',
       ],
     },
     root: './',
