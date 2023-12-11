@@ -173,20 +173,15 @@ export class AuthAccountService {
    * 7. Returns an object containing the new access token and the provided refresh token.
    *
    * @param token - The refresh token associated with the user's session.
-   * @param userId - The ID of the user whose session is being refreshed.
    * @returns An object containing the new access token and the provided refresh token.
    * @throws NotFoundException if the refresh token is not found or revoked.
    * @throws UnauthorizedException if the refresh token is expired or invalid.
    */
-  public async refreshSession(
-    token: string,
-    userId: string,
-  ): Promise<AuthSignInObject> {
+  public async refreshSession(token: string): Promise<AuthSignInObject> {
     // Fetch the refresh token associated with the user's session.
     const refreshToken = await this.tokensRepository.findOne({
       token_type: TokenType.REFRESH,
       token_value: token,
-      user: userId,
     });
 
     // If the refresh token doesn't exist or has been revoked, throw the appropriate exception.
@@ -195,6 +190,8 @@ export class AuthAccountService {
         'No information found for that session refresh token.',
       );
     }
+
+    // If the refresh token has been revoked, throw a NotFoundException.
     if (refreshToken.revoked) {
       throw new NotFoundException('The refresh token has been revoked.');
     }
@@ -219,7 +216,7 @@ export class AuthAccountService {
     // Create the payload for the new access token.
     const tokenPayload: Omit<JWTPayload, 'raw'> = {
       iat: Date.now(),
-      sub: userId,
+      sub: refreshToken.user.id,
     };
 
     // Sign the new access token.
@@ -232,7 +229,7 @@ export class AuthAccountService {
       revoked: false,
       token_type: TokenType.AUTH,
       token_value: tokenAuth,
-      user: userId,
+      user: refreshToken.user.id,
     });
     await this.em.persistAndFlush(tokenAuthCreated);
 
