@@ -64,7 +64,9 @@ export default defineConfig({
         '**/jwt.guard.ts',
       ],
     },
+    poolOptions: {
+      singleThread: true,
+    },
     root: './',
-    singleThread: true,
   },
 });
