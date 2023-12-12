@@ -36,20 +36,51 @@ import './utils/graphql/registers/enum.register';
       context: ({ connection, req }) =>
         connection ? { req: connection.context } : { req },
       driver: ApolloDriver,
-      formatError: (error) => ({
-        extensions: {
-          code: error.extensions?.code,
-          originalError: error.extensions?.originalError,
-          stacktrace:
-            process.env.NODE_ENV !== 'production'
-              ? error.extensions?.stacktrace
-              : undefined,
-          status: error.extensions?.status,
-        },
-        message:
-          (error.extensions?.originalError as { message?: string[] })
-            .message?.[0] || error.message,
-      }),
+      formatError: (error) => {
+        let errorMessage = 'An unknown error occurred. Please try again.';
+        const originalError = error.extensions?.originalError as
+          | { message: string }
+          | string
+          | string[];
+
+        if (Array.isArray(originalError)) {
+          errorMessage = originalError[0];
+        }
+
+        if (typeof originalError === 'string') {
+          errorMessage = originalError;
+        }
+
+        if (typeof originalError === 'object') {
+          errorMessage = Object.values(originalError)[0];
+        }
+
+        if (error.extensions?.code === 'BAD_USER_INPUT') {
+          errorMessage = 'Invalid input provided. Please try again.';
+        }
+
+        if (error.extensions?.code === 'UNAUTHENTICATED') {
+          errorMessage = 'You are not authenticated. Please login.';
+        }
+
+        if (error.extensions?.code === 'INTERNAL_SERVER_ERROR') {
+          errorMessage =
+            'An internal server error occurred. Please try again later.';
+        }
+
+        return {
+          extensions: {
+            code: error.extensions?.code,
+            originalError: error.extensions?.originalError,
+            stacktrace:
+              process.env.NODE_ENV !== 'production'
+                ? error.extensions?.stacktrace
+                : undefined,
+            status: error.extensions?.status,
+          },
+          message: errorMessage,
+        };
+      },
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       sortSchema: true,
