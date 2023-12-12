@@ -46,7 +46,9 @@ import './utils/graphql/registers/enum.register';
               : undefined,
           status: error.extensions?.status,
         },
-        message: error.message,
+        message:
+          (error.extensions?.originalError as { message?: string[] })
+            .message?.[0] || error.message,
       }),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
