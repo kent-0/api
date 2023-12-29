@@ -59,10 +59,6 @@ import './utils/graphql/registers/enum.register';
           errorMessage = 'Invalid input provided. Please try again.';
         }
 
-        if (error.extensions?.code === 'UNAUTHENTICATED') {
-          errorMessage = 'You are not authenticated. Please login.';
-        }
-
         if (error.extensions?.code === 'INTERNAL_SERVER_ERROR') {
           errorMessage =
             'An internal server error occurred. Please try again later.';
