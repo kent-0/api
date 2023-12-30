@@ -23,6 +23,6 @@ export type ToCollections<T> = {
   [K in keyof T]: T[K] extends Array<unknown>
     ? Collection<any, any> // Transform array into MikroORM Collection
     : T[K] extends object
-    ? ToCollections<T[K]> // Recursively transform nested object
-    : T[K]; // Keep other types unchanged
+      ? ToCollections<T[K]> // Recursively transform nested object
+      : T[K]; // Keep other types unchanged
 };
