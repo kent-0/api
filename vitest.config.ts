@@ -65,7 +65,12 @@ export default defineConfig({
       ],
     },
     poolOptions: {
-      singleThread: true,
+      threads: {
+        singleThread: true,
+      },
+      vmThreads: {
+        singleThread: true,
+      },
     },
     root: './',
   },
