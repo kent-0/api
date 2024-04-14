@@ -1,11 +1,42 @@
-import * as process from 'process';
-
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 
+const paths = {
+  '~/*': ['./src/*'],
+  '~/auth/decorator': ['./src/auth/decorators/user.decorator.js'],
+  '~/auth/guard': ['./src/auth/guards/jwt.guard.js'],
+  '~/database/entities': ['./src/database/entities/index.js'],
+  '~/permissions': ['./src/permissions'],
+  '~/permissions/list': ['./src/permissions/enums/index.js'],
+};
+
+const aliases = {
+  '~/': './src/',
+  '~/auth/decorator': './src/auth/decorators/user.decorator',
+  '~/auth/guard': './src/auth/guards/jwt.guard',
+  '~/database/entities': './src/database/entities/index',
+  '~/permissions': './src/permissions',
+  '~/permissions/list': './src/permissions/enums/index',
+};
+
+const excludePaths = [
+  '.eslintrc.js',
+  '**/migrations/**',
+  '**/mikro-orm-config.ts',
+  '**/main.ts',
+  '**/resolvers/**',
+  '**/inputs/**',
+  '**/objects/**',
+  '**/*.module.ts',
+  '**/decorators/**',
+  '**/seeds/**',
+  '**/types/**',
+  '**/graphql/registers/**',
+  '**/jwt.guard.ts',
+];
+
 export default defineConfig({
   plugins: [
-    // This is required to build the test files with SWC
     swc.vite({
       jsc: {
         baseUrl: process.cwd(),
@@ -13,14 +44,7 @@ export default defineConfig({
           dynamicImport: true,
           syntax: 'typescript',
         },
-        paths: {
-          '~/*': ['./src/*'],
-          '~/auth/decorator': ['./src/auth/decorators/user.decorator.js'],
-          '~/auth/guard': ['./src/auth/guards/jwt.guard.js'],
-          '~/database/entities': ['./src/database/entities/index.js'],
-          '~/permissions': ['./src/permissions'],
-          '~/permissions/list': ['./src/permissions/enums/index.js'],
-        },
+        paths,
       },
       module: {
         type: 'es6',
@@ -28,41 +52,13 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      '~/': './src/',
-      '~/auth/decorator': './src/auth/decorators/user.decorator',
-      '~/auth/guard': './src/auth/guards/jwt.guard',
-      '~/database/entities': './src/database/entities/index',
-      '~/permissions': './src/permissions',
-      '~/permissions/list': './src/permissions/enums/index',
-    },
+    alias: aliases,
   },
   test: {
-    alias: {
-      '~/': './src/',
-      '~/auth/decorator': './src/auth/decorators/user.decorator',
-      '~/auth/guard': './src/auth/guards/jwt.guard',
-      '~/database/entities': './src/database/entities/index',
-      '~/permissions': './src/permissions',
-      '~/permissions/list': './src/permissions/enums/index',
-    },
+    alias: aliases,
     coverage: {
       all: true,
-      exclude: [
-        '.eslintrc.js',
-        '**/migrations/**',
-        '**/mikro-orm-config.ts',
-        '**/main.ts',
-        '**/resolvers/**',
-        '**/inputs/**',
-        '**/objects/**',
-        '**/*.module.ts',
-        '**/decorators/**',
-        '**/seeds/**',
-        '**/types/**',
-        '**/graphql/registers/**',
-        '**/jwt.guard.ts',
-      ],
+      exclude: excludePaths,
     },
     poolOptions: {
       threads: {
