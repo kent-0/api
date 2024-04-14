@@ -42,11 +42,20 @@ export class BoardPermissionsGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const args: { boardId: string } = ctx.getArgs();
 
-    // If the boardId is not provided, deny access.
-    if (!args?.boardId) return false;
+    // Determine if the current guard should be excluded for the route or resolver.
+    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
+    if (
+      isExcludeGuard &&
+      isExcludeGuard.some((guard) => guard.name === BoardPermissionsGuard.name)
+    ) {
+      return true;
+    }
 
     // Extract the boardId from the incoming request.
     const boardId = deepFindKey<string>(args, 'boardId');
+
+    // If the boardId is not provided, deny access.
+    if (!boardId) return false;
 
     // Extract the user payload from the incoming request.
     const userReq: JWTPayload = ctx.getContext().req.user;
@@ -56,15 +65,6 @@ export class BoardPermissionsGuard implements CanActivate {
       BoardPermissions,
       ctx.getHandler(),
     );
-
-    // Determine if the current guard should be excluded for the route or resolver.
-    const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
-    if (
-      isExcludeGuard &&
-      isExcludeGuard.some((guard) => guard.name === BoardPermissionsGuard.name)
-    ) {
-      return true;
-    }
 
     // Retrieve the board based on the provided boardId.
     const board = await this.boardRepository.findOne(

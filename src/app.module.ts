@@ -43,16 +43,16 @@ import './utils/graphql/registers/enum.register';
           | string
           | string[];
 
-        if (Array.isArray(originalError)) {
-          errorMessage = originalError[0];
-        }
-
         if (typeof originalError === 'string') {
           errorMessage = originalError;
         }
 
         if (typeof originalError === 'object') {
-          errorMessage = Object.values(originalError)[0];
+          if (Array.isArray(originalError)) {
+            errorMessage = originalError[0];
+          } else {
+            errorMessage = Object.values(originalError)[0];
+          }
         }
 
         if (error.extensions?.code === 'BAD_USER_INPUT') {

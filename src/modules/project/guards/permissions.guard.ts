@@ -42,21 +42,6 @@ export class ProjectPermissionsGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const args: { projectId?: string } = ctx.getArgs();
 
-    // If the projectId isn't provided, deny access.
-    if (!args?.projectId) return false;
-
-    // Extract the projectId from the incoming request.
-    const projectId = deepFindKey<string>(args, 'projectId');
-
-    // Extract the user payload from the incoming request.
-    const userReq: JWTPayload = ctx.getContext().req.user;
-
-    // Retrieve the permissions that are required for the current route or resolver.
-    const requestPermissions = this.reflector.get(
-      ProjectPermissions,
-      ctx.getHandler(),
-    );
-
     // Determine if the current guard should be excluded for the route or resolver.
     const isExcludeGuard = this.reflector.get(ExcludeGuards, ctx.getHandler());
     if (
@@ -67,6 +52,21 @@ export class ProjectPermissionsGuard implements CanActivate {
     ) {
       return true;
     }
+
+    // Extract the boardId from the incoming request.
+    const projectId = deepFindKey<string>(args, 'projectId');
+
+    // If the boardId is not provided, deny access.
+    if (!projectId) return false;
+
+    // Extract the user payload from the incoming request.
+    const userReq: JWTPayload = ctx.getContext().req.user;
+
+    // Retrieve the permissions that are required for the current route or resolver.
+    const requestPermissions = this.reflector.get(
+      ProjectPermissions,
+      ctx.getHandler(),
+    );
 
     // Retrieve the project based on the provided projectId.
     const project = await this.projectRepository.findOne(

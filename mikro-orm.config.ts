@@ -1,4 +1,5 @@
 import { LoadStrategy } from '@mikro-orm/core';
+import { Migrator } from '@mikro-orm/migrations';
 import { PostgreSqlDriver, defineConfig } from '@mikro-orm/postgresql';
 
 /**
@@ -16,9 +17,11 @@ export default defineConfig({
 
   entitiesTs: ['./src/database/entities'],
 
+  // Specify the extensions to use for MikroORM (Migrator in this case)
+  extensions: [Migrator],
+
   // Enable entity constructors during hydration (loading data from the database)
   forceEntityConstructor: true,
-
   // Specify the paths to the migrations and migration TypeScript files
   migrations: {
     path: './dist/database/migrations',
@@ -50,7 +53,6 @@ export default defineConfig({
  * configuration ready for testing.
  *
  * @function TestingMikroORMConfig
- * @param {string} clientUrl - The PostgreSQL database connection string.
  *
  * @example
  * const testConfig = testingMikroORMConfig('postgres://localhost:5432/test_db');
