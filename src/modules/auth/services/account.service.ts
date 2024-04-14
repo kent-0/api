@@ -24,18 +24,13 @@ import {
   ProjectMinimalProperties,
 } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import * as bcrypt from 'bcrypt';
 
 import { AuthSignInInput, AuthSignUpInput } from '../inputs';
 import { AuthUpdateAccountInput } from '../inputs/account/update.input';
 import { JWTPayload } from '../interfaces/jwt.interface';
-import {
-  AuthSignInObject,
-  AuthUserMinimalProperties,
-  AuthUserObject,
-} from '../objects';
+import { AuthSignInObject, AuthUserMinimalProperties } from '../objects';
 
 /**
  * `AuthAccountService` is a service class that provides functionality to manage
@@ -132,7 +127,7 @@ export class AuthAccountService {
    * @returns The user's information.
    * @throws NotFoundException if the user with the provided ID is not found.
    */
-  public async me(userId: string): Promise<ToCollections<AuthUserObject>> {
+  public async me(userId: string) {
     // Fetch the user's information using the provided userId and populate the user's email.
     const user = await this.usersRepository.findOne(
       {
@@ -359,7 +354,7 @@ export class AuthAccountService {
     last_name,
     password,
     username,
-  }: AuthSignUpInput): Promise<ToCollections<AuthUserObject>> {
+  }: AuthSignUpInput) {
     // Check if a user with the same username or email already exists in the database.
     const userExist = await this.usersRepository.findOne({
       $or: [{ username }, { email: { value: email } }],
@@ -432,7 +427,7 @@ export class AuthAccountService {
   public async update(
     { biography, first_name, last_name, username }: AuthUpdateAccountInput,
     userId: string,
-  ): Promise<ToCollections<AuthUserObject>> {
+  ) {
     // Fetch the user's information from the database using the provided userId.
     const user = await this.usersRepository.findOne(
       {

@@ -11,7 +11,6 @@ import { ProjectEntity, ProjectMembersEntity } from '~/database/entities';
 import { AuthUserMinimalProperties } from '~/modules/auth/objects';
 import { BoardMinimalProperties } from '~/modules/board/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectCreateInput, ProjectUpdateInput } from '../inputs';
 import {
@@ -20,7 +19,6 @@ import {
   ProjectNotesMinimalProperties,
   ProjectRolesMinimalProperties,
 } from '../objects';
-import { ProjectObject } from '../objects/project.object';
 
 /**
  * Service class responsible for managing projects.
@@ -66,7 +64,7 @@ export class ProjectService {
   public async create(
     { description, name }: ProjectCreateInput,
     userId: string,
-  ): Promise<ToCollections<ProjectObject>> {
+  ) {
     // Create a new project entity with the provided details.
     const newProject = this.projectRepository.create({
       description,
@@ -167,7 +165,7 @@ export class ProjectService {
    * @returns {Promise<ToCollections<ProjectObject>>} The requested project details.
    * @throws {NotFoundException} If the project is not found.
    */
-  public async get(projectId: string): Promise<ToCollections<ProjectObject>> {
+  public async get(projectId: string) {
     // Fetch the project entity with its associated entities from the database using the provided projectId.
     const project = await this.projectRepository.findOne(
       {
@@ -213,11 +211,7 @@ export class ProjectService {
    * @returns {Promise<ToCollections<ProjectObject>>} The updated project details.
    * @throws {NotFoundException} If the project is not found.
    */
-  public async update({
-    description,
-    name,
-    projectId,
-  }: ProjectUpdateInput): Promise<ToCollections<ProjectObject>> {
+  public async update({ description, name, projectId }: ProjectUpdateInput) {
     // Fetch the project entity using the provided project ID.
     const project = await this.projectRepository.findOne(
       {

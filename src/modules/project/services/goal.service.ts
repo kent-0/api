@@ -5,7 +5,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProjectGoalsEntity } from '~/database/entities';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   ProjectGoalCreateInput,
@@ -14,7 +13,6 @@ import {
 } from '../inputs';
 import {
   ProjectGoalMinimalProperties,
-  ProjectGoalObject,
   ProjectMinimalProperties,
 } from '../objects';
 
@@ -56,7 +54,7 @@ export class ProjectGoalService {
     description,
     name,
     projectId,
-  }: ProjectGoalCreateInput): Promise<ToCollections<ProjectGoalObject>> {
+  }: ProjectGoalCreateInput) {
     const projectGoal = this.goalsRepository.create({
       description,
       name,
@@ -133,7 +131,7 @@ export class ProjectGoalService {
     name,
     projectId,
     status,
-  }: ProjectGoalUpdateInput): Promise<ToCollections<ProjectGoalObject>> {
+  }: ProjectGoalUpdateInput) {
     // Fetch the project goal using provided goal and project IDs.
     const projectGoal = await this.goalsRepository.findOne(
       {

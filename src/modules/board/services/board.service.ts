@@ -13,7 +13,6 @@ import { BoardTagMinimalProperties } from '~/modules/board/objects/minimal/tag.o
 import { BoardTaskMinimalProperties } from '~/modules/board/objects/minimal/task.object';
 import { ProjectMinimalProperties } from '~/modules/project/objects';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   BoardCreateInput,
@@ -24,7 +23,6 @@ import { BoardGetInput } from '../inputs/board/get.input';
 import {
   BoardMembersMinimalProperties,
   BoardMinimalProperties,
-  BoardObject,
   BoardRolesMinimalProperties,
   BoardStepMinimalProperties,
 } from '../objects';
@@ -76,7 +74,7 @@ export class BoardService {
   public async create(
     { description, name, projectId }: BoardCreateInput,
     userId: string,
-  ): Promise<ToCollections<BoardObject>> {
+  ) {
     // Step 0: Check if the project exists.
     const project = await this.projectRepository.findOne({
       id: projectId,
@@ -130,10 +128,7 @@ export class BoardService {
    *
    * @throws NotFoundException - If the board with the specified ID does not exist in the database.
    */
-  public async get({
-    boardId,
-    projectId,
-  }: BoardGetInput): Promise<ToCollections<BoardObject>> {
+  public async get({ boardId, projectId }: BoardGetInput) {
     // Step 1: Query the board repository to find the specified board.
     const board = await this.boardRepository.findOne(
       {
@@ -237,11 +232,7 @@ export class BoardService {
    *
    * @throws NotFoundException if the board cannot be found.
    */
-  public async update({
-    boardId,
-    description,
-    name,
-  }: BoardUpdateInput): Promise<ToCollections<BoardObject>> {
+  public async update({ boardId, description, name }: BoardUpdateInput) {
     const board = await this.boardRepository.findOne(
       {
         id: boardId,

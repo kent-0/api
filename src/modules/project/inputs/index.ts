@@ -10,6 +10,6 @@ export * from './project/update.input';
 export * from './role/assign.input';
 export * from './role/create.input';
 export * from './role/pagination.input';
+export * from './role/remove.input';
 export * from './role/unassign.input';
 export * from './role/update.input';
-export * from './role/remove.input';

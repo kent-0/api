@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { PaginationObject } from '~/utils/graphql/objects';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import { ProjectRoleObject } from './role.object';
 

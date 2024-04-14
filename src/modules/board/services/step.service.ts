@@ -10,7 +10,6 @@ import {
 import { BoardStepEntity } from '~/database/entities';
 import { StepType } from '~/database/enums/step.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   BoardStepCreateInput,
@@ -19,11 +18,7 @@ import {
   BoardStepRemoveInput,
   BoardStepUpdateInput,
 } from '../inputs';
-import {
-  BoardMinimalProperties,
-  BoardStepMinimalProperties,
-  BoardStepObject,
-} from '../objects';
+import { BoardMinimalProperties, BoardStepMinimalProperties } from '../objects';
 
 /**
  * This service resolver is responsible for handling operations related to board steps in the application.
@@ -69,7 +64,7 @@ export class BoardStepService {
     max,
     name,
     type,
-  }: BoardStepCreateInput): Promise<ToCollections<BoardStepObject>> {
+  }: BoardStepCreateInput) {
     // Fetch all the steps associated with the given board.
     const boardStepsTotal = await this.stepRepository.count({
       board: boardId,
@@ -230,11 +225,7 @@ export class BoardStepService {
    * @throws {NotFoundException} - Throws an exception if the targeted step or the replacement
    * step position is not found.
    */
-  public async move({
-    boardId,
-    position,
-    stepId,
-  }: BoardStepMoveInput): Promise<ToCollections<BoardStepObject>> {
+  public async move({ boardId, position, stepId }: BoardStepMoveInput) {
     const boardStepsCount = await this.stepRepository.count({
       board: boardId,
     });
@@ -365,7 +356,7 @@ export class BoardStepService {
     max,
     name,
     stepId,
-  }: BoardStepUpdateInput): Promise<ToCollections<BoardStepObject>> {
+  }: BoardStepUpdateInput) {
     // Try to locate the step in the database using the board and step IDs.
     const step = await this.stepRepository.findOne(
       {

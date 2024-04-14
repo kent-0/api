@@ -5,7 +5,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ProjectNotesEntity } from '~/database/entities';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   ProjectNoteCreateInput,
@@ -14,7 +13,6 @@ import {
 } from '../inputs';
 import {
   ProjectMinimalProperties,
-  ProjectNoteObject,
   ProjectNotesMinimalProperties,
 } from '../objects';
 
@@ -56,7 +54,7 @@ export class ProjectNoteService {
   public async create(
     { content, projectId, title }: ProjectNoteCreateInput,
     userId: string,
-  ): Promise<ToCollections<ProjectNoteObject>> {
+  ) {
     const projectNote = this.notesRepository.create({
       content,
       created_by: userId,
@@ -134,7 +132,7 @@ export class ProjectNoteService {
   public async update(
     { content, noteId, projectId, title }: ProjectNoteUpdateInput,
     userId: string,
-  ): Promise<ToCollections<ProjectNoteObject>> {
+  ) {
     // Fetch the project note using provided note and project IDs.
     const projectNote = await this.notesRepository.findOne(
       {

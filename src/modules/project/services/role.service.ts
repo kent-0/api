@@ -10,7 +10,6 @@ import {
 import { ProjectMembersEntity, ProjectRolesEntity } from '~/database/entities';
 import { checkValidPermissions } from '~/permissions/enums/project.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   ProjectRoleAssignInput,
@@ -21,10 +20,8 @@ import {
   ProjectRoleUpdateInput,
 } from '../inputs';
 import {
-  ProjectMemberObject,
   ProjectMembersMinimalProperties,
   ProjectMinimalProperties,
-  ProjectRoleObject,
   ProjectRolesMinimalProperties,
   ProjectRolesPaginated,
 } from '../objects';
@@ -94,11 +91,7 @@ export class ProjectRoleService {
    * @throws {NotFoundException} - Throws an exception if the role or member is not found.
    * @throws {ConflictException} - Throws an exception if the member already has the role assigned.
    */
-  public async assign({
-    memberId,
-    projectId,
-    roleId,
-  }: ProjectRoleAssignInput): Promise<ToCollections<ProjectMemberObject>> {
+  public async assign({ memberId, projectId, roleId }: ProjectRoleAssignInput) {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -177,7 +170,7 @@ export class ProjectRoleService {
     permissions_granted,
     position,
     projectId,
-  }: ProjectRoleCreateInput): Promise<ToCollections<ProjectRoleObject>> {
+  }: ProjectRoleCreateInput) {
     // Fetch roles count of the project.
     const rolesCount = await this.rolesRepository.count({
       project: projectId,
@@ -335,7 +328,7 @@ export class ProjectRoleService {
     memberId,
     projectId,
     roleId,
-  }: ProjectRoleUnassignInput): Promise<ToCollections<ProjectMemberObject>> {
+  }: ProjectRoleUnassignInput) {
     // Fetch the specified role for the provided project.
     const role = await this.rolesRepository.findOne({
       id: roleId,
@@ -417,7 +410,7 @@ export class ProjectRoleService {
     position,
     projectId,
     roleId,
-  }: ProjectRoleUpdateInput): Promise<ToCollections<ProjectRoleObject>> {
+  }: ProjectRoleUpdateInput) {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne(
       {

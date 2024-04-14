@@ -10,7 +10,6 @@ import {
 import { BoardMembersEntity, BoardRolesEntity } from '~/database/entities';
 import { checkValidPermissions } from '~/permissions/enums/board.enum';
 import { createFieldPaths } from '~/utils/functions/create-fields-path';
-import { ToCollections } from '~/utils/types/to-collection';
 
 import {
   BoardRoleAssignInput,
@@ -22,10 +21,8 @@ import {
 } from '../inputs';
 import {
   BoardMembersMinimalProperties,
-  BoardMembersObject,
   BoardMinimalProperties,
   BoardRolesMinimalProperties,
-  BoardRolesObject,
   BoardRolesPaginated,
 } from '../objects';
 
@@ -94,11 +91,7 @@ export class BoardRoleService {
    * @throws {NotFoundException} - Throws an exception if the role or member is not found.
    * @throws {ConflictException} - Throws an exception if the member already has the role assigned.
    */
-  public async assign({
-    boardId,
-    memberId,
-    roleId,
-  }: BoardRoleAssignInput): Promise<ToCollections<BoardMembersObject>> {
+  public async assign({ boardId, memberId, roleId }: BoardRoleAssignInput) {
     // Fetch the specified role for the provided board.
     const role = await this.rolesRepository.findOne({
       board: boardId,
@@ -175,7 +168,7 @@ export class BoardRoleService {
     permissions_denied,
     permissions_granted,
     position,
-  }: BoardRoleCreateInput): Promise<ToCollections<BoardRolesObject>> {
+  }: BoardRoleCreateInput) {
     // Fetch roles count of the board.
     const rolesCount = await this.rolesRepository.count({
       board: boardId,
@@ -324,11 +317,7 @@ export class BoardRoleService {
    *                               2. If the specified member is not found.
    * @throws {ConflictException} - Throws this exception if the member doesn't have the specified role assigned.
    */
-  public async unassign({
-    boardId,
-    memberId,
-    roleId,
-  }: BoardRoleUnassignInput): Promise<ToCollections<BoardMembersObject>> {
+  public async unassign({ boardId, memberId, roleId }: BoardRoleUnassignInput) {
     // Fetch the specified role for the provided board.
     const role = await this.rolesRepository.findOne({
       board: boardId,
@@ -409,7 +398,7 @@ export class BoardRoleService {
     permissions_granted,
     position,
     roleId,
-  }: BoardRoleUpdateInput): Promise<ToCollections<BoardRolesObject>> {
+  }: BoardRoleUpdateInput) {
     // Fetch the role using the provided ID.
     const role = await this.rolesRepository.findOne(
       {
