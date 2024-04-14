@@ -56,6 +56,8 @@ export default defineConfig({
  * const testConfig = testingMikroORMConfig('postgres://localhost:5432/test_db');
  */
 export const TestingMikroORMConfig = () => {
+  process.env.MIKRO_ORM_ENV = '.env.test';
+
   return defineConfig({
     // @ts-expect-error - This is a valid option, but the type definition is missing it.
     autoLoadEntities: true,
