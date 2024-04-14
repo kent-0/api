@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -50,15 +50,8 @@ describe('Board - Member successfuly cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -92,7 +85,7 @@ describe('Board - Member successfuly cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -157,7 +150,7 @@ describe('Board - Member successfuly cases', () => {
    * The system should acknowledge the addition and reflect it in the returned results.
    */
   it('should add a member to a board', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         boardId: board.id,
         userId: user2.id,
@@ -174,7 +167,7 @@ describe('Board - Member successfuly cases', () => {
    * The system should acknowledge the removal and provide a confirmation message.
    */
   it('should remove a member to a board', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         boardId: board.id,
         userId: user2.id,
@@ -199,7 +192,7 @@ describe('Board - Member successfuly cases', () => {
    * Check the current user role and permissions for a board.
    */
   it('should get user member permissions', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         boardId: board.id,
         userId: user2.id,

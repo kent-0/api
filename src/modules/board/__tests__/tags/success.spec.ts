@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -59,15 +59,8 @@ describe('Tags - Successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -109,7 +102,7 @@ describe('Tags - Successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -181,7 +174,7 @@ describe('Tags - Successfully cases', async () => {
    * Expected behavior: A new tag should be created and returned with the specified name.
    */
   it('should create a new tag', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const tag = await service.create(
         {
           boardId: board.id,
@@ -201,7 +194,7 @@ describe('Tags - Successfully cases', async () => {
    * Expected behavior: The tag should be deleted and a confirmation message should be returned.
    */
   it('should delete a tag', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const tag = await service.create(
         {
           boardId: board.id,
@@ -225,7 +218,7 @@ describe('Tags - Successfully cases', async () => {
    * Expected behavior: The tag should be updated and returned with the updated name.
    */
   it('should update a tag', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const tag = await service.create(
         {
           boardId: board.id,
@@ -250,7 +243,7 @@ describe('Tags - Successfully cases', async () => {
    * Expected behavior: The tag should be added to the specified task and returned.
    */
   it('should add a tag to a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const tag = await service.create(
         {
           boardId: board.id,
@@ -276,7 +269,7 @@ describe('Tags - Successfully cases', async () => {
    * Expected behavior: The tag should be removed from the specified task and returned.
    */
   it('should remove a tag from a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const tag = await service.create(
         {
           boardId: board.id,

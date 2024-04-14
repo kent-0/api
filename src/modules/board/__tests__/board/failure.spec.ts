@@ -1,7 +1,7 @@
 import { EntityManager, MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -43,15 +43,8 @@ describe('Board - Unsuccessfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -78,7 +71,7 @@ describe('Board - Unsuccessfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const projectUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -111,7 +104,7 @@ describe('Board - Unsuccessfully cases', () => {
    * Validates that the system provides an appropriate error message when trying to retrieve a board that does not exist.
    */
   it('should has error because the board is not found', () => {
-    RequestContext.createAsync(em, async () => {
+    RequestContext.create(em, async () => {
       expect(async () =>
         service.get({
           boardId: '30e8b06e-1542-4253-b88d-738d910bbe68',
@@ -128,7 +121,7 @@ describe('Board - Unsuccessfully cases', () => {
    * Ensures that an error message is provided when attempting to delete a board that cannot be found in the system.
    */
   it('should has error because the board to delete is not found', () => {
-    RequestContext.createAsync(em, async () => {
+    RequestContext.create(em, async () => {
       expect(async () =>
         service.remove({
           boardId: '30e8b06e-1542-4253-b88d-738d910bbe68',
@@ -145,7 +138,7 @@ describe('Board - Unsuccessfully cases', () => {
    * Validates that the system handles attempts to update non-existent boards by providing a relevant error message.
    */
   it('should has error because the board to update is not found', () => {
-    RequestContext.createAsync(em, async () => {
+    RequestContext.create(em, async () => {
       expect(async () =>
         service.update({
           boardId: '30e8b06e-1542-4253-b88d-738d910bbe68',
@@ -164,7 +157,7 @@ describe('Board - Unsuccessfully cases', () => {
    * Ensures that the system handles attempts to create boards in non-existent projects by providing a relevant error message.
    */
   it('should has error because the project to create the board is not found', () => {
-    RequestContext.createAsync(em, async () => {
+    RequestContext.create(em, async () => {
       expect(async () =>
         service.create(
           {

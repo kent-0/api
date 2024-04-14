@@ -55,11 +55,10 @@ export default defineConfig({
  * @example
  * const testConfig = testingMikroORMConfig('postgres://localhost:5432/test_db');
  */
-export const TestingMikroORMConfig = (clientUrl: string) =>
-  defineConfig({
+export const TestingMikroORMConfig = () => {
+  return defineConfig({
     // @ts-expect-error - This is a valid option, but the type definition is missing it.
     autoLoadEntities: true,
-    clientUrl,
     discovery: {
       // Disable entity discovery to prevent the test suite from trying to load
       checkDuplicateEntities: false,
@@ -69,3 +68,4 @@ export const TestingMikroORMConfig = (clientUrl: string) =>
     forceEntityConstructor: true,
     loadStrategy: LoadStrategy.JOINED,
   });
+};

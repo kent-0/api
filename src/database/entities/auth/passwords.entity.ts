@@ -6,7 +6,11 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity, OptionalParentProps, ParentEntity } from '..';
+import {
+  AuthUserEntity,
+  type OptionalParentProps,
+  ParentEntity,
+} from '~/database/entities';
 
 /**
  * Entity representing the hashed passwords and their associated salts for user accounts.

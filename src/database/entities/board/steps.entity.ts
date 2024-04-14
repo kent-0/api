@@ -9,14 +9,13 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { StepType } from '~/database/enums/step.enum';
-
 import {
   BoardEntity,
   BoardTaskEntity,
   OptionalParentProps,
   ParentEntity,
-} from '..';
+} from '~/database/entities';
+import { StepType } from '~/database/enums/step.enum';
 
 /**
  * Entity representing various steps or stages that tasks must go through on a board.

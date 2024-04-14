@@ -11,10 +11,10 @@ import {
 import {
   AuthEmailsEntity,
   AuthPasswordEntity,
-  OptionalParentProps,
+  type OptionalParentProps,
   ParentEntity,
   ProjectMembersEntity,
-} from '..';
+} from '~/database/entities';
 
 /**
  * Entity representing individual user profiles within the platform.

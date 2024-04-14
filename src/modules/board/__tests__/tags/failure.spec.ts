@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -59,15 +59,8 @@ describe('Tags - Unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -109,7 +102,7 @@ describe('Tags - Unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -181,7 +174,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the tag does not exist.
    */
   it('should not add a tag to a task if no exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.addToTask({
           boardId: board.id,
@@ -199,7 +192,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * This test is similar to the previous one, and probably one of them should be removed.
    */
   it('should not add a tag to a task if the tag not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.addToTask({
           boardId: board.id,
@@ -217,7 +210,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the tag does not exist.
    */
   it('should not delete a tag if no exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.delete({
           boardId: board.id,
@@ -234,7 +227,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the tag does not exist.
    */
   it('should not remove a tag to a task if no exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.removeFromTask({
           boardId: board.id,
@@ -252,7 +245,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * This test is similar to the previous one, and probably one of them should be removed.
    */
   it('should not remove a tag to a task if the tag not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.removeFromTask({
           boardId: board.id,
@@ -270,7 +263,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the tag does not exist.
    */
   it('should not update a tag if no exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.update({
           boardId: board.id,
@@ -287,7 +280,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the task does not exist.
    */
   it('should not add a tag to a task that not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(async () =>
         service.addToTask({
           boardId: board.id,
@@ -305,7 +298,7 @@ describe('Tags - Unsuccessfully cases', async () => {
    * Expected behavior: It should throw an error indicating that the task does not exist.
    */
   it('should not remove a tag to a task that not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(async () =>
         service.removeFromTask({
           boardId: board.id,

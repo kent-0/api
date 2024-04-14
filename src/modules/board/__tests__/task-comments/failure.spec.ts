@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -61,15 +61,8 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -111,7 +104,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -183,7 +176,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a comment cannot be created for a task that doesn't exist.
    */
   it('should not create a comment if the task not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.create(
           {
@@ -202,7 +195,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a comment cannot be deleted if the associated task doesn't exist.
    */
   it('should not delete a comment if the task not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.delete(
           {
@@ -223,7 +216,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a comment cannot be updated if the associated task doesn't exist.
    */
   it('should not update a comment if the task not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.update(
           {
@@ -243,7 +236,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a comment cannot be updated if it doesn't exist.
    */
   it('should not update a comment if the comment not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.update(
           {
@@ -265,7 +258,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a comment cannot be deleted if it doesn't exist.
    */
   it('should not delete a comment if the comment not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.delete(
           {
@@ -286,7 +279,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a reply cannot be added to a comment if the associated task doesn't exist.
    */
   it('should not reply to a comment if the task not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.reply(
           {
@@ -306,7 +299,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a reply cannot be added to a comment if the comment doesn't exist.
    */
   it('should not reply to a comment if the comment not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.reply(
           {
@@ -328,7 +321,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a user cannot update a comment if they are not the author.
    */
   it('should not update a comment if the user is not the owner', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -359,7 +352,7 @@ describe('Task / Comments - Unsuccessfully cases', async () => {
    * Ensures a user cannot delete a comment if they are not the author.
    */
   it('should not delete a comment if the user is not the owner', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,

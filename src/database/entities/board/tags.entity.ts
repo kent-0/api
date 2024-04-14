@@ -14,7 +14,7 @@ import {
   BoardTaskEntity,
   OptionalParentProps,
   ParentEntity,
-} from '..';
+} from '~/database/entities';
 
 /**
  * Entity representing different tags or labels that can be assigned to tasks within a board.

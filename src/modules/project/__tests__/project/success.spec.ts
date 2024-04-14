@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -47,15 +47,8 @@ describe('Project successfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectEntity,
@@ -81,7 +74,7 @@ describe('Project successfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -110,7 +103,7 @@ describe('Project successfully cases', () => {
    * - The owner of the project matches the authenticated user.
    */
   it('should create a project', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const project = await service.create(
         {
           description: 'Test Project Description',
@@ -139,7 +132,7 @@ describe('Project successfully cases', () => {
    * - Retrieving the deleted project returns a null or throws an error.
    */
   it('should delete a project', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const project = await service.create(
         {
           description: 'Test Project Description',
@@ -170,7 +163,7 @@ describe('Project successfully cases', () => {
    * - Retrieving the project brings along its related data (e.g., owner).
    */
   it('should get a project with relations', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const project = await service.create(
         {
           description: 'Test Project Description',
@@ -203,7 +196,7 @@ describe('Project successfully cases', () => {
    * - The properties of the project are updated in the database.
    */
   it('should upddate a project with relations', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const project = await service.create(
         {
           description: 'Test Project Description',

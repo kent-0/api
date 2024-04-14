@@ -7,15 +7,14 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { PermissionManagerService } from '~/permissions/services/manager.service';
-
 import {
   AuthUserEntity,
   BoardEntity,
   BoardRolesEntity,
-  OptionalParentProps,
+  type OptionalParentProps,
   ParentEntity,
-} from '..';
+} from '~/database/entities';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 /**
  * Entity representing the association between users and boards within a board management system.

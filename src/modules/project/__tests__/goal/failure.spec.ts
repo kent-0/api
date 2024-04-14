@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -50,15 +50,8 @@ describe('Project - Goals unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -85,7 +78,7 @@ describe('Project - Goals unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userProjectOwner = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -131,7 +124,7 @@ describe('Project - Goals unsuccessfully cases', async () => {
    * Validates that a goal cannot be updated if the goal does not exist.
    */
   it('should not update a goal if the goal does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.update({
           description: 'Kento testing goal',
@@ -150,7 +143,7 @@ describe('Project - Goals unsuccessfully cases', async () => {
    * Validates that a goal cannot be deleted if the goal does not exist.
    */
   it('should not delete a goal if the goal does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.delete({
           goalId: '8054de11-b6dc-481e-a8c2-90cef8169914',

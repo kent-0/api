@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -55,15 +55,8 @@ describe('Board - Role successfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -100,7 +93,7 @@ describe('Board - Role successfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -164,7 +157,7 @@ describe('Board - Role successfully cases', () => {
    * It ensures that the system correctly creates the role and returns the appropriate details.
    */
   it('should be able to create a role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
@@ -184,7 +177,7 @@ describe('Board - Role successfully cases', () => {
    * It ensures that the updated attributes are correctly reflected in the system.
    */
   it('should be able to update a role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
@@ -211,7 +204,7 @@ describe('Board - Role successfully cases', () => {
    * and that it no longer exists after the deletion process.
    */
   it('should be able to delete a role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
@@ -234,7 +227,7 @@ describe('Board - Role successfully cases', () => {
    * It ensures the list is accurate and paginated correctly.
    */
   it('should be able to get all roles', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
@@ -263,7 +256,7 @@ describe('Board - Role successfully cases', () => {
    * The system should correctly associate the member with the role and reflect it in the returned results.
    */
   it('should be able to assign a role to board member', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',
@@ -308,7 +301,7 @@ describe('Board - Role successfully cases', () => {
    * The system should correctly dissociate the role from the member and ensure the member no longer holds that role.
    */
   it('should be able to remove a role from board member', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         boardId: board.id,
         name: 'Testing role',

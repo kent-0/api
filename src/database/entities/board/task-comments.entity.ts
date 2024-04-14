@@ -9,14 +9,13 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { CommentsTypes } from '~/database/enums/comments.enum';
-
 import {
   AuthUserEntity,
   BoardTaskEntity,
-  OptionalParentProps,
+  type OptionalParentProps,
   ParentEntity,
-} from '..';
+} from '~/database/entities';
+import { CommentsTypes } from '~/database/enums/comments.enum';
 
 /**
  * Entity representing different comments that members can make on tasks.

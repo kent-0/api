@@ -9,8 +9,6 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { ProjectStatus } from '~/database/enums/status.enum';
-
 import {
   AuthUserEntity,
   BoardEntity,
@@ -20,7 +18,8 @@ import {
   ProjectMembersEntity,
   ProjectNotesEntity,
   ProjectRolesEntity,
-} from '..';
+} from '~/database/entities';
+import { ProjectStatus } from '~/database/enums/status.enum';
 
 /**
  * Represents a project entity used to manage and group boards.

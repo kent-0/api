@@ -9,13 +9,11 @@ import {
 
 import { ActivityHistoryTypes } from '~/database/enums/activity-history.enum';
 
-import {
-  AuthUserEntity,
-  BoardEntity,
-  OptionalParentProps,
-  ParentEntity,
-  ProjectEntity,
-} from '..';
+import { AuthUserEntity } from '../auth/user.entity';
+import { BoardEntity } from '../board/board.entity';
+import { type OptionalParentProps, ParentEntity } from '../parent.entity';
+
+import { ProjectEntity } from './project.entity';
 
 /**
  * Entity that captures and logs the various activities or actions taken by members

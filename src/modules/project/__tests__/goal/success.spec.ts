@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -50,15 +50,8 @@ describe('Project - Goals successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -85,7 +78,7 @@ describe('Project - Goals successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userProjectOwner = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -131,7 +124,7 @@ describe('Project - Goals successfully cases', async () => {
    * Validates that a new goal can be successfully created.
    */
   it('should create a goal', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const goal = await service.create({
         description: 'Kento testing goal',
         name: 'Kento',
@@ -152,7 +145,7 @@ describe('Project - Goals successfully cases', async () => {
    * - The goal entity should reflect the new details after the update.
    */
   it('should update a goal', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const goal = await service.create({
         description: 'Kento testing goal',
         name: 'Kento',
@@ -181,7 +174,7 @@ describe('Project - Goals successfully cases', async () => {
    * - A confirmation message should be returned indicating successful deletion.
    */
   it('should delete a goal', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const goal = await service.create({
         description: 'Kento testing goal',
         name: 'Kento',

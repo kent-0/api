@@ -3,7 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
 import { ExecutionContext } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -62,15 +62,8 @@ describe('Project - Guard - Permissions', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -109,7 +102,7 @@ describe('Project - Guard - Permissions', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -133,7 +126,7 @@ describe('Project - Guard - Permissions', () => {
       userMember = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
     });
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
@@ -197,7 +190,7 @@ describe('Project - Guard - Permissions', () => {
    * Test case to ensure that only project owners can execute actions if no roles are set for the project.
    */
   it('should allow only the project owner to execute actions because the project does not have roles', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         guard.canActivate(mockExecutionContext),
       ).rejects.toThrowError(
@@ -224,7 +217,7 @@ describe('Project - Guard - Permissions', () => {
       {},
     ]);
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(guard.canActivate(mockExecutionContext)).resolves.toBe(false);
     });
   });
@@ -249,7 +242,7 @@ describe('Project - Guard - Permissions', () => {
       {},
     ]);
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         guard.canActivate(mockExecutionContext),
       ).rejects.toThrowError('The project does not exist.');
@@ -276,7 +269,7 @@ describe('Project - Guard - Permissions', () => {
       {},
     ]);
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(guard.canActivate(mockExecutionContext)).resolves.toBe(true);
     });
   });
@@ -301,7 +294,7 @@ describe('Project - Guard - Permissions', () => {
       {},
     ]);
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         guard.canActivate(mockExecutionContext),
       ).rejects.toThrowError(
@@ -314,7 +307,7 @@ describe('Project - Guard - Permissions', () => {
    * Test case to ensure the guard denies access if the user does not have the required role permissions.
    */
   it('should be denied because the user does not have the necessary role permissions.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await projectRolesService.create({
         name: 'Manager',
         permissions_denied: ProjectPermissionsEnum.RoleCreate,
@@ -344,7 +337,7 @@ describe('Project - Guard - Permissions', () => {
    * Test case to ensure the guard allows access if the user has the required role permissions.
    */
   it('should be pass because the user have the necessary role permissions.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await projectRolesService.create({
         name: 'Manager',
         permissions_denied: ProjectPermissionsEnum.RoleCreate,
@@ -372,7 +365,7 @@ describe('Project - Guard - Permissions', () => {
    * Test case to ensure the guard allows access if the user has the required role permissions.
    */
   it('should pass because the ExcludeGuards is passed', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       mockReflector.get.mockReturnValue([ProjectPermissionsGuard]);
 
       await expect(guard.canActivate(mockExecutionContext)).resolves.toBe(true);

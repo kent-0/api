@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMemberMinimalObject, ProjectMinimalObject } from '.';
+import { ProjectMemberMinimalObject } from './minimal/member.object';
+import { ProjectMinimalObject } from './minimal/project.object';
 
 /**
  * The `ProjectMembersObject` class defines a structured representation of

@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -49,15 +49,8 @@ describe('Project - Notes successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -82,7 +75,7 @@ describe('Project - Notes successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -116,7 +109,7 @@ describe('Project - Notes successfully cases', async () => {
    * Validates that a new note can be successfully created.
    */
   it('should create a note', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const note = await service.create(
         {
           content: 'Kento testing note',
@@ -141,7 +134,7 @@ describe('Project - Notes successfully cases', async () => {
    * - The note entity should reflect the new details after the update.
    */
   it('should update a note', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const note = await service.create(
         {
           content: 'Kento testing project',
@@ -177,7 +170,7 @@ describe('Project - Notes successfully cases', async () => {
    * - A confirmation message should be returned indicating successful deletion.
    */
   it('should delete a note', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const note = await service.create(
         {
           content: 'Kento testing project',

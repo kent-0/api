@@ -172,11 +172,15 @@ export class AuthAccountService {
    * @throws NotFoundException if the refresh token is not found or revoked.
    * @throws UnauthorizedException if the refresh token is expired or invalid.
    */
-  public async refreshSession(token: string): Promise<AuthSignInObject> {
+  public async refreshSession(
+    token: string,
+    id: string,
+  ): Promise<AuthSignInObject> {
     // Fetch the refresh token associated with the user's session.
     const refreshToken = await this.tokensRepository.findOne({
       token_type: TokenType.REFRESH,
       token_value: token,
+      user: id,
     });
 
     // If the refresh token doesn't exist or has been revoked, throw the appropriate exception.

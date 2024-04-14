@@ -14,10 +14,10 @@ import {
   BoardRolesEntity,
   BoardStepEntity,
   BoardTagsEntity,
-  OptionalParentProps,
+  type OptionalParentProps,
   ParentEntity,
   ProjectEntity,
-} from '..';
+} from '~/database/entities';
 
 /**
  * Entity representing boards within a project management system.

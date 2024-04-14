@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -51,15 +51,8 @@ describe('Board - Step Unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -95,7 +88,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -141,7 +134,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that attempting to remove a non-existent step triggers an appropriate error message without affecting other data.
    */
   it('should has error because the step to remove it doest not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.remove({
           boardId: board.id,
@@ -158,7 +151,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Validates that attempting to update a non-existent step returns an error, ensuring the system's stability.
    */
   it('should has error because the step to update it doest not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.update({
           boardId: board.id,
@@ -176,7 +169,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Validates that attempts to mark a non-existent step as finished will trigger a suitable error message.
    */
   it('should has error because the step to mark as finished it doest not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -207,7 +200,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Validates that an attempt to move a non-existent step triggers an error, preserving the remaining steps’ order.
    */
   it('should has error because not exist a column with this id', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -237,7 +230,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system prevents the movement of a step that is marked as finished, preserving the integrity of step order.
    */
   it('should has error because the finished step cannot be moved', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -274,7 +267,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system prevents moving a step to the position of a finished step, maintaining the finished step’s position.
    */
   it('should has error because you are trying to move a column to the finished column.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
@@ -311,7 +304,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that attempting to move a non-existent step triggers an error, maintaining the current step order.
    */
   it('should has error because the step to move it doest not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -341,7 +334,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Validates that attempting to move a step to a non-existent position triggers an appropriate error, maintaining the current step order.
    */
   it('should has error because not exist a column in the position to be replaced', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
@@ -373,7 +366,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system prevents moving a step when there's only one column on the board, returning a suitable error message.
    */
   it('should has an error because you are trying to move columns to other positions but there is only one column on the server.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
@@ -396,7 +389,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Validates that when there's only one step on the board, the system prevents marking it as finished and returns an error.
    */
   it('should has an error because you are trying to mark a column as a finished column but there is only one on the board.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Kento testing step',
@@ -420,7 +413,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system throws an error when trying to mark a step that is already marked as finished, preserving the current state.
    */
   it('should has error because the step is already marked as finished', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -454,7 +447,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system throws an error when trying to create a step without a start step
    */
   it('should has error because the board are missing the start step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.create({
           boardId: board.id,
@@ -471,7 +464,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system throws an error when trying to create a start step when the board already has a start step
    */
   it('should has error because the board already has the start step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Kento testing step',
@@ -495,7 +488,7 @@ describe('Board - Step Unsuccessfully cases', async () => {
    * Ensures that the system throws an error when trying to create a finish step when the board already has a finish step
    */
   it('should has error because the board already has the finish step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Kento testing step',

@@ -2,7 +2,6 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -31,14 +30,7 @@ describe('Auth - Email - Successfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthTokensEntity,
@@ -59,7 +51,7 @@ describe('Auth - Email - Successfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -92,7 +84,7 @@ describe('Auth - Email - Successfully cases', () => {
    * Test to ensure that the user email address can be confirmed.
    */
   it('should confirm user email address', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userEmail = await em.findOneOrFail(
         AuthUserEntity,
         {

@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -50,15 +50,8 @@ describe('Project - Member successfuly cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -85,7 +78,7 @@ describe('Project - Member successfuly cases', () => {
     await orm.getSchemaGenerator().refreshDatabase();
 
     // Create test users and a project, which will be used in the subsequent tests.
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -109,7 +102,7 @@ describe('Project - Member successfuly cases', () => {
       userMember = await em.findOneOrFail(AuthUserEntity, { id: userTest2.id });
     });
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const projectTest = await projectService.create(
         {
           description: 'Kento testing project',
@@ -144,7 +137,7 @@ describe('Project - Member successfuly cases', () => {
    * The system should acknowledge the addition and reflect it in the returned results.
    */
   it('should add a member to a project', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         projectId: project.id,
         userId: userMember.id,
@@ -161,7 +154,7 @@ describe('Project - Member successfuly cases', () => {
    * The system should acknowledge the removal and provide a confirmation message.
    */
   it('should remove a member to a project', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         projectId: project.id,
         userId: userMember.id,
@@ -186,7 +179,7 @@ describe('Project - Member successfuly cases', () => {
    * Check the current user role and permissions for a project.
    */
   it('should get user member permissions', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       const member = await service.add({
         projectId: project.id,
         userId: userMember.id,

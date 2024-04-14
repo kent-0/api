@@ -2,7 +2,6 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -53,14 +52,7 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthTokensEntity,
@@ -81,7 +73,7 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -114,7 +106,7 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
    * It should appropriately handle and throw an error.
    */
   it('should has invalid user', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         async () =>
           await passwordService.change(
@@ -132,7 +124,7 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
    * This should result in an error being thrown.
    */
   it('should has invalid current password', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         async () =>
           await passwordService.change(
@@ -147,7 +139,7 @@ describe('Auth - Password - Unsuccessfully cases', async () => {
    * If the password details are not found, throw a NotFoundException.
    */
   it('should has invalid password', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await em.removeAndFlush(user.password!);
 
       expect(

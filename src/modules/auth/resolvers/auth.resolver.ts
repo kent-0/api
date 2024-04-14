@@ -98,12 +98,16 @@ export class AuthResolver {
    * @param token - JWT payload of the authenticated user.
    * @returns New access token and refresh token.
    */
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => AuthSignInObject, {
     description:
       'Ensures that an authenticated user can prolong their session without needing to re-enter credentials.',
   })
-  public refreshSession(@Args('refresh_token') refreshToken: string) {
-    return this._accountService.refreshSession(refreshToken);
+  public refreshSession(
+    @Args('refresh_token') refreshToken: string,
+    @UserToken() token: JWTPayload,
+  ) {
+    return this._accountService.refreshSession(refreshToken, token.sub);
   }
 
   /**

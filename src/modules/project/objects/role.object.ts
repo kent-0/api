@@ -1,10 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import {
-  ProjectMemberObject,
-  ProjectMinimalObject,
-  ProjectRoleMinimalObject,
-} from '.';
+import { ProjectMemberObject } from './member.object';
+import { ProjectMinimalObject } from './minimal/project.object';
+import { ProjectRoleMinimalObject } from './minimal/role.object';
 
 /**
  * The `ProjectRolesObject` class serves as a blueprint for defining roles within a project management system.

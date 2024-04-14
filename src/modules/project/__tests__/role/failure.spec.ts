@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -52,15 +52,8 @@ describe('Project - Role unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectMembersEntity,
@@ -87,7 +80,7 @@ describe('Project - Role unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userProjectOwner = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -138,7 +131,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * The system should detect this invalid input and respond with an appropriate error message.
    */
   it('should not create a role with invalid permissions bit', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.create({
           name: 'Testing role',
@@ -158,7 +151,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * The system should detect this invalid input and respond with an appropriate error message.
    */
   it('should not update a role with invalid permissions bit', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
@@ -186,7 +179,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Ensures that the system detects and rejects attempts to delete a role that does not exist.
    */
   it('should not delete a role that does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.remove({ projectId: project.id, roleId: project.id }),
       ).rejects.toThrowError('Could not find role to delete.');
@@ -198,7 +191,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Tests the system's response when trying to assign a role to a member that does not exist.
    */
   it('should not assign a role to a member that does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
@@ -226,7 +219,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Validates the system's response when attempting to assign a role that doesn't exist to a member.
    */
   it('should not assign a role that does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.assign({
           memberId: userMember.id,
@@ -245,7 +238,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * who already has that role.
    */
   it('should not assign a role to a member that already has the role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
@@ -290,7 +283,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * who already has that role.
    */
   it('should not unassign a role to a member that not has the role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
@@ -318,7 +311,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Tests the system's behavior when attempting to unassign a role from a member who doesn't have it.
    */
   it('should not unassigned a role from a member that dont have the role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,
@@ -362,7 +355,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Ensures that the system rejects an attempt to unassign a role that doesn't exist from a member.
    */
   it('should not unassigned a role that does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         service.unassign({
           memberId: userMember.id,
@@ -380,7 +373,7 @@ describe('Project - Role unsuccessfully cases', async () => {
    * Validates the scenario where a role is attempted to be updated with an invalid permissions bit.
    */
   it('should not update role with invalid denied permissions in role', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const role = await service.create({
         name: 'Testing role',
         permissions_denied: ProjectPermissionsEnum.ProjectUpdate,

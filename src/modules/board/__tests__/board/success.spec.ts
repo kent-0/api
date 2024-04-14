@@ -1,7 +1,7 @@
 import { EntityManager, MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -44,15 +44,8 @@ describe('Board - Successfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -79,7 +72,7 @@ describe('Board - Successfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const projectUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -123,7 +116,7 @@ describe('Board - Successfully cases', () => {
    * Validates that a board can be created with the expected properties and be associated with the correct project.
    */
   it('should create a board', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const board = await service.create(
         {
           description: 'Kento testing board',
@@ -145,7 +138,7 @@ describe('Board - Successfully cases', () => {
    * Ensures that an existing board can be updated, altering its properties and reflecting changes in the system.
    */
   it('should update a board', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const board = await service.create(
         {
           description: 'Kento testing board',
@@ -177,7 +170,7 @@ describe('Board - Successfully cases', () => {
    * Ensures that a board can be deleted from the system and will no longer be retrievable after deletion.
    */
   it('should delete a board', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const board = await service.create(
         {
           description: 'Kento testing board',
@@ -206,7 +199,7 @@ describe('Board - Successfully cases', () => {
    * Validates that a board's details can be successfully retrieved and contain accurate and expected information.
    */
   it('should get a board', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const board = await service.create(
         {
           description: 'Kento testing board',

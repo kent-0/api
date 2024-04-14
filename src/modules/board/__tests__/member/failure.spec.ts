@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -48,15 +48,8 @@ describe('Board - Member unsuccessfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -90,7 +83,7 @@ describe('Board - Member unsuccessfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -155,7 +148,7 @@ describe('Board - Member unsuccessfully cases', () => {
    * The system should recognize this and throw an appropriate error.
    */
   it('should not be able to add a user who is a member of the board', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       expect(
         async () =>
           await service.add({
@@ -172,7 +165,7 @@ describe('Board - Member unsuccessfully cases', () => {
    * The system should recognize this situation and throw an appropriate error.
    */
   it('should not be able to remove a user who is not a member of the board', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       expect(
         async () =>
           await service.remove({
@@ -188,7 +181,7 @@ describe('Board - Member unsuccessfully cases', () => {
    * This test checks the scenario where there's an attempt to remove a user who is the board owner.
    */
   it('should not be able to remove the board member because it does not exist', async () => {
-    await RequestContext.createAsync(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       expect(
         async () =>
           await service.remove({

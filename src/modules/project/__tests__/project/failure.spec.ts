@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -47,15 +47,8 @@ describe('Project unsuccessfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             ProjectEntity,
@@ -81,7 +74,7 @@ describe('Project unsuccessfully cases', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -109,7 +102,7 @@ describe('Project unsuccessfully cases', () => {
    * - The error message correctly indicates that the project was not found.
    */
   it('should show error because the project you are trying to delete does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         async () =>
           await service.delete('8054de11-b6dc-481e-a8c2-90cef8169914', user.id),
@@ -128,7 +121,7 @@ describe('Project unsuccessfully cases', () => {
    * - The error message correctly indicates ownership rights.
    */
   it('should has error because the user trying to delete the project is not the owner.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const project = await service.create(
         {
           description: 'Test Project Description',
@@ -158,7 +151,7 @@ describe('Project unsuccessfully cases', () => {
    * - The error message correctly indicates that the project was not found.
    */
   it('should show error because the project you are trying to get does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         async () => await service.get('8054de11-b6dc-481e-a8c2-90cef8169914'),
       ).rejects.toThrowError(
@@ -175,7 +168,7 @@ describe('Project unsuccessfully cases', () => {
    * - The error message correctly indicates that the project was not found.
    */
   it('should show error because the project you are trying to get update not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(
         async () =>
           await service.update({

@@ -13,7 +13,7 @@ import {
   BoardMembersEntity,
   OptionalParentProps,
   ParentEntity,
-} from '..';
+} from '~/database/entities';
 
 /**
  * Entity representing different roles within the board management system.

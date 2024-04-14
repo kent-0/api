@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -59,15 +59,8 @@ describe('Task - Successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -106,7 +99,7 @@ describe('Task - Successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -193,7 +186,7 @@ describe('Task - Successfully cases', async () => {
    * Ensures that a task can be successfully created.
    */
   it('should create a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -217,7 +210,7 @@ describe('Task - Successfully cases', async () => {
    * Verifies that a task's properties can be successfully updated.
    */
   it('should update a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -248,7 +241,7 @@ describe('Task - Successfully cases', async () => {
    * Ensures that a task can be successfully deleted from the system.
    */
   it('should delete a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -290,7 +283,7 @@ describe('Task - Successfully cases', async () => {
    * Tests the ability to move a task from one step to another within a board.
    */
   it('should move a task to another step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -326,7 +319,7 @@ describe('Task - Successfully cases', async () => {
    * Verifies that a task's position can be adjusted within the same step.
    */
   it('should move a task to another step position', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -396,7 +389,7 @@ describe('Task - Successfully cases', async () => {
    * Tests the ability to move a task to a different step and adjust its position simultaneously.
    */
   it('should move a task to another step and position', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -474,7 +467,7 @@ describe('Task - Successfully cases', async () => {
    * Verifies that a user can be successfully assigned to a task.
    */
   it('should assign a user to a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -507,7 +500,7 @@ describe('Task - Successfully cases', async () => {
    * Ensures that a user can be successfully unassigned from a task.
    */
   it('should unassign a user to a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -550,7 +543,7 @@ describe('Task - Successfully cases', async () => {
    * Tests that a start date is correctly set when a task is moved to a different step.
    */
   it('should set start date when a task is moved to another step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -582,7 +575,7 @@ describe('Task - Successfully cases', async () => {
    * Verifies that a finish date is set when a task is moved to a finish step.
    */
   it('should set finish date when a task is moved to finish step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -620,7 +613,7 @@ describe('Task - Successfully cases', async () => {
    * Verifies that a finish date is set when a task is moved to a finish step.
    */
   it('should set finish date when the second task is moved to finish step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -684,7 +677,7 @@ describe('Task - Successfully cases', async () => {
    * Ensures that a child task can be successfully added to a parent task.
    */
   it('should add a child task to a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const parentTask = await service.create(
         {
           boardId: board.id,
@@ -729,7 +722,7 @@ describe('Task - Successfully cases', async () => {
    * Tests the ability to remove a child task from its parent task.
    */
   it('should remove a child task to a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const parentTask = await service.create(
         {
           boardId: board.id,
@@ -790,7 +783,7 @@ describe('Task - Successfully cases', async () => {
    * Ensures that the childrens of a parent task are correctly recounted when a child task is removed.
    */
   it('should recount childrens when a child is removed', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const parentTask = await service.create(
         {
           boardId: board.id,

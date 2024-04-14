@@ -36,7 +36,7 @@ describe('JWT Strategy', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
         JwtModule.registerAsync({
           imports: [ConfigModule],
           inject: [ConfigService],
@@ -51,14 +51,7 @@ describe('JWT Strategy', () => {
             },
           }),
         }),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthTokensEntity,
@@ -79,7 +72,7 @@ describe('JWT Strategy', () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -139,7 +132,7 @@ describe('JWT Strategy', () => {
   });
 
   it('should be able to check token session', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const token = await jwtService.signAsync({
         sub: user.id,
       });
@@ -164,7 +157,7 @@ describe('JWT Strategy', () => {
   });
 
   it('should check if the token session is revoked', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const signIn = await accountService.signIn({
         password: 'sawako',
         username: user.username,
@@ -198,7 +191,7 @@ describe('JWT Strategy', () => {
   });
 
   it('should check if the token is expired', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const signIn = await accountService.signIn({
         password: 'sawako',
         username: user.username,
@@ -229,7 +222,7 @@ describe('JWT Strategy', () => {
   });
 
   it('should check that the payload is received', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const signIn = await accountService.signIn({
         password: 'sawako',
         username: user.username,

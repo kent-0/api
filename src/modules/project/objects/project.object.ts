@@ -3,13 +3,11 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { ProjectStatus } from '~/database/enums/status.enum';
 import { BoardMinimalObject } from '~/modules/board/objects';
 
-import {
-  ProjectGoalMinimalObject,
-  ProjectMemberMinimalObject,
-  ProjectMinimalObject,
-  ProjectNoteMinimalObject,
-  ProjectRoleMinimalObject,
-} from '.';
+import { ProjectGoalMinimalObject } from './minimal/goal.object';
+import { ProjectMemberMinimalObject } from './minimal/member.object';
+import { ProjectNoteMinimalObject } from './minimal/note.object';
+import { ProjectMinimalObject } from './minimal/project.object';
+import { ProjectRoleMinimalObject } from './minimal/role.object';
 
 /**
  * The `ProjectObject` class serves as a foundational blueprint for representing projects within the application.

@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -51,15 +51,8 @@ describe('Board - Step Successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             BoardEntity,
@@ -95,7 +88,7 @@ describe('Board - Step Successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -141,7 +134,7 @@ describe('Board - Step Successfully cases', async () => {
    * Validates that a step can be successfully created and that the relevant data is correctly stored.
    */
   it('should create a step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -160,7 +153,7 @@ describe('Board - Step Successfully cases', async () => {
    * Ensures that a step can be updated and that the updated data is correctly stored.
    */
   it('should update a step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -186,7 +179,7 @@ describe('Board - Step Successfully cases', async () => {
    * Validates that a step can be deleted and that it is removed from the system.
    */
   it('should delete a step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const step = await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -209,7 +202,7 @@ describe('Board - Step Successfully cases', async () => {
    * Ensures that a step can be marked as finished and that this status is correctly updated in the system.
    */
   it('should mark as finished a step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -240,7 +233,7 @@ describe('Board - Step Successfully cases', async () => {
    * that only one step is marked as finished at a time in the system.
    */
   it('should mark a new step as finished and unmark the previous one', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -305,7 +298,7 @@ describe('Board - Step Successfully cases', async () => {
    * ensuring the reordering is accurately reflected in the system, and all steps maintain a unique position.
    */
   it('should move a step from position in order', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -377,7 +370,7 @@ describe('Board - Step Successfully cases', async () => {
    * This ensures that the UI or logical flow that leverages the step order will present or handle finished steps accurately.
    */
   it('should move the step to the last position if the step is marked as finished', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'Test Step Description',
@@ -446,7 +439,7 @@ describe('Board - Step Successfully cases', async () => {
    * especially in scenarios where the steps may not need to be re-ordered upon finishing.
    */
   it('should not move positions if the step marked as finished is already in the last position', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await service.create({
         boardId: board.id,
         description: 'This step should be moved to the last position',

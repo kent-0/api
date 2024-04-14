@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMinimalObject } from '.';
 import { ProjectGoalMinimalObject } from './minimal/goal.object';
+import { ProjectMinimalObject } from './minimal/project.object';
 
 /**
  * The `ProjectGoalsObject` class represents a structured format for goals

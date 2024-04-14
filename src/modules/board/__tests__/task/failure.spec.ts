@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -60,15 +60,8 @@ describe('Task - Unsuccessfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -107,7 +100,7 @@ describe('Task - Unsuccessfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -193,7 +186,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks if a task cannot be created when the board has no steps.
    */
   it('should not create a task because the board has no steps created', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await stepService.remove({
         boardId: board.id,
         stepId: stepStart.id,
@@ -228,7 +221,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that a task cannot be deleted if it's already marked as finished.
    */
   it('should not delete a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.delete({
           boardId: board.id,
@@ -244,7 +237,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that a task cannot be deleted if it's already marked as finished.
    */
   it('should not delete a task if the task is finished', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -284,7 +277,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * a step assigned.
    */
   it('should not delete a task if is a child of another task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -332,7 +325,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that fetching a non-existing task should result in an error.
    */
   it('should not get a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.get({
           boardId: board.id,
@@ -348,7 +341,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test verifies that an error is thrown when trying to move a task to a non-existing step.
    */
   it('should not move a task if the step does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -375,7 +368,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks if an error is thrown when attempting to move a non-existing task.
    */
   it('should not move a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         service.move({
           boardId: board.id,
@@ -391,7 +384,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that a task that's already finished can't be moved to another step.
    */
   it('should not move a task if the task is finished', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -431,7 +424,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures tasks without assigned users cannot be moved to finish steps.
    */
   it('should not move a task to finish step if the task not has a user assigned', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -458,7 +451,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks that an error is thrown when trying to move a task to a step that's already full.
    */
   it('should not move a task if the step is full', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task1 = await service.create(
         {
           boardId: board.id,
@@ -521,7 +514,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test verifies that an error is thrown when trying to move a task to an invalid position within its current step.
    */
   it('should not move a task if the position to be replaced is not valid in the current step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task1 = await service.create(
         {
           boardId: board.id,
@@ -584,7 +577,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * for a non-existing task.
    */
   it('should not recount task childrens if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.recountTaskChildrensPositions(
           board.id,
@@ -601,7 +594,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * whose parent task doesn't exist.
    */
   it('should not remove child task if the parent task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -628,7 +621,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * that doesn't exist, even if a valid parent task ID is provided.
    */
   it('should not remove task child if the child task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -654,7 +647,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test verifies that unassigning a user from a non-existing task results in an error.
    */
   it('should not unassign a user from a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.unAssignUser({
           boardId: board.id,
@@ -672,7 +665,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * results in an error.
    */
   it('should not unassing a user from a finished task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -712,7 +705,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * from a task which the user isn't assigned to.
    */
   it('should not unassing a user from a task if the user is not assigned to the task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -738,7 +731,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test verifies that unassigning a non-existing member from a valid task results in an error.
    */
   it('should not unassign a member to a task if the member does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -770,7 +763,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks that updating a non-existing task results in an error.
    */
   it('should not update a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.update({
           boardId: board.id,
@@ -789,7 +782,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * that doesn't exist in the current step results in an error.
    */
   it('should not replace a position that doest not exist in the current step', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -826,7 +819,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * that doesn't have a step assigned.
    */
   it('should not move a task if the task not has a step assigned', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -863,7 +856,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that assigning a user to a non-existing task results in an error.
    */
   it('should not assign a user to a task if the task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.assignUser({
           boardId: board.id,
@@ -881,7 +874,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * results in an error.
    */
   it('should not assign a user to a task if the task is finished', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -920,7 +913,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test ensures that assigning a non-existing member to a valid task results in an error.
    */
   it('should not assign a user to a task if the member does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task = await service.create(
         {
           boardId: board.id,
@@ -947,7 +940,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * without providing a parent task ID.
    */
   it('should not assign a user to a task if the task is already assigned to another member', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const task1 = await service.create(
         {
           boardId: board.id,
@@ -979,7 +972,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks that trying to add a child to a non-existing parent task results in an error.
    */
   it('should not add child to a task if the parent tasks id is not present', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.addChild(
           {
@@ -997,7 +990,7 @@ describe('Task - Unsuccessfully cases', async () => {
    * This test checks that trying to add a child to a non-existing parent task results in an error.
    */
   it('should not add child to a task if the parent task does not exist', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       expect(async () =>
         service.addChild(
           {

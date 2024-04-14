@@ -50,15 +50,8 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthTokensEntity,
@@ -99,7 +92,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
      * This setup ensures a consistent and isolated environment for each test, making the test outcomes reliable.
      */
     await orm.getSchemaGenerator().refreshDatabase();
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const userTest = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -139,7 +132,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
    * Validates that the system correctly identifies and responds to an invalid session token.
    */
   it('should has error because the session token is invalid.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.logOut('invalid-token', user.id),
       ).rejects.toThrow('Your current session information could not be found.');
@@ -150,7 +143,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
    * Validates the system's response when attempting to fetch details of a non-existent user.
    */
   it('should has error because the user in the token does not exist.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.me('8054de11-b6dc-481e-a8c2-90cef8169914'),
       ).rejects.toThrow('Your user account information could not be obtained.');
@@ -161,7 +154,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
    * Checks the system's response when provided with a non-existent refresh token.
    */
   it('should has error because the refresh token does not exist.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.refreshSession('invalid-token', user.id),
       ).rejects.toThrow('No information found for that session refresh token.');
@@ -172,7 +165,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
    * Validates the system's handling of an expired refresh token.
    */
   it('should has error because the refresh token is not valid.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const refreshTokenData = await em.findOneOrFail(AuthTokensEntity, {
         token_type: TokenType.REFRESH,
         token_value: refreshToken,
@@ -185,7 +178,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
 
       await em.persistAndFlush(refreshTokenData);
 
-      await RequestContext.createAsync(em, async () => {
+      await RequestContext.create(em, async () => {
         await expect(
           accountService.refreshSession(refreshTokenData.token_value, user.id),
         ).rejects.toThrow(
@@ -199,7 +192,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
    * Validates the system's handling of an revoked refresh token.
    */
   it('should has error because the refresh token is expired.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const refreshTokenData = await em.findOneOrFail(AuthTokensEntity, {
         token_type: TokenType.REFRESH,
         token_value: refreshToken,
@@ -209,7 +202,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
 
       await em.persistAndFlush(refreshTokenData);
 
-      await RequestContext.createAsync(em, async () => {
+      await RequestContext.create(em, async () => {
         await expect(
           accountService.refreshSession(refreshTokenData.token_value, user.id),
         ).rejects.toThrow('The refresh token has been revoked.');
@@ -218,7 +211,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   });
 
   it('should has error because has invalid account crendentials (username).', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.signIn({ password: 'sawako', username: 'sawak0' }),
       ).rejects.toThrow('No account found with that username.');
@@ -226,7 +219,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   });
 
   it('should has error because has invalid account crendentials (password).', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.signIn({ password: 'sawak0', username: 'sawako' }),
       ).rejects.toThrow('An incorrect password has been entered.');
@@ -234,7 +227,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   });
 
   it('should have error because there is already a user with that username.', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.signUp({
           email: 'sawa@acme.com',
@@ -250,7 +243,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   });
 
   it('should have error because it could not obtain user information to be updated', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       await expect(
         accountService.update(
           { username: 'sawak0' },
@@ -261,7 +254,7 @@ describe('Auth - Account - Unsuccessfully cases', () => {
   });
 
   it('should have error because user wants to update his username to an existing one', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const newUser = await accountService.signUp({
         email: 'kana@acme.com',
         first_name: 'Sawa',

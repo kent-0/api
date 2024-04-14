@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ProjectMinimalObject, ProjectNoteMinimalObject } from '.';
+import { ProjectNoteMinimalObject } from './minimal/note.object';
+import { ProjectMinimalObject } from './minimal/project.object';
 
 /**
  * The `ProjectNotesObject` class encapsulates the structure and metadata

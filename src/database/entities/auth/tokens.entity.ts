@@ -9,7 +9,9 @@ import {
 
 import { TokenType } from '~/database/enums/token.enum';
 
-import { AuthUserEntity, OptionalParentProps, ParentEntity } from '..';
+import { type OptionalParentProps, ParentEntity } from '../parent.entity';
+
+import { AuthUserEntity } from './user.entity';
 
 /**
  * Entity representing the authentication tokens. These tokens can be of various types,

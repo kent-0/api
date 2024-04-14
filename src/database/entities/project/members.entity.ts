@@ -7,15 +7,14 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { PermissionManagerService } from '~/permissions/services/manager.service';
-
 import {
   AuthUserEntity,
   OptionalParentProps,
   ParentEntity,
   ProjectEntity,
   ProjectRolesEntity,
-} from '..';
+} from '~/database/entities';
+import { PermissionManagerService } from '~/permissions/services/manager.service';
 
 /**
  * The `ProjectMembersEntity` entity captures the relationship between a user and a project.

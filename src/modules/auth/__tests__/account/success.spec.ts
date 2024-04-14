@@ -47,15 +47,8 @@ describe('Auth - Account - Successfully cases', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthTokensEntity,
@@ -107,7 +100,7 @@ describe('Auth - Account - Successfully cases', () => {
    * contains the expected properties and values.
    */
   it('should create an user', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -131,7 +124,7 @@ describe('Auth - Account - Successfully cases', () => {
    * authenticate and receive a valid session containing access and refresh tokens.
    */
   it('should create a account session', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -164,7 +157,7 @@ describe('Auth - Account - Successfully cases', () => {
    * 3. The updated values are correctly reflected in the returned user object.
    */
   it('should update the user first and last name', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -205,7 +198,7 @@ describe('Auth - Account - Successfully cases', () => {
    * - Fetching user information via `accountService.me`.
    */
   it('should get the user private data', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -238,7 +231,7 @@ describe('Auth - Account - Successfully cases', () => {
    * - Closing a session via `accountService.logOut`.
    */
   it('should close account session', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -278,7 +271,7 @@ describe('Auth - Account - Successfully cases', () => {
    * - Refreshing a session via `accountService.refreshSession`.
    */
   it('should refresh account session', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const user = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',

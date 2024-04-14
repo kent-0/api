@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -61,15 +61,8 @@ describe('Task / Comments - Successfully cases', async () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        MikroOrmModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (_configService: ConfigService) =>
-            TestingMikroORMConfig(
-              _configService.getOrThrow('MIKRO_ORM_DB_TEST_URL'),
-            ),
-        }),
+        ConfigModule.forRoot({ envFilePath: '.env.test' }),
+        MikroOrmModule.forRoot(TestingMikroORMConfig()),
         MikroOrmModule.forFeature({
           entities: [
             AuthUserEntity,
@@ -111,7 +104,7 @@ describe('Task / Comments - Successfully cases', async () => {
 
     await orm.getSchemaGenerator().refreshDatabase();
 
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const boardUser = await accountService.signUp({
         email: 'sawa@acme.com',
         first_name: 'Sawa',
@@ -183,7 +176,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a comment can be successfully created for a task.
    */
   it('should create a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -214,7 +207,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a reply can be made to an existing comment for a task.
    */
   it('should create a reply to a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -266,7 +259,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a comment can be deleted from a task.
    */
   it('should delete a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -316,7 +309,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a reply to a comment can be deleted from a task.
    */
   it('should delete a reply to a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -390,7 +383,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a comment can be updated in a task.
    */
   it('should update a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
@@ -447,7 +440,7 @@ describe('Task / Comments - Successfully cases', async () => {
    * Ensures that a reply to a comment can be updated in a task.
    */
   it('should update a reply to a comment in a task', async () => {
-    await RequestContext.createAsync(em, async () => {
+    await RequestContext.create(em, async () => {
       const comment = await service.create(
         {
           boardId: board.id,
