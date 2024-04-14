@@ -1,3 +1,6 @@
+export * from './parent.entity';
+
+// eslint-disable-next-line perfectionist/sort-exports
 export * from './auth/emails.entity';
 
 export * from './auth/passwords.entity';
@@ -9,10 +12,10 @@ export * from './board/members.entity';
 export * from './board/roles.entity';
 export * from './board/steps.entity';
 export * from './board/tags.entity';
-export * from './board/task.entity';
 export * from './board/task-comments.entity';
+// eslint-disable-next-line perfectionist/sort-exports
+export * from './board/task.entity';
 
-export * from './parent.entity';
 export * from './project/activity-history';
 export * from './project/goals.entity';
 export * from './project/members.entity';
