@@ -7,13 +7,14 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
+import {
+  AuthUserEntity,
+  BoardEntity,
+  type OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+} from '~/database/entities';
 import { ActivityHistoryTypes } from '~/database/enums/activity-history.enum';
-
-import { AuthUserEntity } from '../auth/user.entity';
-import { BoardEntity } from '../board/board.entity';
-import { type OptionalParentProps, ParentEntity } from '../parent.entity';
-
-import { ProjectEntity } from './project.entity';
 
 /**
  * Entity that captures and logs the various activities or actions taken by members

@@ -9,13 +9,15 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity } from '../auth/user.entity';
-import { type OptionalParentProps, ParentEntity } from '../parent.entity';
-
-import { BoardEntity } from './board.entity';
-import { BoardStepEntity } from './steps.entity';
-import { BoardTagsEntity } from './tags.entity';
-import { BoardTaskCommentEntity } from './task-comments.entity';
+import {
+  AuthUserEntity,
+  BoardEntity,
+  BoardStepEntity,
+  BoardTagsEntity,
+  BoardTaskCommentEntity,
+  type OptionalParentProps,
+  ParentEntity,
+} from '~/database/entities';
 
 /**
  * Entity representing individual tasks that are created and managed within a board.

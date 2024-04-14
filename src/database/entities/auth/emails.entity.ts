@@ -6,9 +6,11 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
-import { AuthUserEntity } from '~/database/entities';
-
-import { type OptionalParentProps, ParentEntity } from '../parent.entity';
+import {
+  AuthUserEntity,
+  type OptionalParentProps,
+  ParentEntity,
+} from '~/database/entities';
 
 /**
  * Entity representing the status of emails linked to user accounts.

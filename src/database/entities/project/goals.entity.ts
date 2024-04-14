@@ -7,11 +7,12 @@ import {
   Rel,
 } from '@mikro-orm/core';
 
+import {
+  type OptionalParentProps,
+  ParentEntity,
+  ProjectEntity,
+} from '~/database/entities';
 import { ProjectGoalsStatus } from '~/database/enums/status.enum';
-
-import { type OptionalParentProps, ParentEntity } from '../parent.entity';
-
-import { ProjectEntity } from './project.entity';
 
 /**
  * This entity captures the goals set for a specific project. Each goal
