@@ -116,7 +116,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      MIKRO_ORM_DB_TEST_URL: postgresql://user:password@localhost:5432/kento
+      MIKRO_ORM_CLIENT_URL: postgresql://user:password@localhost:5432/kento
       APP_PORT: 3000
       APP_JWT_TOKEN: kentoapp
       APP_JWT_ISSUER: https://auth.kento.app
