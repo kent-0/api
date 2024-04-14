@@ -39,8 +39,8 @@ export class BoardRolesEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Board assigned to the role. When the board is removed, its available roles are also removed.',
+    deleteRule: 'cascade',
     entity: () => BoardEntity,
-    onDelete: 'cascade',
   })
   public board!: Rel<BoardEntity>;
 

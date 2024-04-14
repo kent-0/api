@@ -58,8 +58,8 @@ export class ProjectGoalsEntity extends ParentEntity {
    */
   @ManyToOne({
     comment: 'Project assigned to the goal.',
+    deleteRule: 'cascade',
     entity: () => ProjectEntity,
-    onDelete: 'cascade',
   })
   public project!: Rel<ProjectEntity>;
 

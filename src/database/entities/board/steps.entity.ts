@@ -44,8 +44,8 @@ export class BoardStepEntity extends ParentEntity {
    */
   @ManyToOne({
     comment: 'Board assigned to the task step.',
+    deleteRule: 'cascade',
     entity: () => BoardEntity,
-    onDelete: 'cascade',
   })
   public board!: Rel<BoardEntity>;
 

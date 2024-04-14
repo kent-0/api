@@ -42,8 +42,8 @@ export class BoardEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Creator of the board. When the user is deleted, the associated dashboard is also deleted.',
+    deleteRule: 'cascade',
     entity: () => AuthUserEntity,
-    onDelete: 'cascade',
   })
   public created_by!: Rel<AuthUserEntity>;
 

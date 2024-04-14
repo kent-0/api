@@ -68,7 +68,7 @@ export class BoardService {
    *
    * @param {BoardCreateInput} description, name, projectId - Input data to create a new board.
    * @param {string} userId - ID of the user creating the board.
-   * @returns {Promise<ToCollections<BoardObject>>} The created board entity.
+   * @returns The created board entity.
    *
    */
   public async create(
@@ -189,7 +189,7 @@ export class BoardService {
         project: projectId,
       },
       {
-        fields: ['created_by.id'],
+        fields: ['created_by.id', 'name'],
       },
     );
 

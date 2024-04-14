@@ -116,8 +116,8 @@ export class ProjectEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Project owner user. If the owner deletes their account, the projects will also be affected.',
+    deleteRule: 'cascade',
     entity: () => AuthUserEntity,
-    onDelete: 'cascade',
   })
   public owner!: Rel<AuthUserEntity>;
 

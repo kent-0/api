@@ -31,6 +31,7 @@ export const BoardRolesMinimalProperties = tuple(
   'name',
   'permissions_granted',
   'permissions_denied',
+  'position',
 );
 
 /**

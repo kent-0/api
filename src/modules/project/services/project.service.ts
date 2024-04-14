@@ -59,7 +59,7 @@ export class ProjectService {
    * @param {string} params.name - The name of the new project.
    * @param {string} userId - The ID of the user who will be the owner of the project.
    *
-   * @returns {Promise<ToCollections<ProjectObject>>} - Returns the newly created project object.
+   * @returns - Returns the newly created project object.
    */
   public async create(
     { description, name }: ProjectCreateInput,
@@ -84,26 +84,22 @@ export class ProjectService {
     // Persist the owner member entry to the database.
     await this.em.persistAndFlush(ownerMember);
 
-    // Load relations
-    await newProject.populate(
-      ['owner', 'members', 'roles', 'notes', 'goals', 'boards'],
-      {
-        fields: [
-          'id',
-          'name',
-          'description',
-          ...createFieldPaths('owner', ...AuthUserMinimalProperties),
-          ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
-          ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
-          ...createFieldPaths('notes', ...ProjectNotesMinimalProperties),
-          ...createFieldPaths('goals', ...ProjectGoalMinimalProperties),
-          ...createFieldPaths('boards', ...BoardMinimalProperties),
-        ],
-      },
-    );
+    const createdProject = await this.projectRepository.findOne(newProject, {
+      fields: [
+        'id',
+        'name',
+        'description',
+        ...createFieldPaths('owner', ...AuthUserMinimalProperties),
+        ...createFieldPaths('members', ...ProjectMembersMinimalProperties),
+        ...createFieldPaths('roles', ...ProjectRolesMinimalProperties),
+        ...createFieldPaths('notes', ...ProjectNotesMinimalProperties),
+        ...createFieldPaths('goals', ...ProjectGoalMinimalProperties),
+        ...createFieldPaths('boards', ...BoardMinimalProperties),
+      ],
+    });
 
     // Return the newly created project object.
-    return newProject;
+    return createdProject;
   }
 
   /**
@@ -162,7 +158,7 @@ export class ProjectService {
    * 3. Returns the fetched project details.
    *
    * @param {string} projectId - The ID of the project to be retrieved.
-   * @returns {Promise<ToCollections<ProjectObject>>} The requested project details.
+   * @returns The requested project details.
    * @throws {NotFoundException} If the project is not found.
    */
   public async get(projectId: string) {
@@ -208,7 +204,7 @@ export class ProjectService {
    * 5. Returns the updated project details.
    *
    * @param {ProjectUpdateInput} projectData - The input data for updating the project.
-   * @returns {Promise<ToCollections<ProjectObject>>} The updated project details.
+   * @returns The updated project details.
    * @throws {NotFoundException} If the project is not found.
    */
   public async update({ description, name, projectId }: ProjectUpdateInput) {

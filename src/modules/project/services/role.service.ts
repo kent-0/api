@@ -86,7 +86,7 @@ export class ProjectRoleService {
    * @param {string} params.projectId - The ID of the project.
    * @param {string} params.roleId - The ID of the role to be assigned.
    *
-   * @returns {Promise<ToCollections<ProjectMemberObject>>} - Returns the updated member object.
+   * @returns - Returns the updated member object.
    *
    * @throws {NotFoundException} - Throws an exception if the role or member is not found.
    * @throws {ConflictException} - Throws an exception if the member already has the role assigned.
@@ -162,7 +162,7 @@ export class ProjectRoleService {
    * @param {number} params.permissions_granted - The permissions granted for the role.
    * @param {string} params.projectId - The ID of the project the role belongs to.
    *
-   * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the newly created role object.
+   * @returns - Returns the newly created role object.
    */
   public async create({
     name,
@@ -246,6 +246,7 @@ export class ProjectRoleService {
               ...ProjectRolesMinimalProperties,
               ...createFieldPaths('project', ...ProjectMinimalProperties),
             ),
+            ...createFieldPaths('project', ...ProjectMinimalProperties),
           ],
           limit: size,
           offset: (page - 1) * size,
@@ -317,7 +318,7 @@ export class ProjectRoleService {
    * @param {string} params.projectId - The ID of the project the role belongs to.
    * @param {string} params.roleId - The ID of the role to be removed.
    *
-   * @returns {Promise<ToCollections<ProjectMemberObject>>} - Returns the updated member object after role removal.
+   * @returns - Returns the updated member object after role removal.
    *
    * @throws {NotFoundException} - Throws this exception in two scenarios:
    *                               1. If the specified role is not found for the project.
@@ -399,7 +400,7 @@ export class ProjectRoleService {
    * @param {number} params.permissions_denied - The new permissions denied for the role (optional).
    * @param {string} params.roleId - The ID of the role to be updated.
    *
-   * @returns {Promise<ToCollections<ProjectRoleObject>>} - Returns the updated role object.
+   * @returns - Returns the updated role object.
    *
    * @throws {NotFoundException} - Throws this exception if the specified role is not found.
    */

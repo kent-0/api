@@ -25,7 +25,7 @@ export type OptionalParentProps = 'createdAt' | 'id' | 'updatedAt' | 'version';
  * It includes common properties like ID, creation and update timestamps, and a version for optimistic locking.
  */
 @Entity({ abstract: true, comment: 'Default configuration of all entities.' })
-export abstract class ParentEntity extends BaseEntity<ParentEntity, 'id'> {
+export abstract class ParentEntity extends BaseEntity {
   /**
    * Timestamp indicating when the entity was first created in the database.
    * Automatically set to the current date and time when the entity is instantiated.

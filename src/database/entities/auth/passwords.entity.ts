@@ -54,8 +54,8 @@ export class AuthPasswordEntity extends ParentEntity {
    */
   @OneToOne({
     comment: 'Relationship to the user assigned to the created password.',
+    deleteRule: 'cascade',
     entity: () => AuthUserEntity,
-    onDelete: 'cascade',
   })
   public user!: Rel<AuthUserEntity>;
 }

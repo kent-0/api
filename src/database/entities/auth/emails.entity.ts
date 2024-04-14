@@ -55,8 +55,8 @@ export class AuthEmailsEntity extends ParentEntity {
    */
   @OneToOne({
     comment: 'Relationship to the user assigned to the created email.',
+    deleteRule: 'cascade',
     entity: () => AuthUserEntity,
-    onDelete: 'cascade',
   })
   public user!: Rel<AuthUserEntity>;
 

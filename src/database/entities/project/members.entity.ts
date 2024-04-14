@@ -40,8 +40,8 @@ export class ProjectMembersEntity extends ParentEntity {
    */
   @ManyToOne({
     comment: 'Project to which the user is a member.',
+    deleteRule: 'cascade',
     entity: () => ProjectEntity,
-    onDelete: 'cascade',
   })
   public project!: Rel<ProjectEntity>;
 
@@ -61,8 +61,8 @@ export class ProjectMembersEntity extends ParentEntity {
    */
   @ManyToOne({
     comment: 'User member of the project.',
+    deleteRule: 'cascade',
     entity: () => AuthUserEntity,
-    onDelete: 'cascade',
   })
   public user!: Rel<AuthUserEntity>;
 

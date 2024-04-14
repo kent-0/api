@@ -86,7 +86,7 @@ export class BoardRoleService {
    * @param {string} params.boardId - The ID of the board.
    * @param {string} params.roleId - The ID of the role to be assigned.
    *
-   * @returns {Promise<ToCollections<BoardMembersObject>>} - Returns the updated member object.
+   * @returns - Returns the updated member object.
    *
    * @throws {NotFoundException} - Throws an exception if the role or member is not found.
    * @throws {ConflictException} - Throws an exception if the member already has the role assigned.
@@ -160,7 +160,7 @@ export class BoardRoleService {
    * @param {number} params.permissions_denied - The permissions denied to the role.
    * @param {string} params.boardId - The ID of the board the role belongs to.
    *
-   * @returns {Promise<ToCollections<BoardRolesObject>>} - Returns the newly created role object.
+   * @returns - Returns the newly created role object.
    */
   public async create({
     boardId,
@@ -310,7 +310,7 @@ export class BoardRoleService {
    * @param {string} params.boardId - The ID of the board the role belongs to.
    * @param {string} params.roleId - The ID of the role to be removed.
    *
-   * @returns {Promise<ToCollections<BoardMembersObject>>} - Returns the updated member object after role removal.
+   * @returns - Returns the updated member object after role removal.
    *
    * @throws {NotFoundException} - Throws this exception in two scenarios:
    *                               1. If the specified role is not found for the board.
@@ -387,7 +387,7 @@ export class BoardRoleService {
    * @param {number} params.permissions_denied - The new permissions for the role (optional).
    * @param {string} params.roleId - The ID of the role to be updated.
    *
-   * @returns {Promise<ToCollections<BoardRolesObject>>} - Returns the updated role object.
+   * @returns - Returns the updated role object.
    *
    * @throws {NotFoundException} - Throws this exception if the specified role is not found.
    */

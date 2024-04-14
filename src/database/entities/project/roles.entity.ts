@@ -90,8 +90,8 @@ export class ProjectRolesEntity extends ParentEntity {
   @ManyToOne({
     comment:
       'Project assigned to the role. When the project is removed, its available roles are also removed.',
+    deleteRule: 'cascade',
     entity: () => ProjectEntity,
-    onDelete: 'cascade',
   })
   public project!: Rel<ProjectEntity>;
 }

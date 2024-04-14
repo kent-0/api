@@ -32,6 +32,7 @@ export const ProjectRolesMinimalProperties = tuple(
   'name',
   'permissions_granted',
   'permissions_denied',
+  'position',
 );
 
 /**
