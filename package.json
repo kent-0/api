@@ -31,9 +31,10 @@
     "migration:fresh": "mikro-orm migration:fresh",
     "seed:initial": "mikro-orm seeder:run",
     "commit": "git-cz",
-    "husky:i": "husky install",
-    "update:i": "pnpm up --interactive",
-    "update:f": "pnpm up --latest"
+    "husky:i": "husky init",
+    "up:i": "pnpm up --interactive",
+    "up:f": "pnpm up --latest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@apollo/server": "^4.10.2",

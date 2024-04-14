@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json.schemastore.org/huskyrc",
+  "hooks": {
+    "pre-commit": "lint-staged --allow-empty",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS --edit \"$1\"",
+    "post-commit": "git update-index --again"
+  }
+}
