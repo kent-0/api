@@ -131,12 +131,13 @@ describe('Project unsuccessfully cases', () => {
       );
 
       expect(project).toBeDefined();
-      expect(project.id).toBeDefined();
+      expect(project?.id).toBeDefined();
 
       expect(
         async () =>
           await service.delete(
-            project.id,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            project?.id!,
             '8054de11-b6dc-481e-a8c2-90cef8169914',
           ),
       ).rejects.toThrowError('Only the owner can delete the projects.');

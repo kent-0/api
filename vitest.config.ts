@@ -47,7 +47,7 @@ export default defineConfig({
         paths,
       },
       module: {
-        type: 'es6',
+        type: 'nodenext',
       },
     }),
   ],

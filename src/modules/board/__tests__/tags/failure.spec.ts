@@ -121,7 +121,7 @@ describe('Tags - Unsuccessfully cases', async () => {
         user.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
 
       const boardTest = await boardService.create(
         {

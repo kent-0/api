@@ -105,7 +105,7 @@ describe('Project - Role unsuccessfully cases', async () => {
         userProjectOwner.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
 
       await projectMemberService.add({
         projectId: project.id,
@@ -263,7 +263,7 @@ describe('Project - Role unsuccessfully cases', async () => {
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
-      expect(roleAssigned.name).toEqual('Testing role');
+      expect(roleAssigned?.name).toEqual('Testing role');
 
       expect(
         service.assign({
@@ -336,7 +336,7 @@ describe('Project - Role unsuccessfully cases', async () => {
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
-      expect(roleAssigned.name).toEqual('Testing role');
+      expect(roleAssigned?.name).toEqual('Testing role');
 
       expect(
         service.unassign({

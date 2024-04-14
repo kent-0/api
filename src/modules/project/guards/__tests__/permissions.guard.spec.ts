@@ -135,7 +135,7 @@ describe('Project - Guard - Permissions', () => {
         userProjectOwner.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
 
       projectMember = await projectMemberService.add({
         projectId: project.id,

@@ -111,7 +111,7 @@ describe('Project - Member successfuly cases', () => {
         userProjectOwner.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
     });
   });
 

@@ -92,7 +92,7 @@ describe('Project - Notes successfully cases', async () => {
         userTest.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
       user = await em.findOneOrFail(AuthUserEntity, { id: userTest.id });
     });
   });

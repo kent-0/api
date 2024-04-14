@@ -121,7 +121,7 @@ describe('Board - Role successfully cases', () => {
         user.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
 
       const boardTest = await boardService.create(
         {
@@ -281,7 +281,7 @@ describe('Board - Role successfully cases', () => {
 
       const roleAssigned = rolesAssigned.at(0);
       expect(roleAssigned).toBeDefined();
-      expect(roleAssigned.name).toEqual('Testing role');
+      expect(roleAssigned?.name).toEqual('Testing role');
 
       const memberWithPermissions = await em.findOneOrFail(BoardMembersEntity, {
         id: member.id,
@@ -324,7 +324,7 @@ describe('Board - Role successfully cases', () => {
       const roleAssigned = rolesAssigned.find((r) => r.id === role.id);
 
       expect(roleAssigned).toBeDefined();
-      expect(roleAssigned.name).toEqual('Testing role');
+      expect(roleAssigned?.name).toEqual('Testing role');
 
       const removedRole = await service.unassign({
         boardId: board.id,

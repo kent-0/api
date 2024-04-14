@@ -113,8 +113,8 @@ describe('Project successfully cases', () => {
       );
 
       expect(project).toBeDefined();
-      expect(project.id).toBeDefined();
-      expect(project.owner).toMatchObject({
+      expect(project?.id).toBeDefined();
+      expect(project?.owner).toMatchObject({
         biography: null,
         fullName: user.fullName,
         id: user.id,
@@ -142,13 +142,14 @@ describe('Project successfully cases', () => {
       );
 
       expect(project).toBeDefined();
-      expect(project.id).toBeDefined();
+      expect(project?.id).toBeDefined();
 
-      const result = await service.delete(project.id, user.id);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      const result = await service.delete(project?.id!, user.id);
       expect(result).toBe('The project has been successfully removed.');
 
       const deletedProject = await em.findOne(ProjectEntity, {
-        id: project.id,
+        id: project?.id,
       });
 
       expect(deletedProject).toBeNull();
@@ -173,9 +174,10 @@ describe('Project successfully cases', () => {
       );
 
       expect(project).toBeDefined();
-      expect(project.id).toBeDefined();
+      expect(project?.id).toBeDefined();
 
-      const result = await service.get(project.id);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      const result = await service.get(project?.id!);
       expect(result).toBeDefined();
       expect(result.id).toBeDefined();
       expect(result.owner).toMatchObject({
@@ -206,12 +208,13 @@ describe('Project successfully cases', () => {
       );
 
       expect(project).toBeDefined();
-      expect(project.id).toBeDefined();
-      expect(project.description).toBe('Test Project Description');
+      expect(project?.id).toBeDefined();
+      expect(project?.description).toBe('Test Project Description');
 
       const result = await service.update({
         description: 'Updated description',
-        projectId: project.id,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        projectId: project?.id!,
       });
 
       expect(result.name).toBe('Test Project');

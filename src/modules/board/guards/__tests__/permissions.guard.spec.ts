@@ -146,7 +146,8 @@ describe('Board - Guard - Permissions', () => {
         {
           description: 'Kento testing board',
           name: 'Kento',
-          projectId: project.id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          projectId: project?.id!,
         },
         userBoardOwner.id,
       );

@@ -103,7 +103,7 @@ describe('Project - Goals unsuccessfully cases', async () => {
         userProjectOwner.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
 
       await projectMemberService.add({
         projectId: project.id,

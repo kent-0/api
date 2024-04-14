@@ -88,7 +88,7 @@ describe('Board - Unsuccessfully cases', () => {
         projectUser.id,
       );
 
-      project = await em.findOneOrFail(ProjectEntity, { id: projectTest.id });
+      project = await em.findOneOrFail(ProjectEntity, { id: projectTest?.id });
     });
   });
 
