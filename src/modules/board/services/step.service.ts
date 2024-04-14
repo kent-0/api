@@ -181,11 +181,14 @@ export class BoardStepService {
       previousFinishedStep.position = tempPosition;
       previousFinishedStep.type = tempType;
 
-      await this.em.persistAndFlush(previousFinishedStep);
-    }
+      return this.em.transactional(async (em) => {
+        // Mark the retrieved step as "finished."
+        newFinishedStep.type = StepType.FINISH;
 
-    // Mark the retrieved step as "finished."
-    newFinishedStep.type = StepType.FINISH;
+        em.persistAndFlush([previousFinishedStep, newFinishedStep]);
+        return newFinishedStep;
+      });
+    }
 
     if (newFinishedStep.position !== boardStepsCount) {
       // Move the step to the last position on the board.
@@ -202,9 +205,18 @@ export class BoardStepService {
         newFinishedStep.position = previousStepInPosition.position;
         previousStepInPosition.position = tempPosition;
 
-        await this.em.persistAndFlush(previousStepInPosition);
+        return this.em.transactional(async (em) => {
+          // Mark the retrieved step as "finished."
+          newFinishedStep.type = StepType.FINISH;
+
+          em.persistAndFlush([previousStepInPosition, newFinishedStep]);
+          return newFinishedStep;
+        });
       }
     }
+
+    // Mark the retrieved step as "finished."
+    newFinishedStep.type = StepType.FINISH;
 
     // Save the changes in the database.
     await this.em.persistAndFlush(newFinishedStep);
